@@ -1,8 +1,8 @@
-export class AuthModel {
+export class AuthDto {
   name?: string;
   email: string;
   phone?: number;
   dataofBirt?: Date;
-  passwordHash: string;
+  password: string;
   role?: "admin" | "user";
 }
