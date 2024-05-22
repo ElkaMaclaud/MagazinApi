@@ -1,4 +1,4 @@
-export interface Root {
+export interface GoodDto {
   image: string[];
   price: number;
   name: string;
