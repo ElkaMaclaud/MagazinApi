@@ -17,6 +17,12 @@ module.exports = {
   },
   ignorePatterns: [".eslintrc.js"],
   rules: {
+    "@typescript-eslint/no-redeclare": ["error", { ignoreClasses: true }], //- В новой версии TS
+    // нельзя объединять класс и интерфейс с одинак. названием, но лучше так не делать - это временное решение
+    // Лучше дать разные названия:
+    // - export interface НАЗВАНИЕ_ИНТЕРФЕЙСА extends Base {}
+    // - export class НАЗВАНИЕ_КЛАССА extends TimeStamps implements НАЗВАНИЕ_ИНТЕРФЕЙСА {
+    // Позже можно поменять на новый подход, пока оставлю так!
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
