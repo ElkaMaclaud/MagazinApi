@@ -17,7 +17,4 @@ export class ReviewModel extends TimeStamps {
 
   @prop()
   createdAt: Date;
-
-  @prop()
-  typegooseName: string;
 }

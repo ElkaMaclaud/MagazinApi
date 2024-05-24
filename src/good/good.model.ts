@@ -36,9 +36,6 @@ export class GoodModel extends TimeStamps {
   characteristics: GoodCharacteristic[];
 
   @prop()
-  typegooseName: string;
-
-  @prop()
   sale?: boolean;
 
   @prop()

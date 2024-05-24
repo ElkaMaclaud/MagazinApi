@@ -2,7 +2,7 @@ import { prop } from "@typegoose/typegoose";
 import { Base, TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 
 
-class IUserGood {
+export class IUserGood {
   @prop()
   productId: string;
 
@@ -16,7 +16,7 @@ class IUserGood {
   choice?: boolean;
 }
 
-class IInfoPublik {
+export class IInfoPublik {
   @prop()
   name: string;
 
@@ -26,7 +26,7 @@ class IInfoPublik {
   @prop()
   age?: number;
 }
-class IInfoPrivate extends IInfoPublik {
+export class IInfoPrivate extends IInfoPublik {
   @prop()
   phone?: string;
 
@@ -39,7 +39,7 @@ class IInfoPrivate extends IInfoPublik {
   @prop()
   gender?: "Ж" | "М";
 }
-class IDelivery {
+export class IDelivery {
   @prop()
   address?: string;
 
@@ -67,7 +67,7 @@ export class UserModel extends TimeStamps {
   @prop({ type: () => [String] })
   order?: string[];
 
-  @prop()
+  @prop({ type: () => IDelivery })
   delivery: IDelivery;
 }
 
