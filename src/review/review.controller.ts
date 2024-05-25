@@ -19,7 +19,7 @@ export class ReviewController {
   @HttpCode(200)
   @Post("create")
   async create(@Body() dto: ReviewDto) {
-    this.reviewService.create(dto);
+    return this.reviewService.create(dto);
   }
 
   @Get("byGood/:goodId")
