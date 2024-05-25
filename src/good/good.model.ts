@@ -18,7 +18,7 @@ export class GoodModel extends TimeStamps {
   price: number;
 
   @prop()
-  oldPrice: number;
+  oldPrice?: number;
 
   @prop()
   brand: string;

@@ -4,5 +4,4 @@ export class ReviewDto {
   description: string;
   rating: number;
   createdAt: Date;
-  typegooseName: string;
 }

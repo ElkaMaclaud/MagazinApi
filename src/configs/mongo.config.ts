@@ -14,4 +14,4 @@ const getMongoConnect = (configService: ConfigService) =>
   configService.get("MONGO_LOGIN") +
   ":" +
   configService.get("MONGO_PASSWORD") +
-  "@cluster0.hmhqyqx.mongodb.net/magazin-api";
+  "@cluster0.7hhds1a.mongodb.net/magazin";
