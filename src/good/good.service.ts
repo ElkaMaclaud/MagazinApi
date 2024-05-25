@@ -1,12 +1,13 @@
 // Сервис для получения товаров из монгодб 
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { GoodModel } from "./good.model";
 import { DocumentType, ModelType } from "@typegoose/typegoose/lib/types";
+import { InjectModel } from "nestjs-typegoose";
 
 @Injectable()
 export class GoodService {
   constructor(
-    @Inject(GoodModel) private readonly goodModel: ModelType<GoodModel>,
+    @InjectModel(GoodModel) private readonly goodModel: ModelType<GoodModel>,
   ) {}
 
   async getGoodsByCategory(
