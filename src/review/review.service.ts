@@ -4,7 +4,7 @@ import { ModelType } from "@typegoose/typegoose/lib/types";
 
 @Injectable()
 export class ReviewService {
-  // constructor(
-  //   @Inject(ReviewModel) private readonly reviewModel: ModelType<ReviewModel>,
-  // ) {}
+  constructor(
+    @Inject(ReviewModel) private readonly reviewModel: ModelType<ReviewModel>,
+  ) {}
 }

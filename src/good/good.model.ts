@@ -9,7 +9,7 @@ class GoodCharacteristic {
   value: string;
 }
 
-export interface GoodMode extends Base {}
+export interface GoodModel extends Base {}
 export class GoodModel extends TimeStamps {
   @prop({ type: () => [String] })
   image: string[];

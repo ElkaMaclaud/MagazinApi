@@ -16,6 +16,6 @@ import { ReviewService } from './review.service';
       },
     ]),
   ],
-  providers: [ReviewService],
+  providers: [ReviewService, ReviewModel],
 })
 export class ReviewModule {}

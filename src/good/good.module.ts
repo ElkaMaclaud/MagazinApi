@@ -16,7 +16,7 @@ import { GoodService } from './good.service';
       },
     ]),
   ],
-  providers: [GoodService],
+  providers: [GoodService, GoodModel],
   exports: [GoodService],
 })
 export class GoodModule {}
