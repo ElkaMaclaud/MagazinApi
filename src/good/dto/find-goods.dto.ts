@@ -9,7 +9,7 @@ export interface GoodDto {
   characteristics: {
     name: string;
     value: string;
-  };
+  } | string;
   sale?: boolean;
   discount?: boolean;
 }

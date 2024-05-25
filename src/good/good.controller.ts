@@ -1,11 +1,18 @@
 import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { GoodDto } from "./dto/find-goods.dto";
+import { GoodService } from "./good.service";
 
 @Controller("good")
 export class GoodController {
-  @Post("getGoodsByCategory")
-  async getGoodsByCategory(@Body() dto: Pick<GoodDto, "category">) {}
+  constructor(private readonly goodService: GoodService) {}
+
+  @Get("getGoodsByCategory")
+  async getGoodsByCategory(@Body() dto: Pick<GoodDto, "category">) {
+    return this.goodService.getGoodsByCategory(dto)
+  }
 
   @Get(":id")
-  async get(@Param("id") id: string) {}
+  async getGoodById(@Param("id") id: string) {
+    return this.goodService.getGoodById(id);
+  }
 }

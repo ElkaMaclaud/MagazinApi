@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { GoodController } from './good.controller';
 import { TypegooseModule } from "nestjs-typegoose";
 import { GoodModel } from "./good.model";
+import { GoodService } from './good.service';
 
 @Module({
   controllers: [GoodController],
@@ -15,5 +16,7 @@ import { GoodModel } from "./good.model";
       },
     ]),
   ],
+  providers: [GoodService],
+  exports: [GoodService],
 })
 export class GoodModule {}

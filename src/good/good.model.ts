@@ -32,8 +32,8 @@ export class GoodModel extends TimeStamps {
   @prop()
   category: string;
 
-  @prop({ type: () => [GoodCharacteristic], _id: false })
-  characteristics: GoodCharacteristic[];
+  @prop({ type: () => [GoodCharacteristic] || String, _id: false })
+  characteristics: GoodCharacteristic[] | string;
 
   @prop()
   sale?: boolean;
