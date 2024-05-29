@@ -7,7 +7,7 @@ import {
   Post,
 } from "@nestjs/common";
 import { Types } from "mongoose";
-import { IUserGood } from "./user.model";
+import { IUserGood, UserModel } from "./user.model";
 import { UserService } from "./user.service";
 import { UserDto } from "./dto/user.dto";
 
@@ -15,19 +15,30 @@ import { UserDto } from "./dto/user.dto";
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @Get("basket")
-  async getBasket(id: Types.ObjectId) {}
+  async getBasket(id: string) {
+    return this.userService.getBasket(id);
+  }
 
   @Get("favorites")
-  async getFavorites(id: Types.ObjectId) {}
+  async getFavorites(id: string) {
+    return this.userService.getFavorites(id);
+  }
 
   @Get("orders")
-  async getOrders(id: Types.ObjectId) {}
+  async getOrders(id: string) {
+    return this.userService.getOrders(id);
+  }
 
   @Get("userData")
-  async getUserData(id: Types.ObjectId) {}
+  async getUserData(id: string) {
+    return this.userService.getUserData(id);
+  }
 
   @Patch("addBasket")
-  async addBasket(@Body() dto: IUserGood) {}
+  async addBasket(@Body() dto: IUserGood, id: string) {
+    const result = this.userService.addBasket(dto, id);
+    return result;
+  }
 
   @Patch("addFavorites")
   async addFavorites(@Body() dto: IUserGood, id: string) {
@@ -36,14 +47,29 @@ export class UserController {
   }
 
   @Patch("buy")
+  async addOrder(@Body() dto: IUserGood, id: string) {
+    const result = this.userService.addOrder(dto, id);
+    return result;
+  }
+
+  @Patch("buy")
   async buy(@Body() dto: IUserGood) {}
 
   @Patch("updateUserData")
-  async updateUserData(id: Types.ObjectId) {}
+  async updateUserData(@Body() dto: UserDto, id: string) {
+    const result = this.userService.updateUserData(dto, id);
+    return result;
+  }
 
-  @Patch ("deleteBasket")
-  async deleteBasket(id: Types.ObjectId, goodId: string) {}
+  @Patch("deleteBasket")
+  async deleteBasket(id: string, goodId: string) {
+    const result = this.userService.deleteBasket(id, goodId);
+    return result;
+  }
 
-  @Patch ("deleteFavorites")
-  async deleteFavorites(id: Types.ObjectId, goodId: string) {}
+  @Patch("deleteFavorites")
+  async deleteFavorites(id: string, goodId: string) {
+    const result = this.userService.deleteFavorites(id, goodId);
+    return result;
+  }
 }
