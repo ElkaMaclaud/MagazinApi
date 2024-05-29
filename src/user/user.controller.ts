@@ -3,17 +3,17 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
   Patch,
   Post,
 } from "@nestjs/common";
-import { UserDto } from "./dto/user.dto";
-import { ConfigService } from "@nestjs/config";
 import { Types } from "mongoose";
+import { IUserGood } from "./user.model";
+import { UserService } from "./user.service";
+import { UserDto } from "./dto/user.dto";
 
 @Controller("user")
 export class UserController {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(private readonly userService: UserService) {}
   @Get("basket")
   async getBasket(id: Types.ObjectId) {}
 
@@ -24,14 +24,26 @@ export class UserController {
   async getOrders(id: Types.ObjectId) {}
 
   @Get("userData")
-  async userData(id: Types.ObjectId) {}
+  async getUserData(id: Types.ObjectId) {}
 
-  @Post("addBasket")
-  async addBasket(id: Types.ObjectId, goodId: string) {}
+  @Patch("addBasket")
+  async addBasket(@Body() dto: IUserGood) {}
 
-  @Post("addFavorites")
-  async addFavorites(id: Types.ObjectId, goodId: string) {}
+  @Patch("addFavorites")
+  async addFavorites(@Body() dto: IUserGood, id: string) {
+    const result = await this.userService.addFavorites(dto, id);
+    return result;
+  }
 
-  @Post("buy")
-  async buy(id: Types.ObjectId, goodId: string) {}
+  @Patch("buy")
+  async buy(@Body() dto: IUserGood) {}
+
+  @Patch("updateUserData")
+  async updateUserData(id: Types.ObjectId) {}
+
+  @Patch ("deleteBasket")
+  async deleteBasket(id: Types.ObjectId, goodId: string) {}
+
+  @Patch ("deleteFavorites")
+  async deleteFavorites(id: Types.ObjectId, goodId: string) {}
 }

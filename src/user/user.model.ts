@@ -52,10 +52,10 @@ export class IDelivery {
 
 export interface UserModel extends Base {}
 export class UserModel extends TimeStamps {
-  @prop()
+  @prop({ type: () => IInfoPublik })
   publik: IInfoPublik;
 
-  @prop()
+  @prop({ type: () => IInfoPrivate })
   private: IInfoPrivate;
 
   @prop({ type: () => [IUserGood] })
