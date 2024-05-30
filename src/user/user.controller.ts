@@ -1,19 +1,23 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Patch,
   Post,
 } from "@nestjs/common";
-import { Types } from "mongoose";
-import { IUserGood, UserModel } from "./user.model";
+import { IUserGood } from "./user.model";
 import { UserService } from "./user.service";
 import { UserDto } from "./dto/user.dto";
 
 @Controller("user")
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Post("basket")
+  async createUser(dto: UserDto) {
+    return this.userService.create(dto);
+  }
+
   @Get("basket")
   async getBasket(id: string) {
     return this.userService.getBasket(id);
@@ -34,6 +38,12 @@ export class UserController {
     return this.userService.getUserData(id);
   }
 
+  @Patch("updateUserData")
+  async updateUserData(@Body() dto: UserDto, id: string) {
+    const result = this.userService.updateUserData(dto, id);
+    return result;
+  }
+
   @Patch("addBasket")
   async addBasket(@Body() dto: IUserGood, id: string) {
     const result = this.userService.addBasket(dto, id);
@@ -52,14 +62,8 @@ export class UserController {
     return result;
   }
 
-  @Patch("buy")
-  async buy(@Body() dto: IUserGood) {}
-
-  @Patch("updateUserData")
-  async updateUserData(@Body() dto: UserDto, id: string) {
-    const result = this.userService.updateUserData(dto, id);
-    return result;
-  }
+  // @Patch("buy")
+  // async buy(@Body() dto: IUserGood) {}
 
   @Patch("deleteBasket")
   async deleteBasket(id: string, goodId: string) {

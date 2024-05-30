@@ -10,6 +10,10 @@ export class UserService {
     @InjectModel(UserModel) private readonly userModel: ModelType<UserModel>,
   ) {}
 
+  async create(dto: UserDto) {
+    this.userModel.create(dto)
+  }
+
   async getBasket(id: string) {
     this.userModel.findOne({ id }, { basket: 1 });
   }
@@ -38,6 +42,15 @@ export class UserService {
     );
 
     return updatedUser;
+  } 
+  async addBasket(dto: IUserGood, id: string) {
+    const updatedUser = await this.userModel.findOneAndUpdate(
+      { _id: id },
+      { $push: { basket: dto } },
+      { new: true },
+    );
+
+    return updatedUser;
   }
   async addFavorites(dto: IUserGood, id: string) {
     const updatedUser = await this.userModel.findOneAndUpdate(
@@ -48,15 +61,7 @@ export class UserService {
 
     return updatedUser;
   }
-  async addBasket(dto: IUserGood, id: string) {
-    const updatedUser = await this.userModel.findOneAndUpdate(
-      { _id: id },
-      { $push: { basket: dto } },
-      { new: true },
-    );
-
-    return updatedUser;
-  }
+ 
   async addOrder(dto: IUserGood, id: string) {
     const updatedUser = await this.userModel.findOneAndUpdate(
       { _id: id },

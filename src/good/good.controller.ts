@@ -8,11 +8,16 @@ export class GoodController {
 
   @Get("getGoodsByCategory")
   async getGoodsByCategory(@Body() dto: Pick<GoodDto, "category">) {
-    return this.goodService.getGoodsByCategory(dto)
+    return this.goodService.getGoodsByCategory(dto);
   }
 
   @Get(":id")
   async getGoodById(@Param("id") id: string) {
     return this.goodService.getGoodById(id);
+  }
+
+  // Специальный метод жизненного цикла nestjs - инициализирует самозапускающуюся ф-ую
+  async onModuleInit() {
+    await this.goodService.writeDataToBD();
   }
 }
