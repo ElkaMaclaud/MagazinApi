@@ -6,10 +6,8 @@ import { UserModule } from "./user/user.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypegooseModule } from "nestjs-typegoose";
 import { getMongoConfig } from "./configs/mongo.config";
-import { ScheduleModule } from "@nestjs/schedule";
 @Module({
   imports: [
-    ScheduleModule.forRoot(),
     ConfigModule.forRoot(),
     TypegooseModule.forRootAsync({
       imports: [ConfigModule],

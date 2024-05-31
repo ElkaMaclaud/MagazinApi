@@ -3,9 +3,10 @@ import { Injectable } from "@nestjs/common";
 import { GoodModel } from "./good.model";
 import { DocumentType, ModelType } from "@typegoose/typegoose/lib/types";
 import { InjectModel } from "nestjs-typegoose";
-import { GoodDto } from "./dto/find-goods.dto";
-import { readFileSync } from "fs";
-import path from "path";
+// import { GoodDto } from "./dto/find-goods.dto";
+// import * as fs from "fs-extra";
+// import * as path from "path";
+// import * as appRoot from "app-root-path";
 
 @Injectable()
 export class GoodService {
@@ -31,10 +32,14 @@ export class GoodService {
     return this.goodModel.find({ _id: { $in: ids } }).exec();
   }
 
-    async writeDataToBD() {
-    const filePath = path.join(process.cwd(), "database", "data.json");
-    const rawdata = readFileSync(filePath);
-    const data: GoodDto = JSON.parse(rawdata.toString());
-    await this.goodModel.insertMany(data);
-  }
+  // Функция для занесения данных в бд, возможно нужна будет в будущем
+  // Функцию для создания и внесения товаров в бд нужно будет реализовать для продавцов в будущем возможно..., но такой цели пока нет
+  // Собственно нет и фронта для продавцов, так что Функцию для создания товаров будет излишней пока...
+
+  // async writeDataToBD() {
+  //   const filePath = path.join(appRoot.path, "./src/database", "data.json");
+  //   const rawdata = await fs.readFile(filePath, "utf8");
+  //   const data: { good: GoodDto[] } = JSON.parse(rawdata);
+  //   await this.goodModel.insertMany(data.good);
+  // }
 }

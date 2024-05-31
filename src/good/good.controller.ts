@@ -17,7 +17,8 @@ export class GoodController {
   }
 
   // Специальный метод жизненного цикла nestjs - инициализирует самозапускающуюся ф-ую
-  async onModuleInit() {
-    await this.goodService.writeDataToBD();
-  }
+  
+  // async onModuleInit() {
+  //   await this.goodService.writeDataToBD();
+  // }
 }
