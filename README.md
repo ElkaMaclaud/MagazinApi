@@ -29,7 +29,9 @@
 ## Installation
 
 ```bash
-$ npm install
+$ npm install  
+or
+$ npm install --force
 ```
 
 ## Running the app

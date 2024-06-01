@@ -3,9 +3,9 @@ import { Injectable } from "@nestjs/common";
 import { GoodModel } from "./good.model";
 import { DocumentType, ModelType } from "@typegoose/typegoose/lib/types";
 import { InjectModel } from "nestjs-typegoose";
-import { GoodDto } from "./dto/find-goods.dto";
-import * as path from "path";
-import * as fs from "fs";
+// import { GoodDto } from "./dto/find-goods.dto";
+// import * as path from "path";
+// import * as fs from "fs";
 
 @Injectable()
 export class GoodService {

@@ -12,7 +12,7 @@
       ],
       "price": 89000,
       "name": "Phone",
-      "brand": "Apple",
+      "brand": "Samsung",
       "description": "Xiaomi Смартфон Xiaomi Redmi Note 12S 8/256 ГБ, синий Тип: Смартфон Диагональ экрана, дюймы: 6.43 Емкость аккумулятора, мАч: 5000 Процессор: Helio G96 (8 ядер), 2.05 ГГц Основной материал корпуса: Пластик, Стекло",
       "category": "electronika",
       "characteristics": {
@@ -52,7 +52,7 @@
       ],
       "price": 27000,
       "name": "Phone",
-      "brand": "Apple",
+      "brand": "Samsung",
       "description": "Xiaomi Смартфон Xiaomi Redmi Note 12S 8/256 ГБ, синий Тип: Смартфон Диагональ экрана, дюймы: 6.43 Емкость аккумулятора, мАч: 5000 Процессор: Helio G96 (8 ядер), 2.05 ГГц Основной материал корпуса: Пластик, Стекло",
       "category": "electronika",
       "characteristics": {
@@ -91,7 +91,7 @@
       ],
       "price": 31000,
       "name": "Phone",
-      "brand": "Apple",
+      "brand": "Samsung",
       "description": "Xiaomi Смартфон Xiaomi Redmi Note 12S 8/256 ГБ, синий Тип: Смартфон Диагональ экрана, дюймы: 6.43 Емкость аккумулятора, мАч: 5000 Процессор: Helio G96 (8 ядер), 2.05 ГГц Основной материал корпуса: Пластик, Стекло",
       "category": "electronika",
       "characteristics": {
@@ -110,7 +110,7 @@
       ],
       "price": 31500,
       "name": "Phone",
-      "brand": "Apple",
+      "brand": "Huawei",
       "description": "Xiaomi Смартфон Xiaomi Redmi Note 12S 8/256 ГБ, синий Тип: Смартфон Диагональ экрана, дюймы: 6.43 Емкость аккумулятора, мАч: 5000 Процессор: Helio G96 (8 ядер), 2.05 ГГц Основной материал корпуса: Пластик, Стекло",
       "category": "electronika",
       "characteristics": {
@@ -130,7 +130,7 @@
       ],
       "price": 33000,
       "name": "Phone",
-      "brand": "Apple",
+      "brand": "Huawei",
       "description": "Xiaomi Смартфон Xiaomi Redmi Note 12S 8/256 ГБ, синий Тип: Смартфон Диагональ экрана, дюймы: 6.43 Емкость аккумулятора, мАч: 5000 Процессор: Helio G96 (8 ядер), 2.05 ГГц Основной материал корпуса: Пластик, Стекло",
       "category": "electronika",
       "characteristics": {
@@ -169,10 +169,10 @@
       ],
       "price": 66000,
       "name": "Phone",
-      "brand": "Apple",
+      "brand": "Xiaomi",
       "description": "Xiaomi Смартфон Xiaomi Redmi Note 12S 8/256 ГБ, синий Тип: Смартфон Диагональ экрана, дюймы: 6.43 Емкость аккумулятора, мАч: 5000 Процессор: Helio G96 (8 ядер), 2.05 ГГц Основной материал корпуса: Пластик, Стекло",
       "category": "electronika",
-        "characteristics": {
+      "characteristics": {
         "name": "Корпус",
         "value": "Ударопрочный"
       },
@@ -188,7 +188,7 @@
       ],
       "price": 10000,
       "name": "Пальто",
-      "brand": "Apple",
+      "brand": "STOREEZ",
       "description": "Женская одежда в официальном интернет-магазине одежды TOM TAILOR с доставкой по России",
       "category": "cloth",
       "characteristics": {
@@ -208,7 +208,7 @@
       ],
       "price": 16000,
       "name": "Пальто",
-      "brand": "Apple",
+      "brand": "IAMSTUDIO",
       "description": "Женская одежда в официальном интернет-магазине одежды TOM TAILOR с доставкой по России",
       "category": "cloth",
       "characteristics": {
@@ -226,7 +226,7 @@
       ],
       "price": 17000,
       "name": "Пальто",
-      "brand": "Apple",
+      "brand": "STOREEZ",
       "description": "Женская одежда в официальном интернет-магазине одежды TOM TAILOR с доставкой по России",
       "category": "cloth",
       "characteristics": {
@@ -245,10 +245,13 @@
       ],
       "price": 18500,
       "name": "Пальто",
-      "brand": "Apple",
+      "brand": "GATE31",
       "description": "Женская одежда в официальном интернет-магазине одежды TOM TAILOR с доставкой по России",
       "category": "cloth",
-      "characteristics": "blablabla",
+      "characteristics": {
+        "name": "Ткань",
+        "value": "Кашемир"
+      },
       "sale": true
     },
     {
@@ -261,10 +264,13 @@
       ],
       "price": 14000,
       "name": "Пальто",
-      "brand": "Apple",
+      "brand": "IAMSTUDIO",
       "description": "Женская одежда в официальном интернет-магазине одежды TOM TAILOR с доставкой по России",
       "category": "cloth",
-      "characteristics": "blablabla"
+      "characteristics": {
+        "name": "Материал",
+        "value": "Шерсть"
+      }
     },
     {
       "image": [
@@ -277,10 +283,13 @@
       ],
       "price": 34000,
       "name": "Пальто",
-      "brand": "Apple",
+      "brand": "STOREEZ",
       "description": "Женская одежда в официальном интернет-магазине одежды TOM TAILOR с доставкой по России",
       "category": "cloth",
-      "characteristics": "blablabla"
+      "characteristics": {
+        "name": "Ткань",
+        "value": "Кашемир"
+      }
     },
     {
       "image": [
@@ -292,10 +301,13 @@
       ],
       "price": 1350,
       "name": "Берцы",
-      "brand": "Apple",
+      "brand": "ABRICOT",
       "description": "Какую обувь носить осенью и зимой: 6 советов от BRANDO - Афиша Красноярска",
       "category": "shoes",
-      "characteristics": "blablabla",
+      "characteristics": {
+        "name": "Материал изделия",
+        "value": "Кожзам"
+      },
       "discount": true
     },
     {
@@ -308,10 +320,13 @@
       ],
       "price": 4600,
       "name": "Берцы",
-      "brand": "Apple",
+      "brand": "AGNELLO",
       "description": "Какую обувь носить осенью и зимой: 6 советов от BRANDO - Афиша Красноярска",
       "category": "shoes",
-      "characteristics": "blablabla"
+      "characteristics": {
+        "name": "Материал изделия",
+        "value": "Кожзам"
+      }
     },
     {
       "image": [
@@ -323,10 +338,13 @@
       ],
       "price": 6000,
       "name": "Берцы",
-      "brand": "Apple",
+      "brand": "ABRICOT",
       "description": "Какую обувь носить осенью и зимой: 6 советов от BRANDO - Афиша Красноярска",
       "category": "shoes",
-      "characteristics": "blablabla",
+      "characteristics": {
+        "name": "Материал изделия",
+        "value": "Кожзам"
+      },
       "sale": true,
       "discount": true
     },
@@ -340,10 +358,13 @@
       ],
       "price": 8000,
       "name": "Берцы",
-      "brand": "Apple",
+      "brand": "AIDINI",
       "description": "Какую обувь носить осенью и зимой: 6 советов от BRANDO - Афиша Красноярска",
       "category": "shoes",
-      "characteristics": "blablabla"
+      "characteristics": {
+        "name": "Цвет",
+        "value": "Чёрный"
+      }
     },
     {
       "image": [
@@ -355,10 +376,13 @@
       ],
       "price": 9000,
       "name": "Берцы",
-      "brand": "Apple",
+      "brand": "AGNELLO",
       "description": "Какую обувь носить осенью и зимой: 6 советов от BRANDO - Афиша Красноярска",
       "category": "shoes",
-      "characteristics": "blablabla"
+      "characteristics": {
+        "name": "Материал изделия",
+        "value": "Кожзам"
+      }
     },
     {
       "image": [
@@ -370,10 +394,13 @@
       ],
       "price": 7800,
       "name": "Берцы",
-      "brand": "Apple",
+      "brand": "AIDINI",
       "description": "Какую обувь носить осенью и зимой: 6 советов от BRANDO - Афиша Красноярска",
       "category": "shoes",
-      "characteristics": "blablabla",
+      "characteristics": {
+        "name": "Цвет",
+        "value": "Чёрный"
+      },
       "sale": true
     },
     {
@@ -386,10 +413,10 @@
       ],
       "price": 666,
       "name": "Дача и сад",
-      "brand": "Apple",
+      "brand": "Alpina",
       "description": "Товары для дома и сада купить в интернет-магазине Beloris.ru",
       "category": "houseAndGarden",
-      "characteristics": "blablabla",
+      "characteristics": "Всё для дома и сада купить в интернет-магазине",
       "sale": true,
       "discount": true
     },
@@ -403,10 +430,10 @@
       ],
       "price": 7770,
       "name": "Дача и сад",
-      "brand": "Apple",
+      "brand": " Ariens",
       "description": "Товары для дома и сада купить в интернет-магазине Beloris.ru",
       "category": "houseAndGarden",
-      "characteristics": "blablabla",
+      "characteristics": "Всё для дома и сада купить в интернет-магазине",
       "discount": true
     },
     {
@@ -419,10 +446,10 @@
       ],
       "price": 7900,
       "name": "Дача и сад",
-      "brand": "Apple",
+      "brand": "Alpina",
       "description": "Товары для дома и сада купить в интернет-магазине Beloris.ru",
       "category": "houseAndGarden",
-      "characteristics": "blablabla"
+      "characteristics": "Всё для дома и сада купить в интернет-магазине"
     },
     {
       "image": [
@@ -435,10 +462,10 @@
       ],
       "price": 1800,
       "name": "Дача и сад",
-      "brand": "Apple",
+      "brand": "Ariens",
       "description": "Товары для дома и сада купить в интернет-магазине Beloris.ru",
       "category": "houseAndGarden",
-      "characteristics": "blablabla",
+      "characteristics": "Всё для дома и сада купить в интернет-магазине",
       "sale": true
     },
     {
@@ -451,10 +478,10 @@
       ],
       "price": 3800,
       "name": "Дача и сад",
-      "brand": "Apple",
+      "brand": "AL-KO",
       "description": "Товары для дома и сада купить в интернет-магазине Beloris.ru",
       "category": "houseAndGarden",
-      "characteristics": "blablabla"
+      "characteristics": "Всё для дома и сада купить в интернет-магазине"
     },
     {
       "image": [
@@ -468,10 +495,10 @@
       ],
       "price": 2400,
       "name": "Лекарства, бады",
-      "brand": "Apple",
+      "brand": "A. Alcon Laboratories",
       "description": "Аптечные товары",
       "category": "pharmacy",
-      "characteristics": "blablabla"
+      "characteristics": "Лекарства"
     },
     {
       "image": [
@@ -485,10 +512,10 @@
       ],
       "price": 1100,
       "name": "Лекарства, бады",
-      "brand": "Apple",
+      "brand": "AstraZeneca",
       "description": "Аптечные товары",
       "category": "pharmacy",
-      "characteristics": "blablabla",
+      "characteristics": "Лекарства",
       "discount": true
     },
     {
@@ -503,10 +530,10 @@
       ],
       "price": 1450,
       "name": "Лекарства, бады",
-      "brand": "Apple",
+      "brand": "A. Alcon Laboratories",
       "description": "Аптечные товары",
       "category": "pharmacy",
-      "characteristics": "blablabla"
+      "characteristics": "Бады"
     },
     {
       "image": [
@@ -520,10 +547,10 @@
       ],
       "price": 278,
       "name": "Лекарства, бады",
-      "brand": "Apple",
+      "brand": "AstraZeneca",
       "description": "Аптечные товары",
       "category": "pharmacy",
-      "characteristics": "blablabla",
+      "characteristics": "Лекарства",
       "sale": true
     },
     {
@@ -539,10 +566,10 @@
       ],
       "price": 744,
       "name": "Лекарства, бады",
-      "brand": "Apple",
+      "brand": "C. Carma Laboratories",
       "description": "Аптечные товары",
       "category": "pharmacy",
-      "characteristics": "blablabla"
+      "characteristics": "Бады"
     },
     {
       "image": [
@@ -556,10 +583,10 @@
       ],
       "price": 3200,
       "name": "Лекарства, бады",
-      "brand": "Apple",
+      "brand": "C. Carma Laboratories",
       "description": "Аптечные товары",
       "category": "pharmacy",
-      "characteristics": "blablabla"
+      "characteristics": "Лекарства"
     },
     {
       "image": [
@@ -573,7 +600,7 @@
       ],
       "price": 400,
       "name": "Печенье",
-      "brand": "Apple",
+      "brand": "Bahlsen",
       "description": "Овсяное печенье, рецепты с фото на RussianFood.com: 170 рецептов овсяного печенья",
       "category": "food",
       "characteristics": "Cooki",
@@ -590,7 +617,7 @@
       ],
       "price": 590,
       "name": "Санввичи",
-      "brand": "Apple",
+      "brand": "Gongfu Songshu",
       "description": "Их прославила еда. Блюда, названные в честь людей | Кухни мира | Кухня | Аргументы и Факты",
       "category": "food",
       "characteristics": "Вкусняшки"
@@ -607,10 +634,13 @@
       ],
       "price": 1234,
       "name": "Пицца",
-      "brand": "Apple",
+      "brand": "Bahlsen",
       "description": "Пицца - национальное итальянское блюдо, популярное во всем мире. Доставка пиццы во все районы Санкт-Петербурга",
       "category": "food",
-      "characteristics": "Пицца итальянская",
+      "characteristics": {
+        "name": "Начинка",
+        "value": "Колбаски пепперони"
+      },
       "sale": true
     },
     {
@@ -624,7 +654,7 @@
       ],
       "price": 320,
       "name": "Санввичи",
-      "brand": "Apple",
+      "brand": "Bahlsen",
       "description": "Их прославила еда. Блюда, названные в честь людей | Кухни мира | Кухня | Аргументы и Факты",
       "category": "food",
       "characteristics": "Вкусняшки"
@@ -641,10 +671,10 @@
       ],
       "price": 1602,
       "name": "Пицца",
-      "brand": "Apple",
+      "brand": "Додо Пицца",
       "description": "Пицца - национальное итальянское блюдо, популярное во всем мире. Доставка пиццы во все районы Санкт-Петербурга",
       "category": "food",
-      "characteristics": "Пицца итальянская"
+      "characteristics": "Пепперони"
     },
     {
       "image": [
@@ -657,7 +687,7 @@
       ],
       "price": 256,
       "name": "Санввичи",
-      "brand": "Apple",
+      "brand": "Gongfu Songshu",
       "description": "Их прославила еда. Блюда, названные в честь людей | Кухни мира | Кухня | Аргументы и Факты",
       "category": "food",
       "characteristics": "Вкусняшки",
@@ -675,7 +705,7 @@
       ],
       "price": 321,
       "name": "Печенье",
-      "brand": "Apple",
+      "brand": "Bahlsen",
       "description": "Овсяное печенье, рецепты с фото на RussianFood.com: 170 рецептов овсяного печенья",
       "category": "food",
       "characteristics": "Cooki"
@@ -692,7 +722,7 @@
       ],
       "price": 1905,
       "name": "Пицца",
-      "brand": "Apple",
+      "brand": "Додо Пицца",
       "description": "Пицца - национальное итальянское блюдо, популярное во всем мире. Доставка пиццы во все районы Санкт-Петербурга",
       "category": "food",
       "characteristics": "Пицца итальянская"
@@ -709,7 +739,7 @@
       ],
       "price": 1008,
       "name": "Печенье",
-      "brand": "Apple",
+      "brand": "Gongfu Songshu",
       "description": "Овсяное печенье, рецепты с фото на RussianFood.com: 170 рецептов овсяного печенья",
       "category": "food",
       "characteristics": "Cooki"
@@ -725,7 +755,7 @@
       ],
       "price": 253,
       "name": "Книги",
-      "brand": "Apple",
+      "brand": "Издательство CLEVER",
       "description": "Как и зачем читать книги эффективно — Work.ua",
       "category": "books",
       "characteristics": "Книги в твердом переплете",
@@ -742,7 +772,7 @@
       ],
       "price": 320,
       "name": "Книги",
-      "brand": "Apple",
+      "brand": "Издательство «Алгори́тм»",
       "description": "Как и зачем читать книги эффективно — Work.ua",
       "category": "books",
       "characteristics": "Книги в твердом переплете",
@@ -759,7 +789,7 @@
       ],
       "price": 450,
       "name": "Книги",
-      "brand": "Apple",
+      "brand": "Издательство CLEVER",
       "description": "Как и зачем читать книги эффективно — Work.ua",
       "category": "books",
       "characteristics": "Книги в твердом переплете",
@@ -775,7 +805,7 @@
       ],
       "price": 678,
       "name": "Книги",
-      "brand": "Apple",
+      "brand": "Издательство «Алгори́тм»",
       "description": "Как и зачем читать книги эффективно — Work.ua",
       "category": "books",
       "characteristics": "Книги в твердом переплете"
@@ -791,7 +821,7 @@
       ],
       "price": 976,
       "name": "Книги",
-      "brand": "Apple",
+      "brand": "Издательство «Белый город».",
       "description": "Как и зачем читать книги эффективно — Work.ua",
       "category": "books",
       "characteristics": "Книги в твердом переплете"
@@ -807,7 +837,7 @@
       ],
       "price": 436,
       "name": "Книги",
-      "brand": "Apple",
+      "brand": "Издательство «Белый город».",
       "description": "Как и зачем читать книги эффективно — Work.ua",
       "category": "books",
       "characteristics": "Книги в твердом переплете"
@@ -823,7 +853,7 @@
       ],
       "price": 12050,
       "name": "Велосипед",
-      "brand": "Apple",
+      "brand": "Trek Bicycle",
       "description": "купить STINGER Велосипед RELOAD PRO 29' в магазине Диана спорт - товары для спорта и отдыха",
       "category": "sportsAndRecreation",
       "characteristics": "Велосипеды",
@@ -839,7 +869,7 @@
       ],
       "price": 12500,
       "name": "Спорт",
-      "brand": "Apple",
+      "brand": "Trek Bicycle",
       "description": "Товары для спорта, отдыха, туризма ОПТОМ!! - обсуждение на форуме e1.ru",
       "category": "sportsAndRecreation",
       "characteristics": "Товары для активного отдыха",
@@ -856,7 +886,7 @@
       ],
       "price": 7350,
       "name": "Велосипед",
-      "brand": "Apple",
+      "brand": "Giant Bicycle",
       "description": "купить STINGER Велосипед RELOAD PRO 29' в магазине Диана спорт - товары для спорта и отдыха",
       "category": "sportsAndRecreation",
       "characteristics": "Велосипеды"
@@ -871,7 +901,7 @@
       ],
       "price": 8250,
       "name": "Мячи",
-      "brand": "Apple",
+      "brand": "Cannondale Bicycle",
       "description": "Товары для спорта, отдыха, туризма ОПТОМ!! - обсуждение на форуме e1.ru",
       "category": "sportsAndRecreation",
       "characteristics": "Товары для активного отдыха"
@@ -886,7 +916,7 @@
       ],
       "price": 9250,
       "name": "Спорт",
-      "brand": "Apple",
+      "brand": "Giant Bicycle",
       "description": "Товары для спорта, отдыха, туризма ОПТОМ!! - обсуждение на форуме e1.ru",
       "category": "sportsAndRecreation",
       "characteristics": "Товары для активного отдыха"
@@ -903,7 +933,7 @@
       ],
       "price": 4350,
       "name": "Велосипед",
-      "brand": "Apple",
+      "brand": "Trek Bicycle",
       "description": "купить STINGER Велосипед RELOAD PRO 29' в магазине Диана спорт - товары для спорта и отдыха",
       "category": "sportsAndRecreation",
       "characteristics": "Велосипеды"
@@ -921,7 +951,7 @@
       ],
       "price": 9850,
       "name": "Удочки",
-      "brand": "Apple",
+      "brand": "Shimano Fishing",
       "description": "Рыбалка на озере, природная серия, удочка, туризм | Премиум Фото",
       "category": "TourismFishingHunting",
       "characteristics": "Все для рыбалки",
@@ -938,7 +968,7 @@
       ],
       "price": 4550,
       "name": "Охота",
-      "brand": "Apple",
+      "brand": "Daiwa",
       "description": "С 1 января 2021 года вступают в силу новые Правила охоты - Департамент гражданской защиты, охраны окружающей",
       "category": "TourismFishingHunting",
       "characteristics": "Ружья и прочее"
@@ -955,7 +985,7 @@
       ],
       "price": 32000,
       "name": "Чемоданы и дорожные сумки",
-      "brand": "Apple",
+      "brand": "Deuter",
       "description": "Летать охота - российский туризм в пандемии — Финам.Ру",
       "category": "TourismFishingHunting",
       "characteristics": "Все для путешествий"
@@ -971,7 +1001,7 @@
       ],
       "price": 5650,
       "name": "Охота",
-      "brand": "Apple",
+      "brand": "Daiwa",
       "description": "С 1 января 2021 года вступают в силу новые Правила охоты - Департамент гражданской защиты, охраны окружающей",
       "category": "TourismFishingHunting",
       "characteristics": "Ружья и прочее"
@@ -989,7 +1019,7 @@
       ],
       "price": 9050,
       "name": "Удочки",
-      "brand": "Apple",
+      "brand": "DaiwaShimano Fishing",
       "description": "Рыбалка на озере, природная серия, удочка, туризм | Премиум Фото",
       "category": "TourismFishingHunting",
       "characteristics": "Все для рыбалки"
@@ -1006,7 +1036,7 @@
       ],
       "price": 4759,
       "name": "Дорожные сумки",
-      "brand": "Apple",
+      "brand": "PINGUIN",
       "description": "Летать охота - российский туризм в пандемии — Финам.Ру",
       "category": "TourismFishingHunting",
       "characteristics": "Все для путешествий"
@@ -1022,7 +1052,7 @@
       ],
       "price": 4454,
       "name": "Охота",
-      "brand": "Apple",
+      "brand": "Daiwa",
       "description": "С 1 января 2021 года вступают в силу новые Правила охоты - Департамент гражданской защиты, охраны окружающей",
       "category": "TourismFishingHunting",
       "characteristics": "Ружья и прочее"
@@ -1040,7 +1070,7 @@
       ],
       "price": 9876,
       "name": "Удочки",
-      "brand": "Apple",
+      "brand": "Shimano Fishing",
       "description": "Рыбалка на озере, природная серия, удочка, туризм | Премиум Фото",
       "category": "TourismFishingHunting",
       "characteristics": "Все для рыбалки",
@@ -1055,10 +1085,10 @@
       ],
       "price": 1254,
       "name": "Корм для собак",
-      "brand": "Apple",
+      "brand": "Monge",
       "description": "Корм сухой для кошек Курица, 650 г с бесплатной доставкой на дом из  «ВкусВилл» | Вологда Корм сухой для кошек Курица, 650 г с бесплатной доставкой на дом из «ВкусВилл» | Вологда",
       "category": "GoodsForPets",
-      "characteristics": "Все ддля вашего питомца"
+      "characteristics": "Все для вашего питомца"
     },
     {
       "image": [
@@ -1071,10 +1101,10 @@
       ],
       "price": 1267,
       "name": "Корм для кошек",
-      "brand": "Apple",
+      "brand": "Perfect Fit",
       "description": "Лучшие влажные корма для кошек — обзор качественных кошачьих консервов: виды и бренды",
       "category": "GoodsForPets",
-      "characteristics": "Все ддля вашего питомца"
+      "characteristics": "Все для вашего питомца"
     },
     {
       "image": [
@@ -1087,10 +1117,10 @@
       ],
       "price": 1305,
       "name": "Корм для собак",
-      "brand": "Apple",
+      "brand": "Monge",
       "description": "Корм сухой для кошек Курица, 650 г с бесплатной доставкой на дом из  «ВкусВилл» | Вологда Корм сухой для кошек Курица, 650 г с бесплатной доставкой на дом из «ВкусВилл» | Вологда",
       "category": "GoodsForPets",
-      "characteristics": "Все ддля вашего питомца",
+      "characteristics": "Все для вашего питомца",
       "sale": true
     },
     {
@@ -1105,10 +1135,10 @@
       ],
       "price": 900,
       "name": "Корм для кошек",
-      "brand": "Apple",
+      "brand": "Perfect Fit",
       "description": "Лучшие влажные корма для кошек — обзор качественных кошачьих консервов: виды и бренды",
       "category": "GoodsForPets",
-      "characteristics": "Все ддля вашего питомца"
+      "characteristics": "Все для вашего питомца"
     },
     {
       "image": [
@@ -1123,10 +1153,10 @@
       ],
       "price": 880,
       "name": "Корм для кошек",
-      "brand": "Apple",
+      "brand": "Royal Canin Kitten",
       "description": "Лучшие влажные корма для кошек — обзор качественных кошачьих консервов: виды и бренды",
       "category": "GoodsForPets",
-      "characteristics": "Все ддля вашего питомца"
+      "characteristics": "Все для вашего питомца"
     },
     {
       "image": [
@@ -1140,10 +1170,10 @@
       ],
       "price": 459,
       "name": "Корм для собак",
-      "brand": "Apple",
+      "brand": "Blitz",
       "description": "Корм сухой для кошек Курица, 650 г с бесплатной доставкой на дом из  «ВкусВилл» | Вологда Корм сухой для кошек Курица, 650 г с бесплатной доставкой на дом из «ВкусВилл» | Вологда",
       "category": "GoodsForPets",
-      "characteristics": "Все ддля вашего питомца"
+      "characteristics": "Все для вашего питомца"
     },
     {
       "image": [
@@ -1157,10 +1187,10 @@
       ],
       "price": 1578,
       "name": "Корм для кошек",
-      "brand": "Apple",
+      "brand": "Sheba Pleasure",
       "description": "Лучшие влажные корма для кошек — обзор качественных кошачьих консервов: виды и бренды",
       "category": "GoodsForPets",
-      "characteristics": "Все ддля вашего питомца",
+      "characteristics": "Все для вашего питомца",
       "sale": true
     },
     {
@@ -1175,10 +1205,10 @@
       ],
       "price": 2563,
       "name": "Корм для кошек",
-      "brand": "Apple",
+      "brand": "Gemon",
       "description": "Лучшие влажные корма для кошек — обзор качественных кошачьих консервов: виды и бренды",
       "category": "GoodsForPets",
-      "characteristics": "Все ддля вашего питомца"
+      "characteristics": "Все для вашего питомца"
     },
     {
       "image": [
@@ -1191,7 +1221,7 @@
       ],
       "price": 1234,
       "name": "Автотовары",
-      "brand": "Apple",
+      "brand": " Behr",
       "description": "Где выгоднее приобретать автотовары без ущерба для качества? | kaup24.ee",
       "category": "automotiveProducts",
       "characteristics": "Все для вашего автомобиля"
@@ -1208,7 +1238,7 @@
       ],
       "price": 950,
       "name": "Автотовары",
-      "brand": "Apple",
+      "brand": " Bilstein",
       "description": "Где выгоднее приобретать автотовары без ущерба для качества? | kaup24.ee",
       "category": "automotiveProducts",
       "characteristics": "Все для вашего автомобиля"
@@ -1226,7 +1256,7 @@
       ],
       "price": 16050,
       "name": "Диски",
-      "brand": "Apple",
+      "brand": "Contitech",
       "description": "Оптом автотовары, мототовары, запчасти купить от поставщиков и  производителей Оптом автотовары, мототовары, запчасти купить от поставщиков и производителей",
       "category": "automotiveProducts",
       "characteristics": "Все для вашего автомобиля",
@@ -1244,7 +1274,7 @@
       ],
       "price": 1750,
       "name": "Автотовары",
-      "brand": "Apple",
+      "brand": "Votex",
       "description": "Где выгоднее приобретать автотовары без ущерба для качества? | kaup24.ee",
       "category": "automotiveProducts",
       "characteristics": "Все для вашего автомобиля"
@@ -1261,7 +1291,7 @@
       ],
       "price": 910,
       "name": "Фары",
-      "brand": "Apple",
+      "brand": "Sachs",
       "description": "Передняя фара BMW - купить БМВ передние фары по выгодной цене | Украина",
       "category": "automotiveProducts",
       "characteristics": "Все для вашего автомобиля"
@@ -1277,7 +1307,7 @@
       ],
       "price": 4554,
       "name": "Автотовары",
-      "brand": "Apple",
+      "brand": "Bilstein",
       "description": "Где выгоднее приобретать автотовары без ущерба для качества? | kaup24.ee",
       "category": "automotiveProducts",
       "characteristics": "Все для вашего автомобиля"
@@ -1293,7 +1323,7 @@
       ],
       "price": 3010,
       "name": "Фары",
-      "brand": "Apple",
+      "brand": "SWF ZF",
       "description": "Передняя фара BMW - купить БМВ передние фары по выгодной цене | Украина",
       "category": "automotiveProducts",
       "characteristics": "Все для вашего автомобиля"
@@ -1309,7 +1339,7 @@
       ],
       "price": 1252,
       "name": "Автотовары",
-      "brand": "Apple",
+      "brand": "Contitech",
       "description": "Где выгоднее приобретать автотовары без ущерба для качества? | kaup24.ee",
       "category": "automotiveProducts",
       "characteristics": "Все для вашего автомобиля"
@@ -1325,7 +1355,7 @@
       ],
       "price": 3250,
       "name": "Бытовая химия",
-      "brand": "Apple",
+      "brand": "Procter & Gamble",
       "description": "Бытовая химия — купить оптом и в розницу в Москве в интернет-магазине  Сима-ленд Бытовая химия — купить оптом и в розницу в Москве в интернет-магазине Сима-ленд",
       "category": "householdChemicalsAndHygiene",
       "characteristics": "Все для чистоты вашего дома",
@@ -1341,7 +1371,7 @@
       ],
       "price": 450,
       "name": "Шампуни",
-      "brand": "Apple",
+      "brand": "Чистая линия",
       "description": "Купить шампунь GARNIER FRUCTIS SOS Восстановление секущихся кончиков волос 400мл, цены в Москве на Мегамаркет | Артикул:",
       "category": "householdChemicalsAndHygiene",
       "characteristics": "Все для ваших волос"
@@ -1356,7 +1386,7 @@
       ],
       "price": 760,
       "name": "Бытовая химия",
-      "brand": "Apple",
+      "brand": "Domestos",
       "description": "Бытовая химия — купить оптом и в розницу в Москве в интернет-магазине  Сима-ленд Бытовая химия — купить оптом и в розницу в Москве в интернет-магазине Сима-ленд",
       "category": "householdChemicalsAndHygiene",
       "characteristics": "Все для чистоты вашего дома",
@@ -1373,7 +1403,7 @@
       ],
       "price": 857,
       "name": "Бытовая химия",
-      "brand": "Apple",
+      "brand": "Domestos",
       "description": "Бытовая химия — купить оптом и в розницу в Москве в интернет-магазине  Сима-ленд Бытовая химия — купить оптом и в розницу в Москве в интернет-магазине Сима-ленд",
       "category": "householdChemicalsAndHygiene",
       "characteristics": "Все для чистоты вашего дома"
@@ -1389,7 +1419,7 @@
       ],
       "price": 7850,
       "name": "Бытовая химия",
-      "brand": "Apple",
+      "brand": "Cif",
       "description": "Бытовая химия — купить оптом и в розницу в Москве в интернет-магазине  Сима-ленд Бытовая химия — купить оптом и в розницу в Москве в интернет-магазине Сима-ленд",
       "category": "householdChemicalsAndHygiene",
       "characteristics": "Все для чистоты вашего дома"
@@ -1405,7 +1435,7 @@
       ],
       "price": 850,
       "name": "Шампуни",
-      "brand": "Apple",
+      "brand": "Чистая линия",
       "description": "Купить шампунь GARNIER FRUCTIS SOS Восстановление секущихся кончиков волос 400мл, цены в Москве на Мегамаркет | Артикул:",
       "category": "householdChemicalsAndHygiene",
       "characteristics": "Все для ваших волос"
@@ -1421,7 +1451,7 @@
       ],
       "price": 1350,
       "name": "Бытовая химия",
-      "brand": "Apple",
+      "brand": "Ariel",
       "description": "Бытовая химия — купить оптом и в розницу в Москве в интернет-магазине  Сима-ленд Бытовая химия — купить оптом и в розницу в Москве в интернет-магазине Сима-ленд",
       "category": "householdChemicalsAndHygiene",
       "characteristics": "Все для чистоты вашего дома"
@@ -1437,7 +1467,7 @@
       ],
       "price": 1859,
       "name": "Бытовая химия",
-      "brand": "Apple",
+      "brand": "Ariel",
       "description": "Бытовая химия — купить оптом и в розницу в Москве в интернет-магазине  Сима-ленд Бытовая химия — купить оптом и в розницу в Москве в интернет-магазине Сима-ленд",
       "category": "householdChemicalsAndHygiene",
       "characteristics": "Все для чистоты вашего дома"
@@ -1453,7 +1483,7 @@
       ],
       "price": 910,
       "name": "Бытовая химия",
-      "brand": "Apple",
+      "brand": "АО «НЭФИС КОСМЕТИКС»",
       "description": "Бытовая химия — купить оптом и в розницу в Москве в интернет-магазине  Сима-ленд Бытовая химия — купить оптом и в розницу в Москве в интернет-магазине Сима-ленд",
       "category": "householdChemicalsAndHygiene",
       "characteristics": "Все для чистоты вашего дома"
@@ -1468,7 +1498,7 @@
       ],
       "price": 850,
       "name": "Шампуни",
-      "brand": "Apple",
+      "brand": "Wella",
       "description": "Купить шампунь GARNIER FRUCTIS SOS Восстановление секущихся кончиков волос 400мл, цены в Москве на Мегамаркет | Артикул:",
       "category": "householdChemicalsAndHygiene",
       "characteristics": "Все для ваших волос"
@@ -1484,7 +1514,7 @@
       ],
       "price": 400,
       "name": "Бытовая химия",
-      "brand": "Apple",
+      "brand": "KAYPRO",
       "description": "Бытовая химия — купить оптом и в розницу в Москве в интернет-магазине  Сима-ленд Бытовая химия — купить оптом и в розницу в Москве в интернет-магазине Сима-ленд",
       "category": "householdChemicalsAndHygiene",
       "characteristics": "Все для чистоты вашего дома"
@@ -1500,7 +1530,7 @@
       ],
       "price": 850,
       "name": "Шампуни",
-      "brand": "Apple",
+      "brand": "Wella",
       "description": "Купить шампунь GARNIER FRUCTIS SOS Восстановление секущихся кончиков волос 400мл, цены в Москве на Мегамаркет | Артикул:",
       "category": "householdChemicalsAndHygiene",
       "characteristics": "Все для ваших волос"
@@ -1517,7 +1547,7 @@
       ],
       "price": 19500850,
       "name": "MINI Cooper",
-      "brand": "Apple",
+      "brand": "BMW",
       "description": "MINI Cooper: цены, комплектации, тест-драйвы, отзывы, форум, фото, видео —  ДРАЙВ MINI Cooper: цены, комплектации, тест-драйвы, отзывы, форум, фото, видео — ДРАЙВ Синергия двигателей и трансмиссий Двигатель 1,5 Turbo оснащен турбонаддувом, имеет максимальную мощность 147 л.с. и крутящий момент 210 Н•м в широком диапазоне 1750-4500 об/мин. Он работает в паре с надежной высокоэффективной коробкой передач, вошедшей в 2021 году в топ-10 лучших трансмиссий мира. Индивидуальный стиль и максимум удобства Изящный интерьер, соответствующий футуристичному облику автомобиля",
       "category": "cars",
       "characteristics": "Автомобиль"
@@ -1533,7 +1563,7 @@
       ],
       "price": 17500850,
       "name": "Автомобиль",
-      "brand": "Apple",
+      "brand": "Toyota",
       "description": "Синергия двигателей и трансмиссий Двигатель 1,5 Turbo оснащен турбонаддувом, имеет максимальную мощность 147 л.с. и крутящий момент 210 Н•м в широком диапазоне 1750-4500 об/мин. Он работает в паре с надежной высокоэффективной коробкой передач, вошедшей в 2021 году в топ-10 лучших трансмиссий мира. Индивидуальный стиль и максимум удобства Изящный интерьер, соответствующий футуристичному облику автомобиля",
       "category": "cars",
       "characteristics": "Автомобиль",
@@ -1552,7 +1582,7 @@
       ],
       "price": 18500000,
       "name": "MINI Cooper",
-      "brand": "Apple",
+      "brand": "BMW",
       "description": "MINI Cooper: цены, комплектации, тест-драйвы, отзывы, форум, фото, видео —  ДРАЙВ MINI Cooper: цены, комплектации, тест-драйвы, отзывы, форум, фото, видео — ДРАЙВ Синергия двигателей и трансмиссий Двигатель 1,5 Turbo оснащен турбонаддувом, имеет максимальную мощность 147 л.с. и крутящий момент 210 Н•м в широком диапазоне 1750-4500 об/мин. Он работает в паре с надежной высокоэффективной коробкой передач, вошедшей в 2021 году в топ-10 лучших трансмиссий мира. Индивидуальный стиль и максимум удобства Изящный интерьер, соответствующий футуристичному облику автомобиля",
       "category": "cars",
       "characteristics": "Автомобиль"
@@ -1568,7 +1598,7 @@
       ],
       "price": 17500850,
       "name": "Автомобиль",
-      "brand": "Apple",
+      "brand": "Peugeot",
       "description": "Синергия двигателей и трансмиссий Двигатель 1,5 Turbo оснащен турбонаддувом, имеет максимальную мощность 147 л.с. и крутящий момент 210 Н•м в широком диапазоне 1750-4500 об/мин. Он работает в паре с надежной высокоэффективной коробкой передач, вошедшей в 2021 году в топ-10 лучших трансмиссий мира. Индивидуальный стиль и максимум удобства Изящный интерьер, соответствующий футуристичному облику автомобиля",
       "category": "cars",
       "characteristics": "Автомобиль"
@@ -1587,7 +1617,7 @@
       ],
       "price": 17900700,
       "name": "MINI Cooper",
-      "brand": "Apple",
+      "brand": "BMW",
       "description": "MINI Cooper: цены, комплектации, тест-драйвы, отзывы, форум, фото, видео —  ДРАЙВ MINI Cooper: цены, комплектации, тест-драйвы, отзывы, форум, фото, видео — ДРАЙВ Синергия двигателей и трансмиссий Двигатель 1,5 Turbo оснащен турбонаддувом, имеет максимальную мощность 147 л.с. и крутящий момент 210 Н•м в широком диапазоне 1750-4500 об/мин. Он работает в паре с надежной высокоэффективной коробкой передач, вошедшей в 2021 году в топ-10 лучших трансмиссий мира. Индивидуальный стиль и максимум удобства Изящный интерьер, соответствующий футуристичному облику автомобиля",
       "category": "cars",
       "characteristics": "Автомобиль"
@@ -1603,7 +1633,7 @@
       ],
       "price": 200700,
       "name": "Furniture",
-      "brand": "Apple",
+      "brand": "Vitra",
       "description": "Гостиная, купить мебель для гостиной в Киеве по лучшей цене | Магазин мебели Restof",
       "category": "furniture",
       "characteristics": "Мебель"
@@ -1619,7 +1649,7 @@
       ],
       "price": 190700,
       "name": "Furniture",
-      "brand": "Apple",
+      "brand": "Antonio Baston",
       "description": "Гостиная, купить мебель для гостиной в Киеве по лучшей цене | Магазин мебели Restof",
       "category": "furniture",
       "characteristics": "Мебель"
@@ -1635,7 +1665,7 @@
       ],
       "price": 45000,
       "name": "Furniture",
-      "brand": "Apple",
+      "brand": "Vitra",
       "description": "Гостиная, купить мебель для гостиной в Киеве по лучшей цене | Магазин мебели Restof",
       "category": "furniture",
       "characteristics": "Мебель",
@@ -1652,7 +1682,7 @@
       ],
       "price": 450980,
       "name": "Furniture",
-      "brand": "Apple",
+      "brand": "Minotti",
       "description": "Гостиная, купить мебель для гостиной в Киеве по лучшей цене | Магазин мебели Restof",
       "category": "furniture",
       "characteristics": "Мебель"
@@ -1668,7 +1698,7 @@
       ],
       "price": 595070,
       "name": "Furniture",
-      "brand": "Apple",
+      "brand": "Antonio Baston",
       "description": "Гостиная, купить мебель для гостиной в Киеве по лучшей цене | Магазин мебели Restof",
       "category": "furniture",
       "characteristics": "Мебель"
@@ -1685,7 +1715,7 @@
       ],
       "price": 680090,
       "name": "Furniture",
-      "brand": "Apple",
+      "brand": "Vitra",
       "description": "Гостиная, купить мебель для гостиной в Киеве по лучшей цене | Магазин мебели Restof",
       "category": "furniture",
       "characteristics": "Мебель"
@@ -1701,7 +1731,7 @@
       ],
       "price": 300330,
       "name": "Furniture",
-      "brand": "Apple",
+      "brand": "SITS",
       "description": "Гостиная, купить мебель для гостиной в Киеве по лучшей цене | Магазин мебели Restof",
       "category": "furniture",
       "characteristics": "Мебель"
@@ -1717,7 +1747,7 @@
       ],
       "price": 68040,
       "name": "Furniture",
-      "brand": "Apple",
+      "brand": "Minotti",
       "description": "Гостиная, купить мебель для гостиной в Киеве по лучшей цене | Магазин мебели Restof",
       "category": "furniture",
       "characteristics": "Мебель",
