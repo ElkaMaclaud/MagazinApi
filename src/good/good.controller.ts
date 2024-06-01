@@ -6,7 +6,7 @@ import { GoodService } from "./good.service";
 export class GoodController {
   constructor(private readonly goodService: GoodService) {}
 
-  @Get("getGoodsByCategory")
+  @Get("goodsByCategory")
   async getGoodsByCategory(@Body() dto: Pick<GoodDto, "category">) {
     return this.goodService.getGoodsByCategory(dto);
   }
