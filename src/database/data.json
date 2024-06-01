@@ -15,7 +15,10 @@
       "brand": "Apple",
       "description": "Xiaomi Смартфон Xiaomi Redmi Note 12S 8/256 ГБ, синий Тип: Смартфон Диагональ экрана, дюймы: 6.43 Емкость аккумулятора, мАч: 5000 Процессор: Helio G96 (8 ядер), 2.05 ГГц Основной материал корпуса: Пластик, Стекло",
       "category": "electronika",
-      "characteristics": "blablabla"
+      "characteristics": {
+        "name": "Корпус",
+        "value": "Ударопрочный"
+      }
     },
     {
       "image": [
@@ -32,7 +35,10 @@
       "brand": "Apple",
       "description": "Xiaomi Смартфон Xiaomi Redmi Note 12S 8/256 ГБ, синий Тип: Смартфон Диагональ экрана, дюймы: 6.43 Емкость аккумулятора, мАч: 5000 Процессор: Helio G96 (8 ядер), 2.05 ГГц Основной материал корпуса: Пластик, Стекло",
       "category": "electronika",
-      "characteristics": "blablabla",
+      "characteristics": {
+        "name": "Корпус",
+        "value": "Ударопрочный"
+      },
       "sale": true,
       "discount": true
     },
@@ -49,7 +55,10 @@
       "brand": "Apple",
       "description": "Xiaomi Смартфон Xiaomi Redmi Note 12S 8/256 ГБ, синий Тип: Смартфон Диагональ экрана, дюймы: 6.43 Емкость аккумулятора, мАч: 5000 Процессор: Helio G96 (8 ядер), 2.05 ГГц Основной материал корпуса: Пластик, Стекло",
       "category": "electronika",
-      "characteristics": "blablabla",
+      "characteristics": {
+        "name": "Цвет",
+        "value": "Розовый металлик"
+      },
       "discount": true
     },
     {
@@ -65,7 +74,10 @@
       "brand": "Apple",
       "description": "Xiaomi Смартфон Xiaomi Redmi Note 12S 8/256 ГБ, синий Тип: Смартфон Диагональ экрана, дюймы: 6.43 Емкость аккумулятора, мАч: 5000 Процессор: Helio G96 (8 ядер), 2.05 ГГц Основной материал корпуса: Пластик, Стекло",
       "category": "electronika",
-      "characteristics": "blablabla"
+      "characteristics": {
+        "name": "Цвет",
+        "value": "Зеленый металлик"
+      }
     },
 
     {
@@ -82,7 +94,10 @@
       "brand": "Apple",
       "description": "Xiaomi Смартфон Xiaomi Redmi Note 12S 8/256 ГБ, синий Тип: Смартфон Диагональ экрана, дюймы: 6.43 Емкость аккумулятора, мАч: 5000 Процессор: Helio G96 (8 ядер), 2.05 ГГц Основной материал корпуса: Пластик, Стекло",
       "category": "electronika",
-      "characteristics": "blablabla"
+      "characteristics": {
+        "name": "Корпус",
+        "value": "Ударопрочный"
+      }
     },
     {
       "image": [
@@ -98,7 +113,10 @@
       "brand": "Apple",
       "description": "Xiaomi Смартфон Xiaomi Redmi Note 12S 8/256 ГБ, синий Тип: Смартфон Диагональ экрана, дюймы: 6.43 Емкость аккумулятора, мАч: 5000 Процессор: Helio G96 (8 ядер), 2.05 ГГц Основной материал корпуса: Пластик, Стекло",
       "category": "electronika",
-      "characteristics": "blablabla"
+      "characteristics": {
+        "name": "Цвет",
+        "value": "Розовый металлик"
+      }
     },
     {
       "image": [
@@ -115,7 +133,10 @@
       "brand": "Apple",
       "description": "Xiaomi Смартфон Xiaomi Redmi Note 12S 8/256 ГБ, синий Тип: Смартфон Диагональ экрана, дюймы: 6.43 Емкость аккумулятора, мАч: 5000 Процессор: Helio G96 (8 ядер), 2.05 ГГц Основной материал корпуса: Пластик, Стекло",
       "category": "electronika",
-      "characteristics": "blablabla"
+      "characteristics": {
+        "name": "Корпус",
+        "value": "Ударопрочный"
+      }
     },
 
     {
@@ -132,7 +153,10 @@
       "brand": "Apple",
       "description": "Xiaomi Смартфон Xiaomi Redmi Note 12S 8/256 ГБ, синий Тип: Смартфон Диагональ экрана, дюймы: 6.43 Емкость аккумулятора, мАч: 5000 Процессор: Helio G96 (8 ядер), 2.05 ГГц Основной материал корпуса: Пластик, Стекло",
       "category": "electronika",
-      "characteristics": "blablabla"
+      "characteristics": {
+        "name": "Корпус",
+        "value": "Ударопрочный"
+      }
     },
     {
       "image": [
@@ -148,7 +172,10 @@
       "brand": "Apple",
       "description": "Xiaomi Смартфон Xiaomi Redmi Note 12S 8/256 ГБ, синий Тип: Смартфон Диагональ экрана, дюймы: 6.43 Емкость аккумулятора, мАч: 5000 Процессор: Helio G96 (8 ядер), 2.05 ГГц Основной материал корпуса: Пластик, Стекло",
       "category": "electronika",
-      "characteristics": "blablabla",
+        "characteristics": {
+        "name": "Корпус",
+        "value": "Ударопрочный"
+      },
       "sale": true
     },
     {
@@ -164,7 +191,10 @@
       "brand": "Apple",
       "description": "Женская одежда в официальном интернет-магазине одежды TOM TAILOR с доставкой по России",
       "category": "cloth",
-      "characteristics": "blablabla",
+      "characteristics": {
+        "name": "Материал",
+        "value": "Шерсть"
+      },
       "sale": true
     },
     {
@@ -181,7 +211,10 @@
       "brand": "Apple",
       "description": "Женская одежда в официальном интернет-магазине одежды TOM TAILOR с доставкой по России",
       "category": "cloth",
-      "characteristics": "blablabla"
+      "characteristics": {
+        "name": "Ткань",
+        "value": "Кашемир"
+      }
     },
     {
       "image": [
@@ -196,7 +229,10 @@
       "brand": "Apple",
       "description": "Женская одежда в официальном интернет-магазине одежды TOM TAILOR с доставкой по России",
       "category": "cloth",
-      "characteristics": "blablabla"
+      "characteristics": {
+        "name": "Материал",
+        "value": "Шерсть"
+      }
     },
     {
       "image": [

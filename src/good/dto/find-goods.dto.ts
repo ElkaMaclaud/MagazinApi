@@ -6,7 +6,12 @@ export interface GoodDto {
   brand: string;
   description: string;
   category: string;
-  characteristics: string;
+  characteristics:
+    | {
+        name: string;
+        value: string;
+      }
+    | string;
   sale?: boolean;
   discount?: boolean;
 }
