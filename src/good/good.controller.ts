@@ -11,7 +11,7 @@ export class GoodController {
     return this.goodService.getGoodsByCategory(dto);
   }
 
-  // Этот метод нужен будет для получения товаров для конкретного юзера по пераденным id
+  // Этот метод нужен будет для получения определенных товаров (н-р по распродаже и т.д.)
   @Get("goodsbyUser")
   async goodsbyUser(@Body() dto: GoodIdsDto) {
     return this.goodService.getGoodsByUser(dto);

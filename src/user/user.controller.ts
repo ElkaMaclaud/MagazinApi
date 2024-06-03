@@ -8,14 +8,10 @@ import {
 import { IUserGood } from "./user.model";
 import { UserService } from "./user.service";
 import { UserDto } from "./dto/user.dto";
-import { GoodIdsDto } from "src/good/dto/find-goods.dto";
-import { GoodService } from "src/good/good.service";
-
 @Controller("user")
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly goodService: GoodService,
   ) {}
 
   @Post("basket")
@@ -24,18 +20,18 @@ export class UserController {
   }
 
   @Get("basket")
-  async getBasket(@Body() dto: GoodIdsDto) {
-    return this.goodService.getGoodsByUser(dto);
+  async getBasket(id: string) {
+    return this.userService.getBasket(id)
   }
 
   @Get("favorites")
-  async getFavorites(@Body() dto: GoodIdsDto) {
-    return this.goodService.getGoodsByUser(dto);
+  async getFavorites(id: string) {
+    return this.userService.getFavorites(id)
   }
 
   @Get("orders")
-  async getOrders(@Body() dto: GoodIdsDto) {
-    return this.goodService.getGoodsByUser(dto);
+  async getOrders(id: string) {
+    return this.userService.getOrders(id)
   }
 
   @Get("userData")

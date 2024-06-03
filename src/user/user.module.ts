@@ -3,7 +3,6 @@ import { UserController } from "./user.controller";
 import { TypegooseModule } from "nestjs-typegoose";
 import { UserModel } from "./user.model";
 import { UserService } from './user.service';
-import { GoodModule } from "src/good/good.module";
 
 @Module({
   controllers: [UserController],
@@ -16,7 +15,6 @@ import { GoodModule } from "src/good/good.module";
         },
       },
     ]),
-    GoodModule,
   ],
   providers: [UserService],
 })

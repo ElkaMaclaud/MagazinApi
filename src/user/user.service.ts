@@ -14,6 +14,18 @@ export class UserService {
     this.userModel.create(dto);
   }
 
+  // Будут сложные агрегации, чтобы достать данные из моодели Good и User
+  async getBasket(id: string) {
+    this.userModel.findOne({ id }, { basket: 1 });
+  }
+  async getFavorites(id: string) {
+    this.userModel.findOne({ id }, { favorite: 1 });
+  }
+
+  async getOrders(id: string) {
+    this.userModel.findOne({ id }, { order: 1 });
+  }
+
   async getUserData(id: string) {
     this.userModel.findOne({ id }, { publik: 1, private: 1, delivery: 1 });
   }
