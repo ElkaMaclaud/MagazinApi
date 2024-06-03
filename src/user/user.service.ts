@@ -11,18 +11,7 @@ export class UserService {
   ) {}
 
   async create(dto: UserDto) {
-    this.userModel.create(dto)
-  }
-
-  async getBasket(id: string) {
-    this.userModel.findOne({ id }, { basket: 1 });
-  }
-  async getFavorites(id: string) {
-    this.userModel.findOne({ id }, { favorite: 1 });
-  }
-
-  async getOrders(id: string) {
-    this.userModel.findOne({ id }, { order: 1 });
+    this.userModel.create(dto);
   }
 
   async getUserData(id: string) {
@@ -42,7 +31,7 @@ export class UserService {
     );
 
     return updatedUser;
-  } 
+  }
   async addBasket(dto: IUserGood, id: string) {
     const updatedUser = await this.userModel.findOneAndUpdate(
       { _id: id },
@@ -61,7 +50,7 @@ export class UserService {
 
     return updatedUser;
   }
- 
+
   async addOrder(dto: IUserGood, id: string) {
     const updatedUser = await this.userModel.findOneAndUpdate(
       { _id: id },
