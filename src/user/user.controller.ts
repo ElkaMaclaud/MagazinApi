@@ -11,7 +11,9 @@ import { UserDto } from "./dto/user.dto";
 
 @Controller("user")
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+  ) {}
 
   @Post("basket")
   async createUser(dto: UserDto) {
@@ -19,8 +21,8 @@ export class UserController {
   }
 
   @Get("basket")
-  async getBasket(id: string) {
-    return this.userService.getBasket(id);
+  async getBasket() {
+    // return this.goodService.getGoodsByUser();
   }
 
   @Get("favorites")

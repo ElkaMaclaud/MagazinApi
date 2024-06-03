@@ -1,3 +1,5 @@
+import { prop } from "@typegoose/typegoose";
+
 export interface GoodDto {
   image: string[];
   price: number;
@@ -15,3 +17,10 @@ export interface GoodDto {
   sale?: boolean;
   discount?: boolean;
 }
+
+export class GoodIdsDto {
+  @prop() 
+  ids: string[];
+}
+
+

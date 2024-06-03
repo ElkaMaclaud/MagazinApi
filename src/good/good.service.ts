@@ -1,8 +1,9 @@
-// Сервис для получения товаров из монгодб 
+// Сервис для получения товаров из монгодб
 import { Injectable } from "@nestjs/common";
 import { GoodModel } from "./good.model";
 import { DocumentType, ModelType } from "@typegoose/typegoose/lib/types";
 import { InjectModel } from "nestjs-typegoose";
+import { GoodIdsDto } from "./dto/find-goods.dto";
 // import { GoodDto } from "./dto/find-goods.dto";
 // import * as path from "path";
 // import * as fs from "fs";
@@ -18,18 +19,17 @@ export class GoodService {
   }): Promise<DocumentType<GoodModel>[] | void> {
     return this.goodModel.find({ category: { $in: dto.category } }).exec();
   }
+  
+  // Нужен для получения товаров для конкретного пользователя
+  async getGoodsByUser(dto: GoodIdsDto): Promise<DocumentType<GoodModel>[] | void> {
+    return this.goodModel.find({_id: {$in: dto.ids}}).exec();
+  }
 
   async getGoodById(id: string): Promise<GoodModel | void> {
     return this.goodModel.findById(id).exec();
   }
 
-  // Данный метод требует доработки
-  // Нужен будет в дальнейшем для получения товаров лоя конкретного пользователя
-  async getGoodsByIds(
-    ids: string[],
-  ): Promise<DocumentType<GoodModel>[] | void> {
-    return this.goodModel.find({ _id: { $in: ids } }).exec();
-  }
+
 
   // Функция для занесения данных в бд (одноразовая)
   // Функцию для создания и внесения товаров в бд нужно будет реализовать для продавцов в будущем возможно..., но такой цели пока нет
