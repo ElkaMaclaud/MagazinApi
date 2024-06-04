@@ -134,10 +134,19 @@ export class UserService {
 
     return updatedUser;
   }
-  async addBasket(dto: IUserGood) {
-    const updatedUser = await this.userModel.updateOne({
-      $push: { basket: dto },
-    });
+  async addBasket(email: string, dto: UserDto) {
+    console.log("////////////////", email)
+    const updatedUser = await this.userModel.updateOne(
+      { "private.email": email 
+        
+      },
+      {
+        $inc: { "basket.count": 1 },
+        $setOnInsert: { "basket.count": 1 },
+        $push: { basket: dto },
+      },
+      { upsert: true },
+    );
 
     return updatedUser;
   }

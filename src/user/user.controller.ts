@@ -1,12 +1,52 @@
-import { BadRequestException, Body, Controller, Get, HttpCode, Patch, Post } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Headers,
+  HttpCode,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from "@nestjs/common";
 import { IUserGood } from "./user.model";
 import { UserService } from "./user.service";
 import { UserDto } from "./dto/user.dto";
 import { AuthDto } from "./dto/auth.dto";
-import { ALREADY_REGISTERED_ERROR } from "./user.constant";
+import { ACCES_TOKEN_VERIFY_ERROR, ALREADY_REGISTERED_ERROR } from "./user.constant";
+import { JwtService } from "@nestjs/jwt";
+import { ConfigService } from "@nestjs/config";
+import { JwtAuthGuard } from "./guards/jwt.guard";
+
+
 @Controller("user")
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {}
+
+  async authMiddleware(req: Request) {
+    const accessToken = req.headers["authorization"].split(" ")[1];
+    if (accessToken) {
+      try {
+        const decodedToken = this.jwtService.verify(
+          accessToken,
+          this.configService.get("JWT_SECRET"),
+        );
+        const userEmail = decodedToken.email;
+        console.log("User Email:", userEmail);
+        return userEmail;
+      } catch (error) {
+        console.error(ACCES_TOKEN_VERIFY_ERROR, error);
+      }
+    } else {
+      console.error("Отсутствует токен доступа");
+    }
+  }
+
   @Post("auth/register")
   async register(@Body() dto: AuthDto) {
     const user = await this.userService.findUser(dto.email);
@@ -23,11 +63,7 @@ export class UserController {
     return this.userService.login(email);
   }
 
-  @Post("basket")
-  async createUser(dto: UserDto) {
-    return this.userService.create(dto);
-  }
-
+  @UseGuards(JwtAuthGuard)
   @Get("basket")
   async getBasket() {
     return this.userService.getBasket();
@@ -55,9 +91,9 @@ export class UserController {
   }
 
   @Patch("addBasket")
-  async addBasket(@Body() dto: IUserGood) {
-    const result = this.userService.addBasket(dto);
-    return result;
+  async addBasket(@Req() req, @Body() dto: UserDto) {
+    const email = await this.authMiddleware(req);
+    return this.userService.addBasket(email, dto);
   }
 
   @Patch("addFavorites")
