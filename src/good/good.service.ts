@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { GoodModel } from "./good.model";
 import { DocumentType, ModelType } from "@typegoose/typegoose/lib/types";
 import { InjectModel } from "nestjs-typegoose";
-import { GoodIdsDto } from "./dto/find-goods.dto";
+import { GoodDiscount, GoodIdsDto } from "./dto/find-goods.dto";
 // import { GoodDto } from "./dto/find-goods.dto";
 // import * as path from "path";
 // import * as fs from "fs";
@@ -19,17 +19,22 @@ export class GoodService {
   }): Promise<DocumentType<GoodModel>[] | void> {
     return this.goodModel.find({ category: { $in: dto.category } }).exec();
   }
-  
-  // Нужен для получения товаров для конкретного пользователя
-  async getGoodsByUser(dto: GoodIdsDto): Promise<DocumentType<GoodModel>[] | void> {
-    return this.goodModel.find({_id: {$in: dto.ids}}).exec();
+
+  async getGoodsByIds(
+    dto: GoodIdsDto,
+  ): Promise<DocumentType<GoodModel>[] | void> {
+    return this.goodModel.find({ _id: { $in: dto.ids } }).exec();
+  }
+
+  async getGoodsByDiscountСlassification(
+    dto: GoodDiscount,
+  ): Promise<DocumentType<GoodModel>[] | void> {
+    return this.goodModel.find({ [dto.field]: { $exists: true } }).exec();
   }
 
   async getGoodById(id: string): Promise<GoodModel | void> {
     return this.goodModel.findById(id).exec();
   }
-
-
 
   // Функция для занесения данных в бд (одноразовая)
   // Функцию для создания и внесения товаров в бд нужно будет реализовать для продавцов в будущем возможно..., но такой цели пока нет
