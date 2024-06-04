@@ -8,7 +8,7 @@ export class UserDto {
 }
 
 export interface IUserGood {
-  productId: string;
+  goodId: string;
   count: number;
   favorite?: boolean;
   choice?: boolean;
@@ -30,3 +30,4 @@ export interface IDelivery {
   pickUpPoin: string;
   choice: "address" | "pickUpPoin";
 }
+

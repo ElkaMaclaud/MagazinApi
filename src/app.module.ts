@@ -1,11 +1,10 @@
 import { Module } from "@nestjs/common";
-import { AuthModule } from "./auth/auth.module";
 import { GoodModule } from "./good/good.module";
 import { ReviewModule } from "./review/review.module";
-import { UserModule } from "./user/user.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypegooseModule } from "nestjs-typegoose";
 import { getMongoConfig } from "./configs/mongo.config";
+import { UserModule } from "./user/user.module";
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -14,7 +13,6 @@ import { getMongoConfig } from "./configs/mongo.config";
       inject: [ConfigService],
       useFactory: getMongoConfig,
     }),
-    AuthModule,
     GoodModule,
     ReviewModule,
     UserModule,

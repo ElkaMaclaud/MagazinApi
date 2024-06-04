@@ -1,10 +1,8 @@
 import { prop } from "@typegoose/typegoose";
 import { Base, TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
-
-
 export class IUserGood {
   @prop()
-  productId: string;
+  goodId: string;
 
   @prop()
   count: number;
@@ -38,6 +36,9 @@ export class IInfoPrivate extends IInfoPublik {
 
   @prop()
   gender?: "Ж" | "М";
+
+  @prop()
+  passwordHash: string;
 }
 export class IDelivery {
   @prop()
@@ -70,5 +71,7 @@ export class UserModel extends TimeStamps {
   @prop({ type: () => IDelivery })
   delivery: IDelivery;
 }
+
+
 
 

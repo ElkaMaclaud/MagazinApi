@@ -11,7 +11,7 @@ export class AuthDto {
   phone?: number;
 
   @prop()
-  dataofBirt?: Date;
+  dataofBirth?: Date;
 
   @prop()
   password: string;
