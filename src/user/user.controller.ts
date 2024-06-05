@@ -91,22 +91,22 @@ export class UserController {
     return result;
   }
 
-  @Patch("addBasket")
-  async addBasket(@Req() req, @Body() dto: IUserGood) {
+  @Patch("addBasket/:id")
+  async addBasket(@Req() req, @Param("id") id: string) {
     const email = await this.authMiddleware(req);
-    return this.userService.addBasket(email, dto);
+    return this.userService.addBasket(email, id);
   }
 
-  @Patch("addFavorites")
-  async addFavorites(@Req() req, @Body() dto: IUserGood) {
+  @Patch("addFavorites/:id")
+  async addFavorites(@Req() req, @Param("id") id: string) {
     const email = await this.authMiddleware(req);
-    return this.userService.addFavorites(email, dto);
+    return this.userService.addFavorites(email, id);
   }
 
-  @Patch("buy")
-  async addOrder(@Req() req, @Body() dto: IUserGood) {
+  @Patch("buy/:id")
+  async addOrder(@Req() req, @Param("id") id: string) {
     const email = await this.authMiddleware(req);
-    return this.userService.addOrder(email, dto);
+    return this.userService.addOrder(email, id);
   }
 
   // @Patch("buy")

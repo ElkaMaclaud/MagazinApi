@@ -141,25 +141,20 @@ export class UserService {
   // Данный метод как и метод получения определенных полей плох тем, что делает 2 запроса к бд
   // Сначала делает запрос на получение и только, исходя из результата делает второй запрос на обновление
   // ОБЯЗАТЕЛЬНО ИСПРАВИТЬ ЭТО БЕЗОБРАЗИЕ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  async addGood(email: string, dto: IUserGood, field: string) {
-    if (field !== "basket") {
-      const updateObject = { $push: { [field]: { ...dto } } };
-      if (field === "favorite") {
-        updateObject.$push[field].favorite = true;
-      }
-      return await this.userModel.updateOne(
-        { "private.email": email },
-        updateObject,
-      );
-    }
+  async addGood(email: string, id: string, field: string) {
     const query = { "private.email": email };
-    query[`${field}.goodId`] = dto.goodId;
+    query[`${field}.goodId`] = id;
     const existingItem = await this.userModel.findOne(query);
     if (existingItem) {
+      field === "favorite" && this.deleteGood(email, id, field)
       const updateField = `${field}.goodId`;
       return await this.userModel.updateOne(
-        { "private.email": email, [updateField]: dto.goodId },
-        { $inc: { [`${field}.$.count`]: 1 } },
+        { "private.email": email, [updateField]: id },
+        {
+          $inc: {
+            [`${field}.$.count`]: 1,
+          },
+        },
       );
     } else {
       return await this.userModel.updateOne(
@@ -169,8 +164,10 @@ export class UserService {
             [field]: {
               $each: [
                 {
-                  goodId: dto.goodId,
+                  goodId: id,
                   count: 1,
+                  favorite:
+                    field === "favorite" ? true : existingItem.favorite,
                 },
               ],
               $position: 0,
@@ -182,12 +179,12 @@ export class UserService {
     }
   }
   // Снова костыль - избавиться  в будущем
-  async  subGood(email: string, id: string, field: string) {
+  async subGood(email: string, id: string, field: string) {
     const query = { "private.email": email, [`${field}.goodId`]: id };
     const existingItem = await this.userModel.findOne(query);
 
     if (existingItem) {
-      if (existingItem[field].find(i=>i.goodId===id).count > 1) {
+      if (existingItem[field].find((i) => i.goodId === id).count > 1) {
         return await this.userModel.updateOne(
           { "private.email": email, [`${field}.goodId`]: id },
           { $inc: { [`${field}.$.count`]: -1 } },
@@ -206,25 +203,28 @@ export class UserService {
       { "private.email": email },
       { $pull: { [field]: { goodId: id } } },
     );
-  };
+  }
 
-  async addBasket(email: string, dto: IUserGood) {
-    return this.addGood(email, dto, "basket");
+  async addBasket(email: string, id: string) {
+    return this.addGood(email, id, "basket");
   }
-  async addFavorites(email: string, dto: IUserGood) {
-    return this.addGood(email, dto, "favorite");
+  async addFavorites(email: string, id: string) {
+    return this.addGood(email, id, "favorite");
   }
-  async addOrder(email: string, dto: IUserGood) {
-    return this.addGood(email, dto, "order");
+  async addOrder(email: string, id: string) {
+    return await this.userModel.updateOne(
+      { "private.email": email },
+      { $push: { order: { goodId: id } } },
+    );
   }
   async subBasket(email: string, id: string) {
     return this.subGood(email, id, "basket");
   }
   async deleteBasket(email: string, id: string) {
-   return this.deleteGood(email, id, "basket");
+    return this.deleteGood(email, id, "basket");
   }
   async deleteFavorites(email: string, id: string) {
-   return this.deleteGood(email, id, "favorite");
+    return this.deleteGood(email, id, "favorite");
   }
 }
 
