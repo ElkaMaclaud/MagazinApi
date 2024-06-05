@@ -146,7 +146,7 @@ export class UserService {
     query[`${field}.goodId`] = id;
     const existingItem = await this.userModel.findOne(query);
     if (existingItem) {
-      field === "favorite" && this.deleteGood(email, id, field)
+      field === "favorite" && this.deleteGood(email, id, field);
       const updateField = `${field}.goodId`;
       return await this.userModel.updateOne(
         { "private.email": email, [updateField]: id },
@@ -166,8 +166,7 @@ export class UserService {
                 {
                   goodId: id,
                   count: 1,
-                  favorite:
-                    field === "favorite" ? true : existingItem.favorite,
+                  favorite: field === "favorite" ? true : existingItem.favorite,
                 },
               ],
               $position: 0,
@@ -208,7 +207,7 @@ export class UserService {
   async addBasket(email: string, id: string) {
     return this.addGood(email, id, "basket");
   }
-  async addFavorites(email: string, id: string) {
+  async toggleFavorites(email: string, id: string) {
     return this.addGood(email, id, "favorite");
   }
   async addOrder(email: string, id: string) {
@@ -222,9 +221,6 @@ export class UserService {
   }
   async deleteBasket(email: string, id: string) {
     return this.deleteGood(email, id, "basket");
-  }
-  async deleteFavorites(email: string, id: string) {
-    return this.deleteGood(email, id, "favorite");
   }
 }
 

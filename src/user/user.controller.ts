@@ -97,10 +97,10 @@ export class UserController {
     return this.userService.addBasket(email, id);
   }
 
-  @Patch("addFavorites/:id")
+  @Patch("toggleFavorites/:id")
   async addFavorites(@Req() req, @Param("id") id: string) {
     const email = await this.authMiddleware(req);
-    return this.userService.addFavorites(email, id);
+    return this.userService.toggleFavorites(email, id);
   }
 
   @Patch("buy/:id")
@@ -125,10 +125,4 @@ export class UserController {
     return result;
   }
 
-  @Patch("deleteFavorites/:id")
-  async deleteFavorites(@Req() req, @Param("id") id: string) {
-    const email = await this.authMiddleware(req);
-    const result = this.userService.deleteFavorites(email, id);
-    return result;
-  }
 }
