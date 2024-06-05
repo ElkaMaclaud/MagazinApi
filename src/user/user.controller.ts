@@ -8,7 +8,6 @@ import {
   Patch,
   Post,
   Req,
-  UseGuards,
 } from "@nestjs/common";
 import { IUserGood } from "./user.model";
 import { UserService } from "./user.service";
@@ -37,13 +36,12 @@ export class UserController {
           this.configService.get("JWT_SECRET"),
         );
         const userEmail = decodedToken.email;
-        console.log("User Email:", userEmail);
         return userEmail;
       } catch (error) {
-        console.error(ACCES_TOKEN_VERIFY_ERROR, error);
+        throw new BadRequestException(ACCES_TOKEN_VERIFY_ERROR, error);
       }
     } else {
-      console.error("Отсутствует токен доступа");
+      throw new BadRequestException("Отсутствует токен доступа");
     }
   }
 
@@ -63,20 +61,23 @@ export class UserController {
     return this.userService.login(email);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get("basket")
-  async getBasket() {
-    return this.userService.getBasket();
+  async getBasket(@Req() req) {
+    const email = await this.authMiddleware(req);
+    return this.userService.getBasket(email);
   }
 
   @Get("favorites")
-  async getFavorites(id: string) {
-    return this.userService.getFavorites(id);
+  async getFavorites(@Req() req) {
+    const email = await this.authMiddleware(req);
+    return this.userService.getFavorites(email);
   }
 
   @Get("orders")
-  async getOrders(id: string) {
-    return this.userService.getOrders(id);
+  async getOrders(@Req() req) {
+    const email = await this.authMiddleware(req);
+    return this.userService.getOrders(email);
   }
 
   @Get("userData")
@@ -91,21 +92,21 @@ export class UserController {
   }
 
   @Patch("addBasket")
-  async addBasket(@Req() req, @Body() dto: UserDto) {
+  async addBasket(@Req() req, @Body() dto: IUserGood) {
     const email = await this.authMiddleware(req);
     return this.userService.addBasket(email, dto);
   }
 
   @Patch("addFavorites")
-  async addFavorites(@Body() dto: IUserGood, id: string) {
-    const result = await this.userService.addFavorites(dto, id);
-    return result;
+  async addFavorites(@Req() req, @Body() dto: IUserGood) {
+    const email = await this.authMiddleware(req);
+    return this.userService.addFavorites(email, dto);
   }
 
   @Patch("buy")
-  async addOrder(@Body() dto: IUserGood, id: string) {
-    const result = this.userService.addOrder(dto, id);
-    return result;
+  async addOrder(@Req() req, @Body() dto: IUserGood) {
+    const email = await this.authMiddleware(req);
+    return this.userService.addOrder(email, dto);
   }
 
   // @Patch("buy")
