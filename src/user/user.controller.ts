@@ -3,8 +3,8 @@ import {
   Body,
   Controller,
   Get,
-  Headers,
   HttpCode,
+  Param,
   Patch,
   Post,
   Req,
@@ -112,15 +112,23 @@ export class UserController {
   // @Patch("buy")
   // async buy(@Body() dto: IUserGood) {}
 
-  @Patch("deleteBasket")
-  async deleteBasket(id: string, goodId: string) {
-    const result = this.userService.deleteBasket(id, goodId);
+  @Patch("subBasket/:id")
+  async subBasket(@Req() req, @Param("id") id: string) {
+    const email = await this.authMiddleware(req);
+    return this.userService.subBasket(email, id);
+  }
+
+  @Patch("deleteBasket/:id")
+  async deleteBasket(@Req() req, @Param("id") id: string) {
+    const email = await this.authMiddleware(req);
+    const result = this.userService.deleteBasket(email, id);
     return result;
   }
 
-  @Patch("deleteFavorites")
-  async deleteFavorites(id: string, goodId: string) {
-    const result = this.userService.deleteFavorites(id, goodId);
+  @Patch("deleteFavorites/:id")
+  async deleteFavorites(@Req() req, @Param("id") id: string) {
+    const email = await this.authMiddleware(req);
+    const result = this.userService.deleteFavorites(email, id);
     return result;
   }
 }
