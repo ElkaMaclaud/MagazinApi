@@ -32,7 +32,7 @@ export class UserService {
         email: dto.email,
         passwordHash: await hash(dto.password, salt),
       },
-      favorite: [],
+      favorites: [],
       basket: [],
       order: [],
       delivery: {
@@ -111,7 +111,7 @@ export class UserService {
   }
 
   async getFavorites(email: string) {
-    return this.getData(email, "favorite");
+    return this.getData(email, "favorites");
   }
 
   async getOrders(email: string) {
@@ -137,64 +137,71 @@ export class UserService {
     return updatedUser;
   }
 
-  // Костыльная реализация - необходимо исправить в будущем на сложную агрегацию
-  // Данный метод как и метод получения определенных полей плох тем, что делает 2 запроса к бд
-  // Сначала делает запрос на получение и только, исходя из результата делает второй запрос на обновление
-  // ОБЯЗАТЕЛЬНО ИСПРАВИТЬ ЭТО БЕЗОБРАЗИЕ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  async addGood(email: string, id: string, field: string) {
-    const query = { "private.email": email };
-    query[`${field}.goodId`] = id;
-    const existingItem = await this.userModel.findOne(query);
-    if (existingItem) {
-      field === "favorite" && this.deleteGood(email, id, field);
-      const updateField = `${field}.goodId`;
-      return await this.userModel.updateOne(
-        { "private.email": email, [updateField]: id },
-        {
-          $inc: {
-            [`${field}.$.count`]: 1,
-          },
+  async updateGoodToBasket(email: string, goodId: string, operand = "add") {
+    let operator = "add";
+    if (operand === "sub") {
+      operator = "subtract";
+    }
+    await this.userModel.updateOne({ "private.email": email }, [
+      {
+        $set: {
+          isExisting: { $in: [goodId, "$basket.goodId"] },
         },
-      );
-    } else {
-      return await this.userModel.updateOne(
-        { "private.email": email },
-        {
-          $push: {
-            [field]: {
-              $each: [
-                {
-                  goodId: id,
-                  count: 1,
-                  favorite: field === "favorite" ? true : existingItem.favorite,
+      },
+      {
+        $set: {
+          basket: {
+            $cond: {
+              if: "$isExisting",
+              then: {
+                $map: {
+                  input: "$basket",
+                  as: "item",
+                  in: {
+                    $cond: {
+                      if: { $eq: ["$$item.goodId", goodId] },
+                      then: {
+                        $cond: {
+                          if: {
+                            $and: [
+                              { $lt: ["$$item.count", 2] },
+                              { $eq: [operator, "subtract"] },
+                            ],
+                          },
+                          then: null,
+                          else: {
+                            goodId: "$$item.goodId",
+                            count: { [`$${operator}`]: ["$$item.count", 1] },
+                          },
+                        },
+                      },
+                      else: "$$item",
+                    },
+                  },
                 },
-              ],
-              $position: 0,
+              },
+              else: {
+                $concatArrays: ["$basket", [{ goodId: goodId, count: 1 }]],
+              },
             },
           },
         },
-        { upsert: true },
-      );
-    }
-  }
-  // Снова костыль - избавиться  в будущем
-  async subGood(email: string, id: string, field: string) {
-    const query = { "private.email": email, [`${field}.goodId`]: id };
-    const existingItem = await this.userModel.findOne(query);
-
-    if (existingItem) {
-      if (existingItem[field].find((i) => i.goodId === id).count > 1) {
-        return await this.userModel.updateOne(
-          { "private.email": email, [`${field}.goodId`]: id },
-          { $inc: { [`${field}.$.count`]: -1 } },
-        );
-      } else {
-        return await this.userModel.updateOne(
-          { "private.email": email },
-          { $pull: { [field]: { goodId: id } } },
-        );
-      }
-    }
+      },
+      {
+        $unset: "isExisting",
+      },
+      {
+        $set: {
+          basket: {
+            $filter: {
+              input: "$basket",
+              as: "item",
+              cond: { $ne: ["$$item", null] },
+            },
+          },
+        },
+      },
+    ]);
   }
 
   async deleteGood(email: string, id: string, field: string) {
@@ -205,10 +212,30 @@ export class UserService {
   }
 
   async addBasket(email: string, id: string) {
-    return this.addGood(email, id, "basket");
+    return this.updateGoodToBasket(email, id);
   }
-  async toggleFavorites(email: string, id: string) {
-    return this.addGood(email, id, "favorite");
+  async toggleFavorites(email: string, goodId: string) {
+    await this.userModel.updateOne({ "private.email": email }, [
+      {
+        $set: {
+          isExisting: { $in: [goodId, "$favorites"] },
+        },
+      },
+      {
+        $set: {
+          favorites: {
+            $cond: {
+              if: "$isExisting",
+              then: { $setDifference: ["$favorites", [goodId]] },
+              else: { $concatArrays: ["$favorites", [goodId]] },
+            },
+          },
+        },
+      },
+      {
+        $unset: "isExisting", // Удаляем временное поле isExisting
+      },
+    ]);
   }
   async addOrder(email: string, id: string) {
     return await this.userModel.updateOne(
@@ -217,52 +244,12 @@ export class UserService {
     );
   }
   async subBasket(email: string, id: string) {
-    return this.subGood(email, id, "basket");
+    return this.updateGoodToBasket(email, id, "sub");
   }
   async deleteBasket(email: string, id: string) {
     return this.deleteGood(email, id, "basket");
   }
 }
 
-// async getBasket(email: string) {
-//     return (await this.userModel
-//       .aggregate([
-//         {
-//           $match: { "private.email": email }, // Найти пользователя по адресу электронной почты
-//         },
-//         {
-//           $lookup: {
-//             from: "Good",
-//             let: { goodId: { $toString: "$_id" } }, // Преобразовать _id в строку для сравнения
-//             pipeline: [
-//               {
-//                 $match: {
-//                   $expr: { $eq: ["$$goodId", "$goodId"] },
-//                 },
-//               },
-//             ],
-//             as: "matchedGood",
-//           },
-//         },
-//         {
-//           $addFields: {
-//             "matchedGood.count": "$basket.count", // Добавить поле "count" из корзины к каждому найденному товару из "Good"
-//           },
-//         },
-//         {
-//           $group: {
-//             _id: "$_id", // Группировка по исходному _id
-//             basket: { $push: "$matchedGood" }, // Формирование массива "basket" с найденными товарами из "Good" и полями из корзины
-//           },
-//         },
-//         {
-//           $project: {
-//             _id: 0, // Исключить поле _id
-//             basket: { $arrayElemAt: ["$basket", 0] }, // Выбрать первый элемент массива "basket"
-//           },
-//         },
-//         {
-//           $unwind: "$basket", // Развернуть массив "basket" с товарами из "Good"
-//         },
-//       ])
-//       .exec()) as IUserGood[];
+
+

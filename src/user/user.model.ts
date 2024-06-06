@@ -59,8 +59,8 @@ export class UserModel extends TimeStamps {
   @prop({ type: () => IInfoPrivate })
   private: IInfoPrivate;
 
-  @prop({ type: () => [IUserGood] })
-  favorite?: IUserGood[];
+  @prop({ type: () => [String] })
+  favorites?: string[];
 
   @prop({ type: () => [IUserGood] })
   basket?: IUserGood[];
