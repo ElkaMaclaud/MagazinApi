@@ -142,10 +142,18 @@ export class UserService {
     if (operand === "sub") {
       operator = "subtract";
     }
+
     await this.userModel.updateOne({ "private.email": email }, [
       {
         $set: {
           isExisting: { $in: [goodId, "$basket.goodId"] },
+          existingItem: {
+            $filter: {
+              input: "$basket",
+              as: "item",
+              cond: { $eq: ["$$item.goodId", goodId] },
+            },
+          },
         },
       },
       {
@@ -154,52 +162,67 @@ export class UserService {
             $cond: {
               if: "$isExisting",
               then: {
-                $map: {
-                  input: "$basket",
-                  as: "item",
-                  in: {
-                    $cond: {
-                      if: { $eq: ["$$item.goodId", goodId] },
-                      then: {
-                        $cond: {
-                          if: {
-                            $and: [
-                              { $lt: ["$$item.count", 2] },
-                              { $eq: [operator, "subtract"] },
-                            ],
+                $cond: {
+                  if: {
+                    $and: [
+                      // { $lt: [ { $arrayElemAt: ["$existingItem", 0] }, 2 ] },
+                      {
+                        $lt: [
+                          {
+                            $first: {
+                              $map: {
+                                input: "$existingItem",
+                                as: "item",
+                                in: "$$item.count",
+                              },
+                            },
                           },
-                          then: null,
-                          else: {
+                          2,
+                        ],
+                      },
+                      { $eq: [operator, "subtract"] },
+                    ],
+                  },
+                  then: {
+                    $filter: {
+                      input: "$basket",
+                      as: "item",
+                      cond: { $ne: ["$$item.goodId", goodId] },
+                    },
+                  },
+                  else: {
+                    $map: {
+                      input: "$basket",
+                      as: "item",
+                      in: {
+                        $cond: {
+                          if: { $eq: ["$$item.goodId", goodId] },
+                          then: {
                             goodId: "$$item.goodId",
                             count: { [`$${operator}`]: ["$$item.count", 1] },
                           },
+                          else: "$$item",
                         },
                       },
-                      else: "$$item",
                     },
                   },
                 },
               },
               else: {
-                $concatArrays: ["$basket", [{ goodId: goodId, count: 1 }]],
+                $cond: {
+                  if: { $eq: [operand, "add"] },
+                  then: {
+                    $concatArrays: ["$basket", [{ goodId: goodId, count: 1 }]],
+                  },
+                  else: "$basket",
+                },
               },
             },
           },
         },
       },
       {
-        $unset: "isExisting",
-      },
-      {
-        $set: {
-          basket: {
-            $filter: {
-              input: "$basket",
-              as: "item",
-              cond: { $ne: ["$$item", null] },
-            },
-          },
-        },
+        $unset: ["isExisting", "existingItem"],
       },
     ]);
   }
@@ -250,6 +273,3 @@ export class UserService {
     return this.deleteGood(email, id, "basket");
   }
 }
-
-
-
