@@ -1,20 +1,18 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from "nestjs-typegoose";
-import { IInfoPrivate, IUserGood, UserModel } from "./user.model";
+import { IInfoPrivate, UserModel } from "./user.model";
 import { UserDto } from "./dto/user.dto";
 import { ModelType } from "@typegoose/typegoose/lib/types";
 import { JwtService } from "@nestjs/jwt";
 import { genSalt, hash, compare } from "bcryptjs";
 import { AuthDto } from "./dto/auth.dto";
 import { USER_NOT_FOUND_ERROR, WRONG_PASSWORD_ERROR } from "./user.constant";
-import { GoodModel } from "src/good/good.model";
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(UserModel) private readonly userModel: ModelType<UserModel>,
     private readonly jwtService: JwtService,
-    @InjectModel(GoodModel) private readonly goodModel: ModelType<GoodModel>,
   ) {}
 
   async registerUser(dto: AuthDto) {
@@ -77,33 +75,76 @@ export class UserService {
     this.userModel.create(dto);
   }
 
-  // Костыльная реализация - необходимо исправить в будущем на сложную агрегацию
-  // Данный метод плох тем, что делает 2 запроса к бд
-  // Первый запрос идет на получение записи из юзера и затем делает ещё один запрос к записям Good для соотнесения данных
-  // Необходимо ПЕРЕДЕЛАТЬ В БУДУЩЕМ!!!
+  // В данном методе делаем агрегацию, в которой подтягиваются данные из внешней коллекции в $lookup
+  // В поле field м/б: корзина, избран. и куплен. определенного пользователя
+  // Дальнейшей оптимизации данный метод не требует!
   async getData(email: string, field: string) {
-    const user = await this.userModel
-      .findOne({ "private.email": email }, { [field]: 1 })
+    const result = await this.userModel
+      .aggregate([
+        { $match: { "private.email": email } },
+        {
+          $unwind: `$${field}`, // Разбивает внутренний массив док. на отд. докум.
+        },
+        {
+          $lookup: {
+            from: "Good",
+            let: {
+              goodId: {
+                $cond: {
+                  if: { $eq: [field, "basket"] },
+                  then: `$${field}.goodId`,
+                  else: `$${field}`,
+                },
+              },
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: [{ $toString: "$_id" }, "$$goodId"] }, // Приведение поля _id к строке и сравнение с goodId
+                },
+              },
+            ],
+            as: "goodInfo",
+          },
+        },
+        {
+          $addFields: {
+            [field]: {
+              $cond: {
+                if: { $eq: [field, "basket"] },
+                then: {
+                  $mergeObjects: [
+                    // Объединение полей
+                    `$${field}`,
+                    { $arrayElemAt: ["$goodInfo", 0] },
+                  ],
+                },
+                else: {
+                  $mergeObjects: [
+                    { goodId: `$${field}` },
+                    { $arrayElemAt: ["$goodInfo", 0] },
+                  ],
+                },
+              },
+            },
+          },
+        },
+        {
+          $group: {
+            _id: "$_id",
+            [field]: { $push: `$${field}` },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            [field]: 1,
+          },
+        },
+      ])
       .exec();
-    if (!user || !user[field] || user[field].length === 0) {
-      return [];
-    }
 
-    const arrItems = await this.goodModel
-      .find({ _id: { $in: user[field].map((item) => item.goodId) } })
-      .exec();
-
-    const result = arrItems.map((item) => {
-      const userData = user[field].find(
-        (i) => item._id.toString() === i.goodId,
-      );
-      return {
-        ...item.toObject(),
-        count: userData.count,
-        favorite: userData.favorite,
-      };
-    });
-    return result;
+    return result[0];
   }
 
   async getBasket(email: string) {
@@ -119,7 +160,10 @@ export class UserService {
   }
 
   async getUserData(id: string) {
-    this.userModel.findOne({ id }, { publik: 1, private: 1, delivery: 1 });
+    return this.userModel.findOne(
+      { id },
+      { publik: 1, private: 1, delivery: 1 },
+    );
   }
   async updateUserData(dto: UserDto, id: string) {
     const updatedUser = await this.userModel.findOneAndUpdate(
@@ -143,7 +187,7 @@ export class UserService {
       operator = "subtract";
     }
 
-    await this.userModel.updateOne({ "private.email": email }, [
+    return await this.userModel.updateOne({ "private.email": email }, [
       {
         $set: {
           isExisting: { $in: [goodId, "$basket.goodId"] },

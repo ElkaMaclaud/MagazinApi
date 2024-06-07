@@ -6,7 +6,6 @@ import { UserService } from "./user.service";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { getJWTConfig } from "src/configs/jwt.config";
-import { GoodModel } from "src/good/good.model";
 
 @Module({
   controllers: [UserController],
@@ -16,12 +15,6 @@ import { GoodModel } from "src/good/good.model";
         typegooseClass: UserModel,
         schemaOptions: {
           collection: "User",
-        },
-      },
-      {
-        typegooseClass: GoodModel,
-        schemaOptions: {
-          collection: "Good",
         },
       },
     ]),
