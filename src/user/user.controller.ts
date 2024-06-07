@@ -9,14 +9,12 @@ import {
   Post,
   Req,
 } from "@nestjs/common";
-import { IUserGood } from "./user.model";
 import { UserService } from "./user.service";
 import { UserDto } from "./dto/user.dto";
 import { AuthDto } from "./dto/auth.dto";
 import { ACCES_TOKEN_VERIFY_ERROR, ALREADY_REGISTERED_ERROR } from "./user.constant";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
-import { JwtAuthGuard } from "./guards/jwt.guard";
 
 
 @Controller("user")

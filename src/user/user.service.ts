@@ -120,10 +120,23 @@ export class UserService {
                   ],
                 },
                 else: {
-                  $mergeObjects: [
-                    { goodId: `$${field}` },
-                    { $arrayElemAt: ["$goodInfo", 0] },
-                  ],
+                  $cond: {
+                    if: { $eq: [field, "favorites"] },
+                    then: {
+                      $mergeObjects: [
+                        // Осталось здесь поправить для досчтупа к count, т.к. он нужен в избранных
+                        { count: "$basket.count" },
+                        { goodId: `$${field}` },
+                        { $arrayElemAt: ["$goodInfo", 0] },
+                      ],
+                    },
+                    else: {
+                      $mergeObjects: [
+                        { goodId: `$${field}` },
+                        { $arrayElemAt: ["$goodInfo", 0] },
+                      ],
+                    },
+                  },
                 },
               },
             },
