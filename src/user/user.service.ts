@@ -113,26 +113,49 @@ export class UserService {
               $cond: {
                 if: { $eq: [field, "basket"] },
                 then: {
+                  // Объединение полей
                   $mergeObjects: [
-                    // Объединение полей
                     `$${field}`,
                     { $arrayElemAt: ["$goodInfo", 0] },
                   ],
                 },
                 else: {
                   $cond: {
+                    // Нужен доступ к count, который нах-ся в другом св-ве
                     if: { $eq: [field, "favorites"] },
                     then: {
-                      $mergeObjects: [
-                        // Осталось здесь поправить для досчтупа к count, т.к. он нужен в избранных
-                        { count: "$basket.count" },
-                        { goodId: `$${field}` },
-                        { $arrayElemAt: ["$goodInfo", 0] },
-                      ],
+                      $let: {
+                        vars: {
+                          basketItem: {
+                            $arrayElemAt: [
+                              {
+                                $filter: {
+                                  input: "$basket",
+                                  as: "item",
+                                  cond: {
+                                    $eq: [
+                                      "$$item.goodId",
+                                      { $toString: `$${field}` },
+                                    ],
+                                  },
+                                },
+                              },
+                              0,
+                            ],
+                          },
+                        },
+                        in: {
+                          $mergeObjects: [
+                            { goodId: { $toString: `$${field}` } },
+                            { count: "$$basketItem.count" },
+                            { $arrayElemAt: ["$goodInfo", 0] },
+                          ],
+                        },
+                      },
                     },
                     else: {
                       $mergeObjects: [
-                        { goodId: `$${field}` },
+                        { goodId: { $toString: `$${field}` } },
                         { $arrayElemAt: ["$goodInfo", 0] },
                       ],
                     },
