@@ -364,7 +364,7 @@ export class UserService {
       ])
       .exec();
   }
-  async choiceAll(email: string, on: boolean) {
+  async ChooseAll(email: string, on: boolean) {
     return await this.userModel
       .updateOne({ "private.email": email }, [
         {
@@ -416,6 +416,21 @@ export class UserService {
   }
   async subBasket(email: string, id: string) {
     return this.updateGoodToBasket(email, id, "sub");
+  }
+  async deleteSelected(email: string) {
+    return this.userModel.updateOne({"private.email": email}, [
+      {
+        $set: {
+          basket: {
+              $filter: {
+                input: "$basket",
+                as: "item",
+                  cond: {$eq: ["$$item.choice", false]}
+              }
+            }
+        }
+      }
+    ])
   }
   async deleteBasket(email: string, id: string) {
     return this.deleteGood(email, id, "basket");

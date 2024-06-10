@@ -78,10 +78,10 @@ export class UserController {
     return this.userService.getOrders(email);
   }
 
-  @Patch("choiceAll")
-  async choiceAll(@Req() req, @Body() dto: { on: boolean }) {
+  @Patch("ChooseAll")
+  async ChooseAll(@Req() req, @Body() dto: { on: boolean }) {
     const email = await this.authMiddleware(req);
-    return this.userService.choiceAll(email, dto.on);
+    return this.userService.ChooseAll(email, dto.on);
   }
 
   @Get("userData")
@@ -92,6 +92,13 @@ export class UserController {
   @Patch("updateUserData")
   async updateUserData(@Body() dto: UserDto, id: string) {
     const result = this.userService.updateUserData(dto, id);
+    return result;
+  }
+
+  @Patch("deleteSelected")
+  async deleteSelected(@Req() req) {
+    const email = await this.authMiddleware(req);
+    const result = this.userService.deleteSelected(email);
     return result;
   }
 
