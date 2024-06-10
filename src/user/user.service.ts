@@ -71,10 +71,6 @@ export class UserService {
     };
   }
 
-  async create(dto: UserDto) {
-    this.userModel.create(dto);
-  }
-
   // В данном методе делаем агрегацию, в которой подтягиваются данные из внешней коллекции в $lookup
   // В поле field м/б: корзина, избран. и куплен. определенного пользователя
   // Дальнейшей оптимизации данный метод не требует!
@@ -196,23 +192,24 @@ export class UserService {
   }
 
   async getUserData(id: string) {
-    return this.userModel.findOne(
-      { id },
-      { publik: 1, private: 1, delivery: 1 },
-    );
+    return this.userModel
+      .findOne({ id }, { publik: 1, private: 1, delivery: 1 })
+      .exec();
   }
   async updateUserData(dto: UserDto, id: string) {
-    const updatedUser = await this.userModel.findOneAndUpdate(
-      { _id: id },
-      {
-        $set: {
-          publik: dto.publik,
-          private: dto.private,
-          delivery: dto.delivery,
+    const updatedUser = await this.userModel
+      .findOneAndUpdate(
+        { _id: id },
+        {
+          $set: {
+            publik: dto.publik,
+            private: dto.private,
+            delivery: dto.delivery,
+          },
         },
-      },
-      { new: true },
-    );
+        { new: true },
+      )
+      .exec();
 
     return updatedUser;
   }
@@ -223,122 +220,193 @@ export class UserService {
       operator = "subtract";
     }
 
-    return await this.userModel.updateOne({ "private.email": email }, [
-      {
-        $set: {
-          isExisting: { $in: [goodId, "$basket.goodId"] },
-          existingItem: {
-            $filter: {
-              input: "$basket",
-              as: "item",
-              cond: { $eq: ["$$item.goodId", goodId] },
+    return await this.userModel
+      .updateOne({ "private.email": email }, [
+        {
+          $set: {
+            isExisting: { $in: [goodId, "$basket.goodId"] },
+            existingItem: {
+              $filter: {
+                input: "$basket",
+                as: "item",
+                cond: { $eq: ["$$item.goodId", goodId] },
+              },
             },
           },
         },
-      },
-      {
-        $set: {
-          basket: {
-            $cond: {
-              if: "$isExisting",
-              then: {
-                $cond: {
-                  if: {
-                    $and: [
-                      // { $lt: [ { $arrayElemAt: ["$existingItem", 0] }, 2 ] },
-                      {
-                        $lt: [
-                          {
-                            $first: {
-                              $map: {
-                                input: "$existingItem",
-                                as: "item",
-                                in: "$$item.count",
+        {
+          $set: {
+            basket: {
+              $cond: {
+                if: "$isExisting",
+                then: {
+                  $cond: {
+                    if: {
+                      $and: [
+                        // { $lt: [ { $arrayElemAt: ["$existingItem", 0] }, 2 ] },
+                        {
+                          $lt: [
+                            {
+                              $first: {
+                                $map: {
+                                  input: "$existingItem",
+                                  as: "item",
+                                  in: "$$item.count",
+                                },
                               },
                             },
-                          },
-                          2,
-                        ],
-                      },
-                      { $eq: [operator, "subtract"] },
-                    ],
-                  },
-                  then: {
-                    $filter: {
-                      input: "$basket",
-                      as: "item",
-                      cond: { $ne: ["$$item.goodId", goodId] },
+                            2,
+                          ],
+                        },
+                        { $eq: [operator, "subtract"] },
+                      ],
                     },
-                  },
-                  else: {
-                    $map: {
-                      input: "$basket",
-                      as: "item",
-                      in: {
-                        $cond: {
-                          if: { $eq: ["$$item.goodId", goodId] },
-                          then: {
-                            goodId: "$$item.goodId",
-                            count: { [`$${operator}`]: ["$$item.count", 1] },
+                    then: {
+                      $filter: {
+                        input: "$basket",
+                        as: "item",
+                        cond: { $ne: ["$$item.goodId", goodId] },
+                      },
+                    },
+                    else: {
+                      $map: {
+                        input: "$basket",
+                        as: "item",
+                        in: {
+                          $cond: {
+                            if: { $eq: ["$$item.goodId", goodId] },
+                            then: {
+                              goodId: "$$item.goodId",
+                              count: { [`$${operator}`]: ["$$item.count", 1] },
+                            },
+                            else: "$$item",
                           },
-                          else: "$$item",
                         },
                       },
                     },
                   },
                 },
-              },
-              else: {
-                $cond: {
-                  if: { $eq: [operand, "add"] },
-                  then: {
-                    $concatArrays: ["$basket", [{ goodId: goodId, count: 1 }]],
+                else: {
+                  $cond: {
+                    if: { $eq: [operand, "add"] },
+                    then: {
+                      $concatArrays: [
+                        "$basket",
+                        [{ goodId: goodId, count: 1, choice: true }],
+                      ],
+                    },
+                    else: "$basket",
                   },
-                  else: "$basket",
                 },
               },
             },
           },
         },
-      },
-      {
-        $unset: ["isExisting", "existingItem"],
-      },
-    ]);
+        {
+          $unset: ["isExisting", "existingItem"],
+        },
+      ])
+      .exec();
   }
 
   async deleteGood(email: string, id: string, field: string) {
-    return await this.userModel.updateOne(
-      { "private.email": email },
-      { $pull: { [field]: { goodId: id } } },
-    );
+    return await this.userModel
+      .updateOne(
+        { "private.email": email },
+        { $pull: { [field]: { goodId: id } } },
+      )
+      .exec();
   }
 
   async addBasket(email: string, id: string) {
     return this.updateGoodToBasket(email, id);
   }
-  async toggleFavorites(email: string, goodId: string) {
-    await this.userModel.updateOne({ "private.email": email }, [
-      {
-        $set: {
-          isExisting: { $in: [goodId, "$favorites"] },
-        },
-      },
-      {
-        $set: {
-          favorites: {
-            $cond: {
-              if: "$isExisting",
-              then: { $setDifference: ["$favorites", [goodId]] },
-              else: { $concatArrays: ["$favorites", [goodId]] },
+  async toggleChoice(email: string, goodId: string) {
+    return await this.userModel
+      .updateOne({ "private.email": email }, [
+        {
+          $set: {
+            basket: {
+              $map: {
+                input: "$basket",
+                as: "item",
+                in: {
+                  $cond: {
+                    if: {
+                      $eq: ["$$item.goodId", goodId],
+                    },
+
+                    then: {
+                      goodId: "$$item.goodId",
+                      count: "$$item.count",
+                      choice: {
+                        $not: ["$$item.choice"],
+                      },
+                    },
+                    // then: {
+                    //   $mergeObjects: [
+                    //     "$$item",
+                    //     {
+                    //       choice: {
+                    //         $not: ["$$item.choice"],
+                    //       },
+                    //     },
+                    //   ],
+                    // },
+
+                    else: "$$item",
+                  },
+                },
+              },
             },
           },
         },
-      },
-      {
-        $unset: "isExisting", // Удаляем временное поле isExisting
-      },
-    ]);
+      ])
+      .exec();
+  }
+  async choiceAll(email: string, on: boolean) {
+    return await this.userModel
+      .updateOne({ "private.email": email }, [
+        {
+          $set: {
+            basket: {
+              $map: {
+                input: "$basket",
+                as: "item",
+                in: {
+                  $mergeObjects: ["$$item", { choice: on }],
+                },
+              },
+            },
+          },
+        },
+      ])
+      .exec();
+  }
+  async toggleFavorites(email: string, goodId: string) {
+    return await this.userModel
+      .updateOne({ "private.email": email }, [
+        {
+          $set: {
+            isExisting: { $in: [goodId, "$favorites"] },
+          },
+        },
+        {
+          $set: {
+            favorites: {
+              $cond: {
+                if: "$isExisting",
+                then: { $setDifference: ["$favorites", [goodId]] },
+                else: { $concatArrays: ["$favorites", [goodId]] },
+              },
+            },
+          },
+        },
+        {
+          $unset: "isExisting", // Удаляем временное поле isExisting
+        },
+      ])
+      .exec();
   }
   async addOrder(email: string, id: string) {
     return await this.userModel.updateOne(

@@ -78,6 +78,12 @@ export class UserController {
     return this.userService.getOrders(email);
   }
 
+  @Patch("choiceAll")
+  async choiceAll(@Req() req, @Body() dto: { on: boolean }) {
+    const email = await this.authMiddleware(req);
+    return this.userService.choiceAll(email, dto.on);
+  }
+
   @Get("userData")
   async getUserData(id: string) {
     return this.userService.getUserData(id);
@@ -93,6 +99,12 @@ export class UserController {
   async addBasket(@Req() req, @Param("id") id: string) {
     const email = await this.authMiddleware(req);
     return this.userService.addBasket(email, id);
+  }
+
+  @Patch("toggleChoice/:id")
+  async toggleChoice(@Req() req, @Param("id") id: string) {
+    const email = await this.authMiddleware(req);
+    return this.userService.toggleChoice(email, id);
   }
 
   @Patch("toggleFavorites/:id")
@@ -122,5 +134,4 @@ export class UserController {
     const result = this.userService.deleteBasket(email, id);
     return result;
   }
-
 }
