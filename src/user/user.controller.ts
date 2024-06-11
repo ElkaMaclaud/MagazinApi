@@ -8,12 +8,14 @@ import {
   Patch,
   Post,
   Req,
+  UseGuards,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { UserDto } from "./dto/user.dto";
 import { AuthDto } from "./dto/auth.dto";
 import { ALREADY_REGISTERED_ERROR } from "./user.constant";
 import { GetUserData } from "src/middleware/authMiddleware";
+import { JwtAuthGuard } from "./guards/jwt.guard";
 
 @Controller("user")
 export class UserController {
@@ -38,7 +40,6 @@ export class UserController {
     return this.userService.login(email);
   }
 
-  // @UseGuards(JwtAuthGuard)
   @Get("basket")
   async getBasket(@Req() req) {
     const email = await this.authMiddleware.getEmail(req);
@@ -63,6 +64,7 @@ export class UserController {
     return this.userService.ChooseAll(email, dto.on);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get("userData")
   async getUserData(id: string) {
     return this.userService.getUserData(id);
@@ -99,6 +101,7 @@ export class UserController {
     return this.userService.toggleFavorites(email, id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch("buy/:id")
   async addOrder(@Req() req, @Param("id") id: string) {
     const email = await this.authMiddleware.getEmail(req);
