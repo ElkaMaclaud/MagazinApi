@@ -35,6 +35,163 @@ export class GoodService {
   async getGoodById(id: string): Promise<GoodModel | void> {
     return this.goodModel.findById(id).exec();
   }
+  async getGoodByIdForUser(id: string, email: string): Promise<GoodModel | void> {
+    const result = await this.goodModel
+      .aggregate([
+        {
+          $match: { $expr: { $eq: [{ $toString: "$_id" }, id] } },
+        },
+        {
+          $lookup: {
+            from: "User",
+            let: { userEmail: email, goodId: id },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ["$private.email", "$$userEmail"] },
+                },
+              },
+              {
+                $addFields: {
+                  basket_item: {
+                    $filter: {
+                      input: "$basket",
+                      as: "item",
+                      cond: { $eq: ["$$item.goodId", "$$goodId"] },
+                    },
+                  },
+                },
+              },
+              {
+                $project: {
+                  count: { $arrayElemAt: ["$basket_item.count", 0] },
+                },
+              },
+            ],
+            as: "user",
+          },
+        },
+        {
+          $addFields: {
+            count: {
+              $cond: {
+                if: { $gt: [{ $size: "$user" }, 0] },
+                then: { $arrayElemAt: ["$user.count", 0] },
+                else: 0,
+              },
+            },
+            favorite: {
+              $cond: {
+                if: {
+                  $in: [
+                    id,
+                    [
+                      {
+                        $arrayElemAt: ["$user.favorites", 0],
+                      },
+                    ],
+                  ],
+                },
+                then: true,
+                else: false,
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            user: 0,
+          },
+        },
+      ])
+      .exec();
+
+    return result[0];
+  }
+
+  // Второй вариант агрегации!!!
+  // Более интуитивный!
+
+  // async getGoodById(id: string, email: string): Promise<GoodModel | void> {
+  //   const result = await this.goodModel
+  //     .aggregate([
+  //       // Находим товар по его ID
+  //       {
+  //         $match: { $expr: { $eq: [{ $toString: "$_id" }, id] } },
+  //       },
+
+  //       {
+  //         $lookup: {
+  //           from: "User",
+  //           let: { userEmail: email },
+  //           pipeline: [
+  //             {
+  //               $match: {
+  //                 $expr: { $eq: ["$private.email", "$$userEmail"] },
+  //               },
+  //             },
+  //             {
+  //               $unwind: "$basket",
+  //             },
+  //             {
+  //               $match: { "basket.goodId": id },
+  //             },
+  //             {
+  //               $project: {
+  //                 count: "$basket.count",
+  //                 favorites: 1,
+  //               },
+  //             },
+  //           ],
+  //           as: "user",
+  //         },
+  //       },
+  //       // Возвращаем результат
+  //       {
+  //         $addFields: {
+  //           count: {
+  //             $arrayElemAt: ["$user.count", 0],
+  //           },
+
+  //           favorite: {
+  //             $cond: {
+  //               if: {
+  //                 $in: [
+  //                   id,
+  //                   {
+  //                     $arrayElemAt: ["$user.favorites", 0],
+  //                   },
+  //                 ],
+  //               },
+
+  //               then: true,
+  //               else: false,
+  //             },
+  //           },
+  //         },
+  //       },
+  //       {
+  //         $replaceRoot: {
+  //           newRoot: {
+  //             $mergeObjects: [
+  //               {
+  //                 count: "$count",
+  //                 favorite: "$favorite"
+  //               },
+  //               "$$ROOT",
+  //             ],
+  //           },
+  //         },
+  //       },
+  //       {
+  //         $project: {
+  //           user: 0,
+  //         },
+  //       },
+  //     ])
+  //     .exec();
+  //     return result[0]
+  // }
 
   // Функция для занесения данных в бд (одноразовая)
   // Функцию для создания и внесения товаров в бд нужно будет реализовать для продавцов в будущем возможно..., но такой цели пока нет

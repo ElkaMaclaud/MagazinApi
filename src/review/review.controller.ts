@@ -24,7 +24,7 @@ export class ReviewController {
 
   @Get("byGood/:goodId")
   async get(@Param("goodId") goodId: string) {
-    return this.reviewService.findByProductId(goodId);
+    return this.reviewService.findByGoodId(goodId);
   }
 
   @Delete(":id")

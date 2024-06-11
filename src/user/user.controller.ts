@@ -12,36 +12,15 @@ import {
 import { UserService } from "./user.service";
 import { UserDto } from "./dto/user.dto";
 import { AuthDto } from "./dto/auth.dto";
-import { ACCES_TOKEN_VERIFY_ERROR, ALREADY_REGISTERED_ERROR } from "./user.constant";
-import { JwtService } from "@nestjs/jwt";
-import { ConfigService } from "@nestjs/config";
-
+import { ALREADY_REGISTERED_ERROR } from "./user.constant";
+import { GetUserData } from "src/middleware/authMiddleware";
 
 @Controller("user")
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
+    private readonly authMiddleware: GetUserData,
   ) {}
-
-  async authMiddleware(req: Request) {
-    const accessToken = req.headers["authorization"].split(" ")[1];
-    if (accessToken) {
-      try {
-        const decodedToken = this.jwtService.verify(
-          accessToken,
-          this.configService.get("JWT_SECRET"),
-        );
-        const userEmail = decodedToken.email;
-        return userEmail;
-      } catch (error) {
-        throw new BadRequestException(ACCES_TOKEN_VERIFY_ERROR, error);
-      }
-    } else {
-      throw new BadRequestException("Отсутствует токен доступа");
-    }
-  }
 
   @Post("auth/register")
   async register(@Body() dto: AuthDto) {
@@ -62,25 +41,25 @@ export class UserController {
   // @UseGuards(JwtAuthGuard)
   @Get("basket")
   async getBasket(@Req() req) {
-    const email = await this.authMiddleware(req);
+    const email = await this.authMiddleware.getEmail(req);
     return this.userService.getBasket(email);
   }
 
   @Get("favorites")
   async getFavorites(@Req() req) {
-    const email = await this.authMiddleware(req);
+    const email = await this.authMiddleware.getEmail(req);
     return this.userService.getFavorites(email);
   }
 
   @Get("orders")
   async getOrders(@Req() req) {
-    const email = await this.authMiddleware(req);
+    const email = await this.authMiddleware.getEmail(req);
     return this.userService.getOrders(email);
   }
 
   @Patch("ChooseAll")
   async ChooseAll(@Req() req, @Body() dto: { on: boolean }) {
-    const email = await this.authMiddleware(req);
+    const email = await this.authMiddleware.getEmail(req);
     return this.userService.ChooseAll(email, dto.on);
   }
 
@@ -97,32 +76,32 @@ export class UserController {
 
   @Patch("deleteSelected")
   async deleteSelected(@Req() req) {
-    const email = await this.authMiddleware(req);
+    const email = await this.authMiddleware.getEmail(req);
     const result = this.userService.deleteSelected(email);
     return result;
   }
 
   @Patch("addBasket/:id")
   async addBasket(@Req() req, @Param("id") id: string) {
-    const email = await this.authMiddleware(req);
+    const email = await this.authMiddleware.getEmail(req);
     return this.userService.addBasket(email, id);
   }
 
   @Patch("toggleChoice/:id")
   async toggleChoice(@Req() req, @Param("id") id: string) {
-    const email = await this.authMiddleware(req);
+    const email = await this.authMiddleware.getEmail(req);
     return this.userService.toggleChoice(email, id);
   }
 
   @Patch("toggleFavorites/:id")
   async addFavorites(@Req() req, @Param("id") id: string) {
-    const email = await this.authMiddleware(req);
+    const email = await this.authMiddleware.getEmail(req);
     return this.userService.toggleFavorites(email, id);
   }
 
   @Patch("buy/:id")
   async addOrder(@Req() req, @Param("id") id: string) {
-    const email = await this.authMiddleware(req);
+    const email = await this.authMiddleware.getEmail(req);
     return this.userService.addOrder(email, id);
   }
 
@@ -131,13 +110,13 @@ export class UserController {
 
   @Patch("subBasket/:id")
   async subBasket(@Req() req, @Param("id") id: string) {
-    const email = await this.authMiddleware(req);
+    const email = await this.authMiddleware.getEmail(req);
     return this.userService.subBasket(email, id);
   }
 
   @Patch("deleteBasket/:id")
   async deleteBasket(@Req() req, @Param("id") id: string) {
-    const email = await this.authMiddleware(req);
+    const email = await this.authMiddleware.getEmail(req);
     const result = this.userService.deleteBasket(email, id);
     return result;
   }

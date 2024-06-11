@@ -1,10 +1,14 @@
-import { Body, Controller, Get, Param } from "@nestjs/common";
+import { Body, Controller, Get, Param, Req } from "@nestjs/common";
 import { GoodDiscount, GoodDto, GoodIdsDto } from "./dto/find-goods.dto";
 import { GoodService } from "./good.service";
+import { GetUserData } from "src/middleware/authMiddleware";
 
 @Controller("good")
 export class GoodController {
-  constructor(private readonly goodService: GoodService) {}
+  constructor(
+    private readonly goodService: GoodService,
+    private readonly authMiddleware: GetUserData,
+  ) {}
 
   @Get("goodsByCategory")
   async getGoodsByCategory(@Body() dto: Pick<GoodDto, "category">) {
@@ -28,8 +32,12 @@ export class GoodController {
   }
 
   @Get(":id")
-  async getGoodById(@Param("id") id: string) {
-    return this.goodService.getGoodById(id);
+  async getGoodById(@Param("id") id: string, @Req() req) {
+     if (!req.headers["authorization"]) {
+       return this.goodService.getGoodById(id);
+     }
+    const email = await this.authMiddleware.getEmail(req)
+    return this.goodService.getGoodByIdForUser(id, email);
   }
 
   // Специальный метод жизненного цикла nestjs - инициализирует самозапускающуюся ф-ую
