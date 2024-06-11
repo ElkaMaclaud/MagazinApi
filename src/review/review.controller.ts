@@ -7,7 +7,6 @@ import {
   HttpException,
   HttpStatus,
   Param,
-  Patch,
   Post,
 } from "@nestjs/common";
 import { ReviewDto } from "./dto/review.dto";

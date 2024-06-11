@@ -35,7 +35,10 @@ export class GoodService {
   async getGoodById(id: string): Promise<GoodModel | void> {
     return this.goodModel.findById(id).exec();
   }
-  async getGoodByIdForUser(id: string, email: string): Promise<GoodModel | void> {
+  async getGoodByIdForUser(
+    id: string,
+    email: string,
+  ): Promise<GoodModel | void> {
     const result = await this.goodModel
       .aggregate([
         {
@@ -96,6 +99,26 @@ export class GoodService {
                 else: false,
               },
             },
+          },
+        },
+        {
+          $lookup: {
+            from: "Review",
+            let: { goodId: { $toString: "$_id" } },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ["$$goodId", "$goodId"] },
+                },
+              },
+            ],
+            as: "reviews",
+          },
+        },
+        {
+          $addFields: {
+            reviewCount: { $size: "$reviews" },
+            reviewAvg: { $avg: "$reviews.rating" },
           },
         },
         {
@@ -181,6 +204,26 @@ export class GoodService {
   //               "$$ROOT",
   //             ],
   //           },
+  //         },
+  //       },
+  // {
+  //         $lookup: {
+  //           from: "Review",
+  //           let: { goodId: { $toString: "$_id" } },
+  //           pipeline: [
+  //             {
+  //               $match: {
+  //                 $expr: { $eq: ["$$goodId", "$goodId"] },
+  //               },
+  //             },
+  //           ],
+  //           as: "reviews",
+  //         },
+  //       },
+  //       {
+  //         $addFields: {
+  //           reviewCount: { $size: "$reviews" },
+  //           reviewAvg: { $avg: "$reviews.rating" },
   //         },
   //       },
   //       {
