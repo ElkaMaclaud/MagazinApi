@@ -57,7 +57,7 @@ export class UserModel extends TimeStamps {
   publik: IInfoPublik;
 
   @prop({ type: () => IInfoPrivate })
-  private: IInfoPrivate;
+  privates: IInfoPrivate;
 
   @prop({ type: () => [String] })
   favorites?: string[];

@@ -16,6 +16,7 @@ import { AuthDto } from "./dto/auth.dto";
 import { ALREADY_REGISTERED_ERROR } from "./user.constant";
 import { GetUserData } from "src/middleware/authMiddleware";
 import { JwtAuthGuard } from "./guards/jwt.guard";
+import { UserEmail } from "src/decorators/user-email.decorator";
 
 @Controller("user")
 export class UserController {
@@ -40,9 +41,11 @@ export class UserController {
     return this.userService.login(email);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get("basket")
-  async getBasket(@Req() req) {
-    const email = await this.authMiddleware.getEmail(req);
+  async getBasket(@Req() req, @UserEmail() email: string) {
+    console.log("////////////////", email)
+    // const email = await this.authMiddleware.getEmail(req);
     return this.userService.getBasket(email);
   }
 
@@ -103,8 +106,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Patch("buy/:id")
-  async addOrder(@Req() req, @Param("id") id: string) {
-    const email = await this.authMiddleware.getEmail(req);
+  async addOrder(@Req() req, @Param("id") id: string, @UserEmail() email: string) {
     return this.userService.addOrder(email, id);
   }
 

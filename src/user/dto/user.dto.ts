@@ -1,6 +1,6 @@
 export class UserDto {
   publik: IInfoPublik;
-  private: IInfoPrivate;
+  privates: IInfoPrivate;
   favorite?: IUserGood[];
   basket?: IUserGood[];
   order?: string[];

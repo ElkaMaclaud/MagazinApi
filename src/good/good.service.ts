@@ -51,7 +51,7 @@ export class GoodService {
             pipeline: [
               {
                 $match: {
-                  $expr: { $eq: ["$private.email", "$$userEmail"] },
+                  $expr: { $eq: ["$privates.email", "$$userEmail"] },
                 },
               },
               {

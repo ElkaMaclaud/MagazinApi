@@ -23,7 +23,7 @@ export class UserService {
         city: "",
         age: "",
       },
-      private: {
+      privates: {
         phone: dto.phone || "",
         dataofBirt: dto.dataofBirth || "",
         role: "user",
@@ -43,7 +43,7 @@ export class UserService {
   }
 
   async findUser(email: string) {
-    return this.userModel.findOne({ "private.email": email }).exec();
+    return this.userModel.findOne({ "privates.email": email }).exec();
   }
 
   async validateUser(
@@ -56,12 +56,12 @@ export class UserService {
     }
     const isCorrectPassword = await compare(
       password,
-      user.private.passwordHash,
+      user.privates.passwordHash,
     );
     if (!isCorrectPassword) {
       throw new UnauthorizedException(WRONG_PASSWORD_ERROR);
     }
-    return { email: user.private.email };
+    return { email: user.privates.email };
   }
 
   async login(email: string) {
@@ -77,7 +77,7 @@ export class UserService {
   async getData(email: string, field: string) {
     const result = await this.userModel
       .aggregate([
-        { $match: { "private.email": email } },
+        { $match: { "privates.email": email } },
         {
           $unwind: `$${field}`, // Разбивает внутренний массив док. на отд. докум.
         },
@@ -193,7 +193,7 @@ export class UserService {
 
   async getUserData(id: string) {
     return this.userModel
-      .findOne({ id }, { publik: 1, private: 1, delivery: 1 })
+      .findOne({ id }, { publik: 1, privates: 1, delivery: 1 })
       .exec();
   }
   async updateUserData(dto: UserDto, id: string) {
@@ -203,7 +203,7 @@ export class UserService {
         {
           $set: {
             publik: dto.publik,
-            private: dto.private,
+            privates: dto.privates,
             delivery: dto.delivery,
           },
         },
@@ -221,7 +221,7 @@ export class UserService {
     }
 
     return await this.userModel
-      .updateOne({ "private.email": email }, [
+      .updateOne({ "privates.email": email }, [
         {
           $set: {
             isExisting: { $in: [goodId, "$basket.goodId"] },
@@ -312,7 +312,7 @@ export class UserService {
   async deleteGood(email: string, id: string, field: string) {
     return await this.userModel
       .updateOne(
-        { "private.email": email },
+        { "privates.email": email },
         { $pull: { [field]: { goodId: id } } },
       )
       .exec();
@@ -323,7 +323,7 @@ export class UserService {
   }
   async toggleChoice(email: string, goodId: string) {
     return await this.userModel
-      .updateOne({ "private.email": email }, [
+      .updateOne({ "privates.email": email }, [
         {
           $set: {
             basket: {
@@ -366,7 +366,7 @@ export class UserService {
   }
   async ChooseAll(email: string, on: boolean) {
     return await this.userModel
-      .updateOne({ "private.email": email }, [
+      .updateOne({ "privates.email": email }, [
         {
           $set: {
             basket: {
@@ -385,7 +385,7 @@ export class UserService {
   }
   async toggleFavorites(email: string, goodId: string) {
     return await this.userModel
-      .updateOne({ "private.email": email }, [
+      .updateOne({ "privates.email": email }, [
         {
           $set: {
             isExisting: { $in: [goodId, "$favorites"] },
@@ -418,7 +418,7 @@ export class UserService {
     return this.updateGoodToBasket(email, id, "sub");
   }
   async deleteSelected(email: string) {
-    return this.userModel.updateOne({"private.email": email}, [
+    return this.userModel.updateOne({"privates.email": email}, [
       {
         $set: {
           basket: {
