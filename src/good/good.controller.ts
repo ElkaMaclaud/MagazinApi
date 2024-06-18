@@ -1,13 +1,12 @@
 import { Body, Controller, Get, Param, Req } from "@nestjs/common";
 import { GoodDiscount, GoodDto, GoodIdsDto } from "./dto/find-goods.dto";
 import { GoodService } from "./good.service";
-import { GetUserData } from "src/middleware/authMiddleware";
+import { UserEmail } from "src/decorators/user-email.decorator";
 
 @Controller("good")
 export class GoodController {
   constructor(
     private readonly goodService: GoodService,
-    private readonly authMiddleware: GetUserData,
   ) {}
 
   @Get("goodsByCategory")
@@ -32,11 +31,11 @@ export class GoodController {
   }
 
   @Get(":id")
-  async getGoodById(@Param("id") id: string, @Req() req) {
-     if (!req.headers["authorization"]) {
+  async getGoodById(@Param("id") id: string, @Req() req, @UserEmail() email: string) {
+     if (!email) {
        return this.goodService.getGoodById(id);
      }
-    const email = await this.authMiddleware.getEmail(req)
+
     return this.goodService.getGoodByIdForUser(id, email);
   }
 

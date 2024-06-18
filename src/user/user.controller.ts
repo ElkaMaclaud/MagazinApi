@@ -14,7 +14,6 @@ import { UserService } from "./user.service";
 import { UserDto } from "./dto/user.dto";
 import { AuthDto } from "./dto/auth.dto";
 import { ALREADY_REGISTERED_ERROR } from "./user.constant";
-import { GetUserData } from "src/middleware/authMiddleware";
 import { JwtAuthGuard } from "./guards/jwt.guard";
 import { UserEmail } from "src/decorators/user-email.decorator";
 
@@ -22,7 +21,6 @@ import { UserEmail } from "src/decorators/user-email.decorator";
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly authMiddleware: GetUserData,
   ) {}
 
   @Post("auth/register")
@@ -44,84 +42,112 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get("basket")
   async getBasket(@Req() req, @UserEmail() email: string) {
-    console.log("////////////////", email)
-    // const email = await this.authMiddleware.getEmail(req);
     return this.userService.getBasket(email);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get("favorites")
-  async getFavorites(@Req() req) {
-    const email = await this.authMiddleware.getEmail(req);
+  async getFavorites(@Req() req, @UserEmail() email: string) {
     return this.userService.getFavorites(email);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get("orders")
-  async getOrders(@Req() req) {
-    const email = await this.authMiddleware.getEmail(req);
+  async getOrders(@Req() req, @UserEmail() email: string) {
     return this.userService.getOrders(email);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch("ChooseAll")
-  async ChooseAll(@Req() req, @Body() dto: { on: boolean }) {
-    const email = await this.authMiddleware.getEmail(req);
+  async ChooseAll(
+    @Req() req,
+    @Body() dto: { on: boolean },
+    @UserEmail() email: string,
+  ) {
     return this.userService.ChooseAll(email, dto.on);
   }
 
+  @UseGuards(JwtAuthGuard)
   @UseGuards(JwtAuthGuard)
   @Get("userData")
   async getUserData(id: string) {
     return this.userService.getUserData(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch("updateUserData")
   async updateUserData(@Body() dto: UserDto, id: string) {
     const result = this.userService.updateUserData(dto, id);
     return result;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch("deleteSelected")
-  async deleteSelected(@Req() req) {
-    const email = await this.authMiddleware.getEmail(req);
+  async deleteSelected(@Req() req, @UserEmail() email: string) {
     const result = this.userService.deleteSelected(email);
     return result;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch("addBasket/:id")
-  async addBasket(@Req() req, @Param("id") id: string) {
-    const email = await this.authMiddleware.getEmail(req);
+  async addBasket(
+    @Req() req,
+    @Param("id") id: string,
+    @UserEmail() email: string,
+  ) {
     return this.userService.addBasket(email, id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch("toggleChoice/:id")
-  async toggleChoice(@Req() req, @Param("id") id: string) {
-    const email = await this.authMiddleware.getEmail(req);
+  async toggleChoice(
+    @Req() req,
+    @Param("id") id: string,
+    @UserEmail() email: string,
+  ) {
     return this.userService.toggleChoice(email, id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch("toggleFavorites/:id")
-  async addFavorites(@Req() req, @Param("id") id: string) {
-    const email = await this.authMiddleware.getEmail(req);
+  async addFavorites(
+    @Req() req,
+    @Param("id") id: string,
+    @UserEmail() email: string,
+  ) {
     return this.userService.toggleFavorites(email, id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch("buy/:id")
-  async addOrder(@Req() req, @Param("id") id: string, @UserEmail() email: string) {
+  async addOrder(
+    @Req() req,
+    @Param("id") id: string,
+    @UserEmail() email: string,
+  ) {
     return this.userService.addOrder(email, id);
   }
 
   // @Patch("buy")
   // async buy(@Body() dto: IUserGood) {}
 
+  @UseGuards(JwtAuthGuard)
   @Patch("subBasket/:id")
-  async subBasket(@Req() req, @Param("id") id: string) {
-    const email = await this.authMiddleware.getEmail(req);
+  async subBasket(
+    @Req() req,
+    @Param("id") id: string,
+    @UserEmail() email: string,
+  ) {
     return this.userService.subBasket(email, id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch("deleteBasket/:id")
-  async deleteBasket(@Req() req, @Param("id") id: string) {
-    const email = await this.authMiddleware.getEmail(req);
+  async deleteBasket(
+    @Req() req,
+    @Param("id") id: string,
+    @UserEmail() email: string,
+  ) {
     const result = this.userService.deleteBasket(email, id);
     return result;
   }

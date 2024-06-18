@@ -3,10 +3,10 @@ import { GoodController } from './good.controller';
 import { TypegooseModule } from "nestjs-typegoose";
 import { GoodModel } from "./good.model";
 import { GoodService } from './good.service';
-import { GetUserData } from "src/middleware/authMiddleware";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { getJWTConfig } from "src/configs/jwt.config";
+import { JwtStratagy } from "src/user/strategies/jwt.stratagy";
 
 @Module({
   controllers: [GoodController],
@@ -26,6 +26,6 @@ import { getJWTConfig } from "src/configs/jwt.config";
       useFactory: getJWTConfig,
     }),
   ],
-  providers: [GoodService, GetUserData],
+  providers: [GoodService, JwtStratagy],
 })
 export class GoodModule {}
