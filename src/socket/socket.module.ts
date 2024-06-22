@@ -5,11 +5,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { getJWTConfig } from 'src/configs/jwt.config';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStratagy } from 'src/user/strategies/jwt.stratagy';
-import { SocketController } from './socket.controller';
+import { WebSocketJwtStrategy } from './strategies/jwt.websocketStrategy';
 
 @Module({
-  controllers: [SocketController],
   imports: [
     TypegooseModule.forFeature([
     ]),
@@ -21,7 +19,7 @@ import { SocketController } from './socket.controller';
     }),
     PassportModule,
   ],
-  providers: [SocketService, JwtStratagy],
+  providers: [SocketService, WebSocketJwtStrategy],
   
 })
 export class SocketModule {}

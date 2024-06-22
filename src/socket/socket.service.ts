@@ -1,29 +1,45 @@
-import { Injectable, UseGuards } from '@nestjs/common';
-import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
-import { Server } from 'socket.io';
-import { UserEmail } from 'src/decorators/user-email.decorator';
-import { JwtAuthGuard } from 'src/user/guards/jwt.guard';
+import { Injectable, UseGuards } from "@nestjs/common";
+import {
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from "@nestjs/websockets";
+import { Server } from "socket.io";
+import { UserEmailSocket } from "src/decorators/user-emailFromWebsocket.decorator";
+import { JwtAuthGuard } from "src/user/guards/jwt.guard";
+import { JwtAuthGuardWebsocket } from "./guards/jwt.guardWebsocket";
 
 @WebSocketGateway({
-    cors: {
-        origin: "*"
-    }
+  //   transports: ["socket"],
+  cors: {
+    origin: "*",
+  },
 })
+
 export class SocketService implements OnGatewayConnection, OnGatewayDisconnect {
-    @WebSocketServer()
-    server: Server;
+  @WebSocketServer()
+  server: Server;
+  firsConnect: boolean;
+  constructor() {
+    this.firsConnect = true
+  }
 
-    // @UseGuards(JwtAuthGuard)
-    handleConnection(@UserEmail() email: string) {
-        console.log("CONNECTED")
-    }
+  @UseGuards(JwtAuthGuardWebsocket)
+  handleConnection(@UserEmailSocket() email: string) {
+    console.log("CONNECTED");
+    this.firsConnect  && this.server.emit("message", "Hello from server, ElkaMaclaud");
+    this.firsConnect = false
+  }
 
-    handleDisconnect() {
-        console.log("DISCONNECTED")
-    }
+  handleDisconnect() {
+    console.log("DISCONNECTED");
+  }
 
-    handleMessage(client: any, payload: any) {
-        console.log("Received message:", payload);
-        this.server.emit('message', payload);
-    }
+  @SubscribeMessage("message")
+  handleMessage(client: any, payload: string) {
+    console.log("Received message:", payload);
+    this.server.emit("message", "Ваше сообщение: " + payload);
+  }
 }
