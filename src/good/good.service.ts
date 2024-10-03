@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { GoodModel } from "./good.model";
 import { DocumentType, ModelType } from "@typegoose/typegoose/lib/types";
 import { InjectModel } from "nestjs-typegoose";
-import { GoodDiscount, GoodIdsDto } from "./dto/find-goods.dto";
+import { GoodIdsDto } from "./dto/find-goods.dto";
 // import { GoodDto } from "./dto/find-goods.dto";
 // import * as path from "path";
 // import * as fs from "fs";
@@ -27,9 +27,9 @@ export class GoodService {
   }
 
   async getGoodsByDiscountСlassification(
-    dto: GoodDiscount,
+    dto: string,
   ): Promise<DocumentType<GoodModel>[] | void> {
-    return this.goodModel.find({ [dto.field]: { $exists: true } }).exec();
+    return this.goodModel.find({ [dto]: { $exists: true } }).exec();
   }
 
   async getGoodById(id: string): Promise<GoodModel | void> {

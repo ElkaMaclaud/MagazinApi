@@ -22,8 +22,3 @@ export class GoodIdsDto {
   @prop() 
   ids: string[];
 }
-
-export class GoodDiscount {
-  @prop()
-  field: string;
-}
