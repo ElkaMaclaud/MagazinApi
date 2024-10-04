@@ -3,8 +3,7 @@
   "builds": [
     {
       "src": "src/main.ts",
-      "use": "@vercel/node",
-      "install": "npm install --force"
+      "use": "@vercel/node"
     }
   ],
   "routes": [
