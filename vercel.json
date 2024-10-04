@@ -14,5 +14,9 @@
   ],
   "env": {
     "PORT": "3000"
+  },
+  "scripts": {
+    "install": "npm install --force"
   }
 }
+
