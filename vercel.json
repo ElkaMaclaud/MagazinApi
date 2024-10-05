@@ -1,21 +1,13 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "dist/main.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "rewrites": [{ "source": "/api(.*)", "destination": "/api" }] ,
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "dist/main.js"
-    }
+    { "src": "/api(.*)", "dest": "/api/$1" }
   ],
+    
   "env": {
     "PORT": "3000"
-  }
+  },
+  "outputDirectory": "dist" 
 }
 
 
