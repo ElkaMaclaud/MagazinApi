@@ -6,6 +6,10 @@ export const getMongoConfig = async (
 ): Promise<TypegooseModuleOptions> => {
   return {
     uri: getMongoConnect(configService),
+    options: {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    },
   };
 };
 
