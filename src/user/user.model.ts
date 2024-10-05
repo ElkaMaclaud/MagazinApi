@@ -11,7 +11,7 @@ export class IUserGood {
   favorite?: boolean;
 
   @prop()
-  choice?: boolean;
+  choice: "address" | "pickUpPoin" | "";
 }
 
 export class IInfoPublik {
@@ -24,12 +24,12 @@ export class IInfoPublik {
   @prop()
   age?: number;
 }
-export class IInfoPrivate extends IInfoPublik {
+export class IInfoPrivate {
   @prop()
   phone?: string;
 
   @prop()
-  dateOfBirt?: Date;
+  dateOfBirth?: Date;
 
   @prop()
   email: string;
@@ -39,6 +39,9 @@ export class IInfoPrivate extends IInfoPublik {
 
   @prop()
   passwordHash: string;
+
+  @prop()
+  role: "admin" | "user"
 }
 export class IDelivery {
   @prop()
@@ -70,6 +73,8 @@ export class UserModel extends TimeStamps {
 
   @prop({ type: () => IDelivery })
   delivery: IDelivery;
+
+  typegooseName: string;
 }
 
 

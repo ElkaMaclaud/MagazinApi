@@ -11,7 +11,7 @@ export interface IUserGood {
   goodId: string;
   count: number;
   favorite?: boolean;
-  choice?: boolean;
+  choice: "address" | "pickUpPoin";
 }
 
 export interface IInfoPublik {
@@ -19,11 +19,13 @@ export interface IInfoPublik {
   city: string;
   age?: number;
 }
-export interface IInfoPrivate extends IInfoPublik {
+export interface IInfoPrivate {
   phone?: string;
-  dateOfBirt?: Date;
+  dateOfBirth?: Date;
   email: string;
   gender?: "Ж" | "М";
+  role: "admin" | "user"
+
 }
 export interface IDelivery {
   address?: string;

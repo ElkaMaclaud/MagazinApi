@@ -18,4 +18,7 @@ export class ReviewModel extends TimeStamps {
 
   @prop()
   goodId: Types.ObjectId;
+
+  @prop()
+  typegooseName: string;  
 }

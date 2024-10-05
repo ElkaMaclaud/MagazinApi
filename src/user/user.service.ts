@@ -21,11 +21,11 @@ export class UserService {
       publik: {
         name: dto.name,
         city: "",
-        age: "",
+        age: 20,
       },
       privates: {
         phone: dto.phone || "",
-        dataofBirt: dto.dataofBirth || "",
+        dateOfBirth: new Date(dto.dateofBirth) || new Date(),
         role: "user",
         email: dto.email,
         passwordHash: await hash(dto.password, salt),
@@ -36,8 +36,9 @@ export class UserService {
       delivery: {
         address: "",
         pickUpPoin: "",
-        choice: "",
+        choice: "pickUpPoin",
       },
+      typegooseName: ""
     });
     return newUser.save();
   }

@@ -8,14 +8,17 @@ export class AuthDto {
   email: string;
 
   @prop()
-  phone?: number;
+  phone?: string;
 
   @prop()
-  dataofBirth?: Date;
+  dateofBirth?: Date;
 
   @prop()
   password: string;
 
   @prop()
   role?: "admin" | "user";
+
+  @prop()
+  typegooseName?: string;  
 }

@@ -1,4 +1,5 @@
 import { prop } from "@typegoose/typegoose";
+import { Types } from "mongoose";
 
 export class ReviewDto {
   @prop()
@@ -15,4 +16,9 @@ export class ReviewDto {
 
   @prop()
   productId: string;
+
+  @prop()
+  goodId: Types.ObjectId; 
+
+  typegooseName: string;  
 }

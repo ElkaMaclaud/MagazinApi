@@ -19,9 +19,7 @@ import { UserEmail } from "src/decorators/user-email.decorator";
 
 @Controller("user")
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   @Post("auth/register")
   async register(@Body() dto: AuthDto) {
