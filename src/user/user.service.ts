@@ -306,8 +306,8 @@ export class UserService {
           $unset: ["isExisting", "existingItem"],
         },
         {
-          $project: {
-            basket: {
+          $set: {
+            updatedBasketItem: {
               $filter: {
                 input: "$basket",
                 as: "item",
