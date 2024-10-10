@@ -66,7 +66,6 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @UseGuards(JwtAuthGuard)
   @Get("userData")
   async getUserData(id: string) {
     return this.userService.getUserData(id);
@@ -87,42 +86,46 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch("addBasket/:id")
+  @Patch("addBasket")
   async addBasket(
     @Req() req,
-    @Param("id") id: string,
+    @Body() dto: {id: string},
     @UserEmail() email: string,
   ) {
+    const id = dto.id
     return this.userService.addBasket(email, id);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch("toggleChoice/:id")
+  @Patch("toggleChoice")
   async toggleChoice(
     @Req() req,
-    @Param("id") id: string,
+    @Body() dto: {id: string},
     @UserEmail() email: string,
   ) {
+    const id = dto.id
     return this.userService.toggleChoice(email, id);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch("toggleFavorites/:id")
+  @Patch("toggleFavorites")
   async addFavorites(
     @Req() req,
-    @Param("id") id: string,
+    @Body() dto: {id: string},
     @UserEmail() email: string,
   ) {
+    const id = dto.id
     return this.userService.toggleFavorites(email, id);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch("buy/:id")
+  @Patch("buy")
   async addOrder(
     @Req() req,
-    @Param("id") id: string,
+    @Body() dto: {id: string},
     @UserEmail() email: string,
   ) {
+    const id = dto.id
     return this.userService.addOrder(email, id);
   }
 
@@ -130,22 +133,24 @@ export class UserController {
   // async buy(@Body() dto: IUserGood) {}
 
   @UseGuards(JwtAuthGuard)
-  @Patch("subBasket/:id")
+  @Patch("subBasket")
   async subBasket(
     @Req() req,
-    @Param("id") id: string,
+    @Body() dto: {id: string},
     @UserEmail() email: string,
   ) {
+    const id = dto.id
     return this.userService.subBasket(email, id);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch("deleteBasket/:id")
+  @Patch("deleteBasket")
   async deleteBasket(
     @Req() req,
-    @Param("id") id: string,
+    @Body() dto: {id: string},
     @UserEmail() email: string,
   ) {
+    const id = dto.id
     const result = this.userService.deleteBasket(email, id);
     return result;
   }

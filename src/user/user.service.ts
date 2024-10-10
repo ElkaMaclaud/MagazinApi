@@ -171,13 +171,13 @@ export class UserService {
         {
           $project: {
             _id: 0,
-            [field]: 1,
+            [field]: 1 //[field]: { $arrayElemAt: [`$${field}`, 0] }, // [field]: 1 - так возвращал массив!!!!!!!!!!,
           },
         },
       ])
       .exec();
 
-    return result[0];
+    return result[0]?.[field] || [];
   }
 
   async getBasket(email: string) {
