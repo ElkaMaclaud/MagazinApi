@@ -176,7 +176,6 @@ export class UserService {
         },
       ])
       .exec();
-
     return result[0]?.[field] || [];
   }
 
@@ -221,8 +220,8 @@ export class UserService {
       operator = "subtract";
     }
 
-    return await this.userModel
-      .updateOne({ "privates.email": email }, [
+   const result = await this.userModel
+      .findOneAndUpdate({ "privates.email": email }, [
         {
           $set: {
             isExisting: { $in: [goodId, "$basket.goodId"] },
@@ -306,13 +305,26 @@ export class UserService {
         {
           $unset: ["isExisting", "existingItem"],
         },
-      ])
+        {
+          $project: {
+            basket: {
+              $filter: {
+                input: "$basket",
+                as: "item",
+                cond: { $eq: ["$$item.goodId", goodId] },
+              },
+            },
+          },
+        },
+      ],
+      { new: true })
       .exec();
+      return result?.basket[0] || {}
   }
 
   async deleteGood(email: string, id: string, field: string) {
     return await this.userModel
-      .updateOne(
+      .findOneAndUpdate(
         { "privates.email": email },
         { $pull: { [field]: { goodId: id } } },
       )
@@ -324,7 +336,7 @@ export class UserService {
   }
   async toggleChoice(email: string, goodId: string) {
     return await this.userModel
-      .updateOne({ "privates.email": email }, [
+      .findOneAndUpdate({ "privates.email": email }, [
         {
           $set: {
             basket: {
@@ -367,7 +379,7 @@ export class UserService {
   }
   async ChooseAll(email: string, on: boolean) {
     return await this.userModel
-      .updateOne({ "privates.email": email }, [
+      .findOneAndUpdate({ "privates.email": email }, [
         {
           $set: {
             basket: {
@@ -386,7 +398,7 @@ export class UserService {
   }
   async toggleFavorites(email: string, goodId: string) {
     return await this.userModel
-      .updateOne({ "privates.email": email }, [
+      .findOneAndUpdate({ "privates.email": email }, [
         {
           $set: {
             isExisting: { $in: [goodId, "$favorites"] },
@@ -410,7 +422,7 @@ export class UserService {
       .exec();
   }
   async addOrder(email: string, id: string) {
-    return await this.userModel.updateOne(
+    return await this.userModel.findOneAndUpdate(
       { "private.email": email },
       { $push: { order: { goodId: id } } },
     );
@@ -419,7 +431,7 @@ export class UserService {
     return this.updateGoodToBasket(email, id, "sub");
   }
   async deleteSelected(email: string) {
-    return this.userModel.updateOne({"privates.email": email}, [
+    return this.userModel.findOneAndUpdate({"privates.email": email}, [
       {
         $set: {
           basket: {
