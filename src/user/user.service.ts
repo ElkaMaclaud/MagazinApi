@@ -38,7 +38,7 @@ export class UserService {
         pickUpPoin: "",
         choice: "pickUpPoin",
       },
-      typegooseName: ""
+      typegooseName: "",
     });
     return newUser.save();
   }
@@ -171,7 +171,7 @@ export class UserService {
         {
           $project: {
             _id: 0,
-            [field]: 1 //[field]: { $arrayElemAt: [`$${field}`, 0] }, // [field]: 1 - так возвращал массив!!!!!!!!!!,
+            [field]: 1, //[field]: { $arrayElemAt: [`$${field}`, 0] }, // [field]: 1 - так возвращал массив!!!!!!!!!!,
           },
         },
       ])
@@ -220,106 +220,144 @@ export class UserService {
       operator = "subtract";
     }
 
-   const result = await this.userModel
-      .findOneAndUpdate({ "privates.email": email }, [
-        {
-          $set: {
-            isExisting: { $in: [goodId, "$basket.goodId"] },
-            existingItem: {
-              $filter: {
-                input: "$basket",
-                as: "item",
-                cond: { $eq: ["$$item.goodId", goodId] },
+    await this.userModel
+      .updateOne(
+        { "privates.email": email },
+        [
+          {
+            $set: {
+              isExisting: { $in: [goodId, "$basket.goodId"] },
+              existingItem: {
+                $filter: {
+                  input: "$basket",
+                  as: "item",
+                  cond: { $eq: ["$$item.goodId", goodId] },
+                },
               },
             },
           },
-        },
-        {
-          $set: {
-            basket: {
-              $cond: {
-                if: "$isExisting",
-                then: {
-                  $cond: {
-                    if: {
-                      $and: [
-                        // { $lt: [ { $arrayElemAt: ["$existingItem", 0] }, 2 ] },
-                        {
-                          $lt: [
-                            {
-                              $first: {
-                                $map: {
-                                  input: "$existingItem",
-                                  as: "item",
-                                  in: "$$item.count",
+          {
+            $set: {
+              basket: {
+                $cond: {
+                  if: "$isExisting",
+                  then: {
+                    $cond: {
+                      if: {
+                        $and: [
+                          // { $lt: [ { $arrayElemAt: ["$existingItem", 0] }, 2 ] },
+                          {
+                            $lt: [
+                              {
+                                $first: {
+                                  $map: {
+                                    input: "$existingItem",
+                                    as: "item",
+                                    in: "$$item.count",
+                                  },
                                 },
                               },
-                            },
-                            2,
-                          ],
-                        },
-                        { $eq: [operator, "subtract"] },
-                      ],
-                    },
-                    then: {
-                      $filter: {
-                        input: "$basket",
-                        as: "item",
-                        cond: { $ne: ["$$item.goodId", goodId] },
+                              2,
+                            ],
+                          },
+                          { $eq: [operator, "subtract"] },
+                        ],
                       },
-                    },
-                    else: {
-                      $map: {
-                        input: "$basket",
-                        as: "item",
-                        in: {
-                          $cond: {
-                            if: { $eq: ["$$item.goodId", goodId] },
-                            then: {
-                              goodId: "$$item.goodId",
-                              count: { [`$${operator}`]: ["$$item.count", 1] },
+                      then: {
+                        $filter: {
+                          input: "$basket",
+                          as: "item",
+                          cond: { $ne: ["$$item.goodId", goodId] },
+                        },
+                      },
+                      else: {
+                        $map: {
+                          input: "$basket",
+                          as: "item",
+                          in: {
+                            $cond: {
+                              if: { $eq: ["$$item.goodId", goodId] },
+                              then: {
+                                goodId: "$$item.goodId",
+                                count: {
+                                  [`$${operator}`]: ["$$item.count", 1],
+                                },
+                              },
+                              else: "$$item",
                             },
-                            else: "$$item",
                           },
                         },
                       },
                     },
                   },
-                },
-                else: {
-                  $cond: {
-                    if: { $eq: [operand, "add"] },
-                    then: {
-                      $concatArrays: [
-                        "$basket",
-                        [{ goodId: goodId, count: 1, choice: true }],
-                      ],
+                  else: {
+                    $cond: {
+                      if: { $eq: [operand, "add"] },
+                      then: {
+                        $concatArrays: [
+                          "$basket",
+                          [{ goodId: goodId, count: 1, choice: true }],
+                        ],
+                      },
+                      else: "$basket",
                     },
-                    else: "$basket",
                   },
                 },
               },
             },
           },
-        },
-        {
-          $unset: ["isExisting", "existingItem"],
-        },
-        {
-          $set: {
-            updatedBasketItem: {
-              $filter: {
-                input: "$basket",
-                as: "item",
-                cond: { $eq: ["$$item.goodId", goodId] },
+          {
+            $unset: ["isExisting", "existingItem"],
+          }
+        ],
+        { new: true },
+      )
+    const result = await this.userModel.aggregate([
+      {
+        $match: { "privates.email": email },
+      },
+      {
+        $lookup: {
+          from: "Good",
+          let: { goodId: { $toString: goodId } },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: ["$$goodId", { $toString: "$_id" }] },
               },
             },
-          },
+          ],
+          as: "goodDetails", 
         },
-      ],
-      { new: true })
-      .exec();
-      return result?.basket[0] || {}
+      },
+      {
+        $project: {
+          updated: {
+            $mergeObjects: [
+              {
+                $arrayElemAt: [
+                  {
+                    $filter: {
+                      input: "$basket",
+                      as: "item",
+                      cond: { $eq: ["$$item.goodId", goodId] },
+                    },
+                  },
+                  0,
+                ],
+              },
+              { $arrayElemAt: ["$goodDetails", 0] }, 
+            ],
+          }
+        },
+      },
+      {
+        $project: {
+          "updated.goodId": 0,
+        },
+      },
+    ]).exec();
+    return result[0]?.updated || {};
   }
 
   async deleteGood(email: string, id: string, field: string) {
@@ -431,19 +469,19 @@ export class UserService {
     return this.updateGoodToBasket(email, id, "sub");
   }
   async deleteSelected(email: string) {
-    return this.userModel.findOneAndUpdate({"privates.email": email}, [
+    return this.userModel.findOneAndUpdate({ "privates.email": email }, [
       {
         $set: {
           basket: {
-              $filter: {
-                input: "$basket",
-                as: "item",
-                  cond: {$eq: ["$$item.choice", false]}
-              }
-            }
-        }
-      }
-    ])
+            $filter: {
+              input: "$basket",
+              as: "item",
+              cond: { $eq: ["$$item.choice", false] },
+            },
+          },
+        },
+      },
+    ]);
   }
   async deleteBasket(email: string, id: string) {
     return this.deleteGood(email, id, "basket");
