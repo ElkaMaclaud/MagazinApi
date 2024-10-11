@@ -220,153 +220,155 @@ export class UserService {
       operator = "subtract";
     }
 
-    await this.userModel
-      .updateOne(
-        { "privates.email": email },
-        [
-          {
-            $set: {
-              isExisting: { $in: [goodId, "$basket.goodId"] },
-              existingItem: {
-                $filter: {
-                  input: "$basket",
-                  as: "item",
-                  cond: { $eq: ["$$item.goodId", goodId] },
-                },
+    await this.userModel.updateOne(
+      { "privates.email": email },
+      [
+        {
+          $set: {
+            isExisting: { $in: [goodId, "$basket.goodId"] },
+            existingItem: {
+              $filter: {
+                input: "$basket",
+                as: "item",
+                cond: { $eq: ["$$item.goodId", goodId] },
               },
             },
           },
-          {
-            $set: {
-              basket: {
-                $cond: {
-                  if: "$isExisting",
-                  then: {
-                    $cond: {
-                      if: {
-                        $and: [
-                          // { $lt: [ { $arrayElemAt: ["$existingItem", 0] }, 2 ] },
-                          {
-                            $lt: [
-                              {
-                                $first: {
-                                  $map: {
-                                    input: "$existingItem",
-                                    as: "item",
-                                    in: "$$item.count",
-                                  },
+        },
+        {
+          $set: {
+            basket: {
+              $cond: {
+                if: "$isExisting",
+                then: {
+                  $cond: {
+                    if: {
+                      $and: [
+                        // { $lt: [ { $arrayElemAt: ["$existingItem", 0] }, 2 ] },
+                        {
+                          $lt: [
+                            {
+                              $first: {
+                                $map: {
+                                  input: "$existingItem",
+                                  as: "item",
+                                  in: "$$item.count",
                                 },
                               },
-                              2,
-                            ],
-                          },
-                          { $eq: [operator, "subtract"] },
-                        ],
-                      },
-                      then: {
-                        $filter: {
-                          input: "$basket",
-                          as: "item",
-                          cond: { $ne: ["$$item.goodId", goodId] },
-                        },
-                      },
-                      else: {
-                        $map: {
-                          input: "$basket",
-                          as: "item",
-                          in: {
-                            $cond: {
-                              if: { $eq: ["$$item.goodId", goodId] },
-                              then: {
-                                goodId: "$$item.goodId",
-                                count: {
-                                  [`$${operator}`]: ["$$item.count", 1],
-                                },
-                              },
-                              else: "$$item",
                             },
+                            2,
+                          ],
+                        },
+                        { $eq: [operator, "subtract"] },
+                      ],
+                    },
+                    then: {
+                      $filter: {
+                        input: "$basket",
+                        as: "item",
+                        cond: { $ne: ["$$item.goodId", goodId] },
+                      },
+                    },
+                    else: {
+                      $map: {
+                        input: "$basket",
+                        as: "item",
+                        in: {
+                          $cond: {
+                            if: { $eq: ["$$item.goodId", goodId] },
+                            then: {
+                              goodId: "$$item.goodId",
+                              count: {
+                                [`$${operator}`]: ["$$item.count", 1],
+                              },
+                            },
+                            else: "$$item",
                           },
                         },
                       },
                     },
                   },
-                  else: {
-                    $cond: {
-                      if: { $eq: [operand, "add"] },
-                      then: {
-                        $concatArrays: [
-                          "$basket",
-                          [{ goodId: goodId, count: 1, choice: true }],
-                        ],
-                      },
-                      else: "$basket",
+                },
+                else: {
+                  $cond: {
+                    if: { $eq: [operand, "add"] },
+                    then: {
+                      $concatArrays: [
+                        "$basket",
+                        [{ goodId: goodId, count: 1, choice: true }],
+                      ],
                     },
+                    else: "$basket",
                   },
                 },
               },
             },
           },
-          {
-            $unset: ["isExisting", "existingItem"],
-          }
-        ],
-        { new: true },
-      )
-    const result = await this.userModel.aggregate([
-      {
-        $match: { "privates.email": email },
-      },
-      {
-        $lookup: {
-          from: "Good",
-          let: { goodId: { $toString: goodId } },
-          pipeline: [
-            {
-              $match: {
-                $expr: { $eq: ["$$goodId", { $toString: "$_id" }] },
-              },
-            },
-          ],
-          as: "goodDetails", 
         },
-      },
-      {
-        $project: {
-          updated: {
-            $mergeObjects: [
+        {
+          $unset: ["isExisting", "existingItem"],
+        },
+      ],
+      { new: true },
+    );
+    const result = await this.userModel
+      .aggregate([
+        {
+          $match: { "privates.email": email },
+        },
+        {
+          $lookup: {
+            from: "Good",
+            let: { goodId: { $toString: goodId } },
+            pipeline: [
               {
-                $arrayElemAt: [
-                  {
-                    $filter: {
-                      input: "$basket",
-                      as: "item",
-                      cond: { $eq: ["$$item.goodId", goodId] },
-                    },
-                  },
-                  0,
-                ],
+                $match: {
+                  $expr: { $eq: ["$$goodId", { $toString: "$_id" }] },
+                },
               },
-              { $arrayElemAt: ["$goodDetails", 0] }, 
             ],
-          }
+            as: "goodDetails",
+          },
         },
-      },
-      {
-        $project: {
-          "updated.goodId": 0,
+        {
+          $project: {
+            updated: {
+              $mergeObjects: [
+                {
+                  $arrayElemAt: [
+                    {
+                      $filter: {
+                        input: "$basket",
+                        as: "item",
+                        cond: { $eq: ["$$item.goodId", goodId] },
+                      },
+                    },
+                    0,
+                  ],
+                },
+                { $arrayElemAt: ["$goodDetails", 0] },
+              ],
+            },
+          },
         },
-      },
-    ]).exec();
+        {
+          $project: {
+            "updated.goodId": 0,
+          },
+        },
+      ])
+      .exec();
     return result[0]?.updated || {};
   }
 
   async deleteGood(email: string, id: string, field: string) {
-    return await this.userModel
-      .findOneAndUpdate(
+    await this.userModel
+      .updateOne(
         { "privates.email": email },
         { $pull: { [field]: { goodId: id } } },
       )
       .exec();
+    return { id };
   }
 
   async addBasket(email: string, id: string) {
@@ -435,29 +437,87 @@ export class UserService {
       .exec();
   }
   async toggleFavorites(email: string, goodId: string) {
-    return await this.userModel
-      .findOneAndUpdate({ "privates.email": email }, [
-        {
-          $set: {
-            isExisting: { $in: [goodId, "$favorites"] },
+    const updateResult = await this.userModel
+      .findOneAndUpdate(
+        { "privates.email": email },
+        [
+          {
+            $set: {
+              isExisting: { $in: [goodId, "$favorites"] },
+            },
           },
-        },
-        {
-          $set: {
-            favorites: {
-              $cond: {
-                if: "$isExisting",
-                then: { $setDifference: ["$favorites", [goodId]] },
-                else: { $concatArrays: ["$favorites", [goodId]] },
+          {
+            $set: {
+              isExisting: { $in: [goodId, "$favorites"] },
+              favorites: {
+                $cond: {
+                  if: "$isExisting",
+                  then: { $setDifference: ["$favorites", [goodId]] },
+                  else: { $concatArrays: ["$favorites", [goodId]] },
+                },
               },
             },
           },
-        },
-        {
-          $unset: "isExisting", // Удаляем временное поле isExisting
-        },
-      ])
-      .exec();
+        ],
+        { new: true, useFindAndModify: false },
+      )
+      .exec() as UserModel & {isExisting?: boolean};
+
+    // const existing = updateResult["isExisting"];
+
+    let result = {};
+    if (updateResult.favorites.includes(goodId)) {
+      result = await this.userModel
+        .aggregate([
+          {
+            $match: { "privates.email": email },
+          },
+          {
+            $lookup: {
+              from: "Good",
+              let: { goodId: { $toString: goodId } },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: { $eq: ["$$goodId", { $toString: "$_id" }] },
+                  },
+                },
+              ],
+              as: "goodDetails",
+            },
+          },
+          {
+            $project: {
+              updated: {
+                $mergeObjects: [
+                  {
+                    $arrayElemAt: [
+                      {
+                        $filter: {
+                          input: "$favorites",
+                          as: "item",
+                          cond: { $eq: ["$$item.goodId", goodId] },
+                        },
+                      },
+                      0,
+                    ],
+                  },
+                  { $arrayElemAt: ["$goodDetails", 0] },
+                ],
+              },
+            },
+          },
+          {
+            $project: {
+              "updated.goodId": 0,
+            },
+          },
+        ])
+        .exec();
+        
+        result = result[0]?.updated;
+    }
+   return result;
   }
   async addOrder(email: string, id: string) {
     return await this.userModel.findOneAndUpdate(
