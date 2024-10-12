@@ -448,7 +448,7 @@ export class UserService {
           },
           {
             $set: {
-              isExisting: { $in: [goodId, "$favorites"] },
+              existing: { $in: [goodId, "$favorites"] },
               favorites: {
                 $cond: {
                   if: "$isExisting",
@@ -461,11 +461,10 @@ export class UserService {
         ],
         { new: true, useFindAndModify: false },
       )
-      .exec() as UserModel & {isExisting?: boolean};
+      .exec() as UserModel & {existing?: boolean};
 
     // const existing = updateResult["isExisting"];
-
-    let result = {};
+    let result = {id: goodId};
     if (updateResult.favorites.includes(goodId)) {
       result = await this.userModel
         .aggregate([
@@ -503,6 +502,7 @@ export class UserService {
                     ],
                   },
                   { $arrayElemAt: ["$goodDetails", 0] },
+                  {favorite: true}
                 ],
               },
             },
