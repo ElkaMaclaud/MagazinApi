@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -79,7 +80,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch("deleteSelected")
+  @Delete("deleteSelected")
   async deleteSelected(@Req() req, @UserEmail() email: string) {
     const result = this.userService.deleteSelected(email);
     return result;

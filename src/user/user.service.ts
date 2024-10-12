@@ -207,7 +207,7 @@ export class UserService {
             delivery: dto.delivery,
           },
         },
-        { new: true },
+        { new: true, useFindAndModify: false },
       )
       .exec();
 
@@ -309,7 +309,7 @@ export class UserService {
           $unset: ["isExisting", "existingItem"],
         },
       ],
-      { new: true },
+      { new: true, useFindAndModify: false },
     );
     const result = await this.userModel
       .aggregate([
@@ -375,7 +375,7 @@ export class UserService {
     return this.updateGoodToBasket(email, id);
   }
   async toggleChoice(email: string, goodId: string) {
-    return await this.userModel
+    const updated = await this.userModel
       .findOneAndUpdate({ "privates.email": email }, [
         {
           $set: {
@@ -388,11 +388,15 @@ export class UserService {
                     if: {
                       $eq: ["$$item.goodId", goodId],
                     },
-
                     then: {
                       goodId: "$$item.goodId",
                       count: "$$item.count",
                       choice: {
+                        // $cond: {
+                        //   if: { $eq: ["$$item.choice", true] },
+                        //   then: false, 
+                        //   else: true,  
+                        // },
                         $not: ["$$item.choice"],
                       },
                     },
@@ -406,7 +410,6 @@ export class UserService {
                     //     },
                     //   ],
                     // },
-
                     else: "$$item",
                   },
                 },
@@ -414,8 +417,11 @@ export class UserService {
             },
           },
         },
-      ])
+      ],
+      { new: true, useFindAndModify: false })
       .exec();
+      console.log(updated)
+      return updated.basket.find(good=>good.goodId===goodId)
   }
   async ChooseAll(email: string, on: boolean) {
     return await this.userModel
@@ -437,7 +443,7 @@ export class UserService {
       .exec();
   }
   async toggleFavorites(email: string, goodId: string) {
-    const updateResult = await this.userModel
+    const updateResult = (await this.userModel
       .findOneAndUpdate(
         { "privates.email": email },
         [
@@ -461,10 +467,10 @@ export class UserService {
         ],
         { new: true, useFindAndModify: false },
       )
-      .exec() as UserModel & {existing?: boolean};
+      .exec()) as UserModel & { existing?: boolean };
 
     // const existing = updateResult["isExisting"];
-    let result = {id: goodId};
+    let result = { id: goodId };
     if (updateResult.favorites.includes(goodId)) {
       result = await this.userModel
         .aggregate([
@@ -502,7 +508,19 @@ export class UserService {
                     ],
                   },
                   { $arrayElemAt: ["$goodDetails", 0] },
-                  {favorite: true}
+                  { favorite: true },
+                  {
+                    $arrayElemAt: [
+                      {
+                        $filter: {
+                          input: "$basket",
+                          as: "item",
+                          cond: { $eq: ["$$item.goodId", goodId] },
+                        },
+                      },
+                      0,
+                    ],
+                  },
                 ],
               },
             },
@@ -514,10 +532,10 @@ export class UserService {
           },
         ])
         .exec();
-        
-        result = result[0]?.updated;
+
+      result = result[0]?.updated;
     }
-   return result;
+    return result;
   }
   async addOrder(email: string, id: string) {
     return await this.userModel.findOneAndUpdate(
