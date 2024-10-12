@@ -376,52 +376,54 @@ export class UserService {
   }
   async toggleChoice(email: string, goodId: string) {
     const updated = await this.userModel
-      .findOneAndUpdate({ "privates.email": email }, [
-        {
-          $set: {
-            basket: {
-              $map: {
-                input: "$basket",
-                as: "item",
-                in: {
-                  $cond: {
-                    if: {
-                      $eq: ["$$item.goodId", goodId],
-                    },
-                    then: {
-                      goodId: "$$item.goodId",
-                      count: "$$item.count",
-                      choice: {
-                        // $cond: {
-                        //   if: { $eq: ["$$item.choice", true] },
-                        //   then: false, 
-                        //   else: true,  
-                        // },
-                        $not: ["$$item.choice"],
+      .findOneAndUpdate(
+        { "privates.email": email },
+        [
+          {
+            $set: {
+              basket: {
+                $map: {
+                  input: "$basket",
+                  as: "item",
+                  in: {
+                    $cond: {
+                      if: {
+                        $eq: ["$$item.goodId", goodId],
                       },
+                      then: {
+                        goodId: "$$item.goodId",
+                        count: "$$item.count",
+                        choice: {
+                          // $cond: {
+                          //   if: { $eq: ["$$item.choice", true] },
+                          //   then: false,
+                          //   else: true,
+                          // },
+                          $not: ["$$item.choice"],
+                        },
+                      },
+                      // then: {
+                      //   $mergeObjects: [
+                      //     "$$item",
+                      //     {
+                      //       choice: {
+                      //         $not: ["$$item.choice"],
+                      //       },
+                      //     },
+                      //   ],
+                      // },
+                      else: "$$item",
                     },
-                    // then: {
-                    //   $mergeObjects: [
-                    //     "$$item",
-                    //     {
-                    //       choice: {
-                    //         $not: ["$$item.choice"],
-                    //       },
-                    //     },
-                    //   ],
-                    // },
-                    else: "$$item",
                   },
                 },
               },
             },
           },
-        },
-      ],
-      { new: true, useFindAndModify: false })
+        ],
+        { new: true, useFindAndModify: false },
+      )
       .exec();
-      console.log(updated)
-      return updated.basket.find(good=>good.goodId===goodId)
+    return updated.basket.find((good) => good.goodId === goodId);
   }
   async ChooseAll(email: string, on: boolean) {
     return await this.userModel
@@ -547,19 +549,24 @@ export class UserService {
     return this.updateGoodToBasket(email, id, "sub");
   }
   async deleteSelected(email: string) {
-    return this.userModel.findOneAndUpdate({ "privates.email": email }, [
-      {
-        $set: {
-          basket: {
-            $filter: {
-              input: "$basket",
-              as: "item",
-              cond: { $eq: ["$$item.choice", false] },
+    const basket = await this.userModel.findOneAndUpdate(
+      { "privates.email": email },
+      [
+        {
+          $set: {
+            basket: {
+              $filter: {
+                input: "$basket",
+                as: "item",
+                cond: { $eq: ["$$item.choice", false] },
+              },
             },
           },
         },
-      },
-    ]);
+      ],
+      { new: true, useFindAndModify: false },
+    );
+    return  basket.basket
   }
   async deleteBasket(email: string, id: string) {
     return this.deleteGood(email, id, "basket");
