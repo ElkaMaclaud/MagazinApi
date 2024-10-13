@@ -11,7 +11,7 @@ export class IUserGood {
   favorite?: boolean;
 
   @prop()
-  choice: "address" | "pickUpPoin" | "";
+  choice?: boolean;
 }
 
 export class IInfoPublik {

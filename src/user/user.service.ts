@@ -423,7 +423,7 @@ export class UserService {
         { new: true, useFindAndModify: false },
       )
       .exec();
-    return updated.basket.find((good) => good.goodId === goodId);
+     return updated.basket.find((good) => good.goodId === goodId);
   }
   async ChooseAll(email: string, on: boolean) {
     return await this.userModel
@@ -566,7 +566,7 @@ export class UserService {
       ],
       { new: true, useFindAndModify: false },
     );
-    return  basket.basket
+    return basket.basket;
   }
   async deleteBasket(email: string, id: string) {
     return this.deleteGood(email, id, "basket");
