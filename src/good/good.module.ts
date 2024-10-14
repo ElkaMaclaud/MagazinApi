@@ -6,7 +6,6 @@ import { GoodService } from './good.service';
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { getJWTConfig } from "src/configs/jwt.config";
-import { JwtStratagy } from "src/user/strategies/jwt.stratagy";
 
 @Module({
   controllers: [GoodController],
@@ -26,6 +25,6 @@ import { JwtStratagy } from "src/user/strategies/jwt.stratagy";
       useFactory: getJWTConfig,
     }),
   ],
-  providers: [GoodService, JwtStratagy],
+  providers: [GoodService],
 })
 export class GoodModule {}

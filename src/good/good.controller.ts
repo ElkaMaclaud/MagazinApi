@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Post, Req, UseGuards } from "@nestjs/common";
 import { GoodDto, GoodIdsDto } from "./dto/find-goods.dto";
 import { GoodService } from "./good.service";
-import { UserEmail } from "src/decorators/user-email.decorator";
-import { JwtAuthGuard } from "src/user/guards/jwt.guard";
+import { UserEmail } from "src/decorators/user-email.decoratorIfAuto";
+import { JwtAuthGuard } from "./guards/jwtAuthGuard";
 
 @Controller("good")
 export class GoodController {
