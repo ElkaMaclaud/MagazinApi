@@ -14,6 +14,149 @@ export class GoodService {
     @InjectModel(GoodModel) private readonly goodModel: ModelType<GoodModel>,
   ) {}
 
+  buildMatchCondition(value: string | { [key: string]: string }) {
+    const matchCondition: { [key: string]: any } = {};
+
+    if (typeof value === "string") {
+      matchCondition[value] = { $exists: true }; 
+    } else if (typeof value === "object" && Object.keys(value).length > 0) {
+      const dynamicField = Object.keys(value)[0];
+      matchCondition[dynamicField] = { $in: [value[dynamicField]]}
+    }
+    return matchCondition;
+  }
+
+  async getGoodsByDiscountСlassificationUser(
+    email: string,
+    value: string | { [key: string]: string },
+  ): Promise<DocumentType<GoodModel>[] | void> {
+    return await this.goodModel
+      .aggregate([
+        {
+          $match: this.buildMatchCondition(value),
+        },
+        {
+          $lookup: {
+            from: "User",
+            let: { userEmail: email },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ["$privates.email", "$$userEmail"] }, 
+                },
+              },
+            ],
+            as: "user",
+          },
+        },
+        {
+          $unwind: {
+            path: "$user",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $addFields: {
+            count: {
+              $let: {
+                vars: {
+                  matchedItem: {
+                    $arrayElemAt: [
+                      {
+                        $filter: {
+                          input: "$user.basket",
+                          as: "basketItem",
+                          cond: {
+                            $eq: [
+                              "$$basketItem.goodId",
+                              { $toString: "$$ROOT._id" },
+                            ],
+                          },
+                        },
+                      },
+                      0,
+                    ],
+                  },
+                },
+                in: {
+                  $cond: {
+                    if: { $ne: ["$$matchedItem", null] },
+                    then: "$$matchedItem.count",
+                    else: 0,
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          $addFields: {
+            favorite: {
+              $let: {
+                vars: {
+                  matchedFavorite: {
+                    $arrayElemAt: [
+                      {
+                        $filter: {
+                          input: "$user.favorites",
+                          as: "favoriteItem",
+                          cond: {
+                            $eq: [
+                              "$$favoriteItem",
+                              { $toString: "$$ROOT._id" },
+                            ],
+                          },
+                        },
+                      },
+                      0,
+                    ],
+                  },
+                },
+                in: {
+                  $cond: {
+                    if: { $gt: [{ $type: "$$matchedFavorite" }, "missing"] },
+                    then: true,
+                    else: "$$REMOVE",
+                  },
+                },
+              },
+            },
+          },
+        },
+        // Проверка того, что входит в  matched:
+        // {
+        //   $addFields: {
+        //     matchedFavorite: {
+        //       $let: {
+        //         vars: {
+        //           matched: {
+        //             $filter: {
+        //               input: "$user.favorites",
+        //               as: "favoriteItem",
+        //               cond: { $eq: ["$$favoriteItem", { $toString: "$$ROOT._id" }] }
+        //             }
+        //           }
+        //         },
+        //         in: {
+        //           matched: {
+        //             $arrayElemAt: ["$$matched", 0]
+        //           },
+        //           rootId: { $toString: "$$ROOT._id" },
+        //           favoriteExists: { $cond: { if: { $ne: ["$$matched", null] }, then: true, else: false } }
+        //         }
+        //       }
+        //     }
+        //   }
+        // },
+        {
+          $project: {
+            user: 0,
+          },
+        },
+      ])
+      .exec();
+  }
+
   async getGoodsByCategory(dto: {
     category: string;
   }): Promise<DocumentType<GoodModel>[] | void> {

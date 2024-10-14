@@ -145,6 +145,7 @@ export class UserService {
                           $mergeObjects: [
                             { goodId: { $toString: `$${field}` } },
                             { count: "$$basketItem.count" },
+                            { favorite: true },
                             { $arrayElemAt: ["$goodInfo", 0] },
                           ],
                         },
@@ -423,26 +424,31 @@ export class UserService {
         { new: true, useFindAndModify: false },
       )
       .exec();
-     return updated.basket.find((good) => good.goodId === goodId);
+    return updated.basket.find((good) => good.goodId === goodId);
   }
   async ChooseAll(email: string, on: boolean) {
-    return await this.userModel
-      .findOneAndUpdate({ "privates.email": email }, [
-        {
-          $set: {
-            basket: {
-              $map: {
-                input: "$basket",
-                as: "item",
-                in: {
-                  $mergeObjects: ["$$item", { choice: on }],
+     const updated = await this.userModel
+      .findOneAndUpdate(
+        { "privates.email": email },
+        [
+          {
+            $set: {
+              basket: {
+                $map: {
+                  input: "$basket",
+                  as: "item",
+                  in: {
+                    $mergeObjects: ["$$item", { choice: on }],
+                  },
                 },
               },
             },
           },
-        },
-      ])
+        ],
+        { new: true, useFindAndModify: false },
+      )
       .exec();
+      return updated.basket
   }
   async toggleFavorites(email: string, goodId: string) {
     const updateResult = (await this.userModel
