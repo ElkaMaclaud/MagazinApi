@@ -17,6 +17,7 @@ import { AuthDto } from "./dto/auth.dto";
 import { ALREADY_REGISTERED_ERROR } from "./user.constant";
 import { JwtAuthGuard } from "./guards/jwt.guard";
 import { UserEmail } from "src/decorators/user-email.decorator";
+import { IDelivery } from "./user.model";
 
 @Controller("user")
 export class UserController {
@@ -74,8 +75,15 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Patch("updateUserData")
-  async updateUserData(@Body() dto: UserDto, id: string) {
-    const result = this.userService.updateUserData(dto, id);
+  async updateUserData(@Body() dto: {name: string, phone: string}, @UserEmail() email: string,) {
+    const result = this.userService.updateUserData(dto, email);
+    return result;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch("changeDelivery")
+  async updateDelivery(@Body() dto: IDelivery, @UserEmail() email: string,) {
+    const result = this.userService.updateDelivery(dto, email);
     return result;
   }
 
@@ -123,11 +131,10 @@ export class UserController {
   @Patch("buy")
   async addOrder(
     @Req() req,
-    @Body() dto: {id: string},
+    @Body() dto: {ids: string[]},
     @UserEmail() email: string,
   ) {
-    const id = dto.id
-    return this.userService.addOrder(email, id);
+    return this.userService.addOrder(email, dto.ids);
   }
 
   // @Patch("buy")

@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from "nestjs-typegoose";
-import { IInfoPrivate, UserModel } from "./user.model";
+import { IDelivery, IInfoPrivate, UserModel } from "./user.model";
 import { UserDto } from "./dto/user.dto";
 import { ModelType } from "@typegoose/typegoose/lib/types";
 import { JwtService } from "@nestjs/jwt";
@@ -197,22 +197,42 @@ export class UserService {
       .findOne({ id }, { publik: 1, privates: 1, delivery: 1 })
       .exec();
   }
-  async updateUserData(dto: UserDto, id: string) {
+  async updateUserData(dto: { name: string; phone: string }, email: string) {
     const updatedUser = await this.userModel
       .findOneAndUpdate(
-        { _id: id },
-        {
-          $set: {
-            publik: dto.publik,
-            privates: dto.privates,
-            delivery: dto.delivery,
+        { "privates.email": email },
+        [
+          {
+            $set: {
+              publik: {
+                $mergeObjects: ["$publik", { name: dto.name }],
+              },
+              privates: {
+                $mergeObjects: ["$privates", { phone: dto.phone }],
+              },
+            },
           },
-        },
+        ],
+        { new: true, useFindAndModify: false },
+      )
+      .exec();
+    return {privates: updatedUser.privates, publik: updatedUser.publik, delivery: updatedUser.delivery};
+  }
+
+  async updateDelivery(dto: IDelivery, email: string) {
+    const updatedUser = await this.userModel
+      .findOneAndUpdate(
+        { "privates.email": email },
+        [
+          {
+            $set: { delivery: { $mergeObjects: ["$delivery", dto] } },
+          },
+        ],
         { new: true, useFindAndModify: false },
       )
       .exec();
 
-    return updatedUser;
+    return updatedUser.delivery
   }
 
   async updateGoodToBasket(email: string, goodId: string, operand = "add") {
@@ -427,7 +447,7 @@ export class UserService {
     return updated.basket.find((good) => good.goodId === goodId);
   }
   async ChooseAll(email: string, on: boolean) {
-     const updated = await this.userModel
+    const updated = await this.userModel
       .findOneAndUpdate(
         { "privates.email": email },
         [
@@ -448,7 +468,7 @@ export class UserService {
         { new: true, useFindAndModify: false },
       )
       .exec();
-      return updated.basket
+    return updated.basket;
   }
   async toggleFavorites(email: string, goodId: string) {
     const updateResult = (await this.userModel
@@ -545,12 +565,22 @@ export class UserService {
     }
     return result;
   }
-  async addOrder(email: string, id: string) {
-    return await this.userModel.findOneAndUpdate(
-      { "private.email": email },
-      { $push: { order: { goodId: id } } },
+  async addOrder(email: string, ids: string[]) {
+    const updated = await this.userModel.findOneAndUpdate(
+      { "privates.email": email },
+      {
+        $pull: {
+          basket: {
+            goodId: { $in: ids },
+          },
+        },
+        $push: { order: { $each: ids } },
+      },
+      { new: true, useFindAndModify: false },
     );
+    return updated.order;
   }
+
   async subBasket(email: string, id: string) {
     return this.updateGoodToBasket(email, id, "sub");
   }
