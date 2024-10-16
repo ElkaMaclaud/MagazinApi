@@ -192,11 +192,12 @@ export class UserService {
     return this.getData(email, "order");
   }
 
-  async getUserData(id: string) {
+  async getUserData(email: string) {
     return this.userModel
-      .findOne({ id }, { publik: 1, privates: 1, delivery: 1 })
+      .findOne({ "privates.email": email }, { publik: 1, privates: 1, delivery: 1 })
       .exec();
   }
+
   async updateUserData(dto: { name: string; phone: string }, email: string) {
     const updatedUser = await this.userModel
       .findOneAndUpdate(
@@ -216,7 +217,10 @@ export class UserService {
         { new: true, useFindAndModify: false },
       )
       .exec();
-    return {privates: updatedUser.privates, publik: updatedUser.publik, delivery: updatedUser.delivery};
+    return {
+      phone: updatedUser.privates.phone,
+      name: updatedUser.publik.name,
+    };
   }
 
   async updateDelivery(dto: IDelivery, email: string) {
@@ -232,7 +236,7 @@ export class UserService {
       )
       .exec();
 
-    return updatedUser.delivery
+    return updatedUser.delivery;
   }
 
   async updateGoodToBasket(email: string, goodId: string, operand = "add") {

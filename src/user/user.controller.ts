@@ -69,13 +69,13 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get("userData")
-  async getUserData(id: string) {
-    return this.userService.getUserData(id);
+  async getUserData(@UserEmail() email: string) {
+    return this.userService.getUserData(email);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch("updateUserData")
-  async updateUserData(@Body() dto: {name: string, phone: string}, @UserEmail() email: string,) {
+  async updateUserData(@Body() dto: {name: string, phone: string}, @UserEmail() email: string) {
     const result = this.userService.updateUserData(dto, email);
     return result;
   }
