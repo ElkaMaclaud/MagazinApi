@@ -5,9 +5,9 @@ import {
   Delete,
   Get,
   HttpCode,
-  Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from "@nestjs/common";
@@ -41,20 +41,38 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get("basket")
-  async getBasket(@Req() req, @UserEmail() email: string) {
-    return this.userService.getBasket(email);
+  async getBasket(
+    @Req() req,
+    @UserEmail() email: string,
+    @Query("offset") offset?: number,
+    @Query("limit") limit?: number,
+  ) {
+    const options = { offset, limit };
+    return this.userService.getBasket(email, options);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get("favorites")
-  async getFavorites(@Req() req, @UserEmail() email: string) {
-    return this.userService.getFavorites(email);
+  async getFavorites(
+    @Req() req,
+    @UserEmail() email: string,
+    @Query("offset") offset?: number,
+    @Query("limit") limit?: number,
+  ) {
+    const options = { offset, limit };
+    return this.userService.getFavorites(email, options);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get("orders")
-  async getOrders(@Req() req, @UserEmail() email: string) {
-    return this.userService.getOrders(email);
+  async getOrders(
+    @Req() req,
+    @UserEmail() email: string,
+    @Query("offset") offset?: number,
+    @Query("limit") limit?: number,
+  ) {
+    const options = { offset, limit };
+    return this.userService.getOrders(email, options);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -75,14 +93,17 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Patch("updateUserData")
-  async updateUserData(@Body() dto: {name: string, phone: string}, @UserEmail() email: string) {
+  async updateUserData(
+    @Body() dto: { name: string; phone: string },
+    @UserEmail() email: string,
+  ) {
     const result = this.userService.updateUserData(dto, email);
     return result;
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch("changeDelivery")
-  async updateDelivery(@Body() dto: IDelivery, @UserEmail() email: string,) {
+  async updateDelivery(@Body() dto: IDelivery, @UserEmail() email: string) {
     const result = this.userService.updateDelivery(dto, email);
     return result;
   }
@@ -98,10 +119,10 @@ export class UserController {
   @Patch("addBasket")
   async addBasket(
     @Req() req,
-    @Body() dto: {id: string},
+    @Body() dto: { id: string },
     @UserEmail() email: string,
   ) {
-    const id = dto.id
+    const id = dto.id;
     return this.userService.addBasket(email, id);
   }
 
@@ -109,10 +130,10 @@ export class UserController {
   @Patch("toggleChoice")
   async toggleChoice(
     @Req() req,
-    @Body() dto: {id: string},
+    @Body() dto: { id: string },
     @UserEmail() email: string,
   ) {
-    const id = dto.id
+    const id = dto.id;
     return this.userService.toggleChoice(email, id);
   }
 
@@ -120,10 +141,10 @@ export class UserController {
   @Patch("toggleFavorites")
   async addFavorites(
     @Req() req,
-    @Body() dto: {id: string},
+    @Body() dto: { id: string },
     @UserEmail() email: string,
   ) {
-    const id = dto.id
+    const id = dto.id;
     return this.userService.toggleFavorites(email, id);
   }
 
@@ -131,7 +152,7 @@ export class UserController {
   @Patch("buy")
   async addOrder(
     @Req() req,
-    @Body() dto: {ids: string[]},
+    @Body() dto: { ids: string[] },
     @UserEmail() email: string,
   ) {
     return this.userService.addOrder(email, dto.ids);
@@ -144,10 +165,10 @@ export class UserController {
   @Patch("subBasket")
   async subBasket(
     @Req() req,
-    @Body() dto: {id: string},
+    @Body() dto: { id: string },
     @UserEmail() email: string,
   ) {
-    const id = dto.id
+    const id = dto.id;
     return this.userService.subBasket(email, id);
   }
 
@@ -155,10 +176,10 @@ export class UserController {
   @Patch("deleteBasket")
   async deleteBasket(
     @Req() req,
-    @Body() dto: {id: string},
+    @Body() dto: { id: string },
     @UserEmail() email: string,
   ) {
-    const id = dto.id
+    const id = dto.id;
     const result = this.userService.deleteBasket(email, id);
     return result;
   }

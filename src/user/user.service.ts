@@ -1,7 +1,6 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from "nestjs-typegoose";
 import { IDelivery, IInfoPrivate, UserModel } from "./user.model";
-import { UserDto } from "./dto/user.dto";
 import { ModelType } from "@typegoose/typegoose/lib/types";
 import { JwtService } from "@nestjs/jwt";
 import { genSalt, hash, compare } from "bcryptjs";
@@ -75,7 +74,9 @@ export class UserService {
   // В данном методе делаем агрегацию, в которой подтягиваются данные из внешней коллекции в $lookup
   // В поле field м/б: корзина, избран. и куплен. определенного пользователя
   // Дальнейшей оптимизации данный метод не требует!
-  async getData(email: string, field: string) {
+  async getData(email: string, field: string, options) {
+    const offset = options.offset || 0
+    const limit = options.limit || 50
     const result = await this.userModel
       .aggregate([
         { $match: { "privates.email": email } },
@@ -175,21 +176,36 @@ export class UserService {
             [field]: 1, //[field]: { $arrayElemAt: [`$${field}`, 0] }, // [field]: 1 - так возвращал массив!!!!!!!!!!,
           },
         },
+        { $unwind: `$${field}` }, // Разворачиваем массив для применения skip и limit
+        { $skip: offset },
+        { $limit: limit },
+        {
+          $group: {
+            _id: null,
+            [field]: { $push: `$${field}` }, // Снова группируем, чтобы вернуть массив
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            [field]: 1,
+          },
+        },
       ])
       .exec();
     return result[0]?.[field] || [];
   }
 
-  async getBasket(email: string) {
-    return this.getData(email, "basket");
+  async getBasket(email: string, options) {
+    return this.getData(email, "basket", options);
   }
 
-  async getFavorites(email: string) {
-    return this.getData(email, "favorites");
+  async getFavorites(email: string, options) {
+    return this.getData(email, "favorites", options);
   }
 
-  async getOrders(email: string) {
-    return this.getData(email, "order");
+  async getOrders(email: string, options) {
+    return this.getData(email, "order", options);
   }
 
   async getUserData(email: string) {

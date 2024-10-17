@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { GoodModel } from "./good.model";
 import { DocumentType, ModelType } from "@typegoose/typegoose/lib/types";
 import { InjectModel } from "nestjs-typegoose";
-import { GoodIdsDto } from "./dto/find-goods.dto";
+import { GoodIdsDto, OptionsLimits } from "./dto/find-goods.dto";
 // import { GoodDto } from "./dto/find-goods.dto";
 // import * as path from "path";
 // import * as fs from "fs";
@@ -18,10 +18,10 @@ export class GoodService {
     const matchCondition: { [key: string]: any } = {};
 
     if (typeof value === "string") {
-      matchCondition[value] = { $exists: true }; 
+      matchCondition[value] = { $exists: true };
     } else if (typeof value === "object" && Object.keys(value).length > 0) {
       const dynamicField = Object.keys(value)[0];
-      matchCondition[dynamicField] = { $in: [value[dynamicField]]}
+      matchCondition[dynamicField] = { $in: [value[dynamicField]] };
     }
     return matchCondition;
   }
@@ -29,7 +29,10 @@ export class GoodService {
   async getGoodsByDiscountСlassificationUser(
     email: string,
     value: string | { [key: string]: string },
+    options: OptionsLimits,
   ): Promise<DocumentType<GoodModel>[] | void> {
+    const offset = options.offset || 0
+    const limit = options.limit || 50
     return await this.goodModel
       .aggregate([
         {
@@ -42,7 +45,7 @@ export class GoodService {
             pipeline: [
               {
                 $match: {
-                  $expr: { $eq: ["$privates.email", "$$userEmail"] }, 
+                  $expr: { $eq: ["$privates.email", "$$userEmail"] },
                 },
               },
             ],
@@ -153,26 +156,59 @@ export class GoodService {
             user: 0,
           },
         },
+        { $skip: offset },
+        { $limit: limit },
       ])
       .exec();
   }
 
-  async getGoodsByCategory(dto: {
-    category: string;
-  }): Promise<DocumentType<GoodModel>[] | void> {
-    return this.goodModel.find({ category: { $in: dto.category } }).exec();
+  async getGoodsByCategory(
+    dto: {
+      category: string;
+    },
+    options: OptionsLimits,
+  ): Promise<DocumentType<GoodModel>[] | void> {
+    const query = this.goodModel.find({
+      category: { $in: dto.category },
+    });
+    if (options.offset) {
+      query.skip(options.offset);
+    }
+    if (options.limit) {
+      query.limit(options.limit);
+    }
+
+    return query.exec();
   }
 
   async getGoodsByIds(
     dto: GoodIdsDto,
+    options: OptionsLimits,
   ): Promise<DocumentType<GoodModel>[] | void> {
-    return this.goodModel.find({ _id: { $in: dto.ids } }).exec();
+    const query = this.goodModel.find({ _id: { $in: dto.ids } })
+    if (options.offset) {
+      query.skip(options.offset);
+    }
+    if (options.limit) {
+      query.limit(options.limit);
+    }
+
+    return query.exec();
   }
 
   async getGoodsByDiscountСlassification(
     dto: string,
+    options: OptionsLimits,
   ): Promise<DocumentType<GoodModel>[] | void> {
-    return this.goodModel.find({ [dto]: { $exists: true } }).exec();
+    const query = this.goodModel.find({ [dto]: { $exists: true } })
+    if (options.offset) {
+      query.skip(options.offset);
+    }
+    if (options.limit) {
+      query.limit(options.limit);
+    }
+
+    return query.exec();
   }
 
   async getGoodById(id: string): Promise<GoodModel | void> {

@@ -17,8 +17,13 @@ export interface GoodDto {
   sale?: boolean;
   discount?: boolean;
 }
-
+export interface OptionsLimits {
+  offset: number; 
+  limit: number;
+}
 export class GoodIdsDto {
   @prop() 
   ids: string[];
 }
+
+

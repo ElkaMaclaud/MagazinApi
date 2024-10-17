@@ -1,5 +1,14 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards } from "@nestjs/common";
-import { GoodDto, GoodIdsDto } from "./dto/find-goods.dto";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from "@nestjs/common";
+import { GoodDto, GoodIdsDto, OptionsLimits } from "./dto/find-goods.dto";
 import { GoodService } from "./good.service";
 import { UserEmail } from "src/decorators/user-email.decoratorIfAuto";
 import { JwtAuthGuard } from "./guards/jwtAuthGuard";
@@ -9,19 +18,41 @@ export class GoodController {
   constructor(private readonly goodService: GoodService) {}
   @Get("goodsbySale")
   @UseGuards(JwtAuthGuard)
-  async goodsbySale( @Req() req, @UserEmail() email: string,) {
+  async goodsbySale(
+    @Req() req,
+    @UserEmail() email: string,
+    @Query("offset") offset?: number,
+    @Query("limit") limit?: number,
+  ) {
+    const options = { offset, limit };
     if (!email) {
-      return this.goodService.getGoodsByDiscountСlassification("sale");
+      return this.goodService.getGoodsByDiscountСlassification("sale", options);
     }
-    return this.goodService.getGoodsByDiscountСlassificationUser(email, "sale");
+    return this.goodService.getGoodsByDiscountСlassificationUser(
+      email,
+      "sale",
+      options,
+    );
   }
   @Get("goodsbyDiscount")
   @UseGuards(JwtAuthGuard)
-  async goodsbyDiscount( @UserEmail() email: string,) {
+  async goodsbyDiscount(
+    @UserEmail() email: string,
+    @Query("offset") offset?: number,
+    @Query("limit") limit?: number,
+  ) {
+    const options = { offset, limit };
     if (!email) {
-      return this.goodService.getGoodsByDiscountСlassification("discount");
+      return this.goodService.getGoodsByDiscountСlassification(
+        "discount",
+        options,
+      );
     }
-    return this.goodService.getGoodsByDiscountСlassificationUser(email, "discount");
+    return this.goodService.getGoodsByDiscountСlassificationUser(
+      email,
+      "discount",
+      options,
+    );
   }
   @Get(":id")
   @UseGuards(JwtAuthGuard)
@@ -38,17 +69,31 @@ export class GoodController {
 
   @Post("goodsByCategory")
   @UseGuards(JwtAuthGuard)
-  async getGoodsByCategory(@Body() dto: Pick<GoodDto, "category">,  @UserEmail() email: string,) {
+  async getGoodsByCategory(
+    @Body() dto: Pick<GoodDto, "category"> & OptionsLimits,
+    @UserEmail() email: string,
+  ) {
+    const { category, ...options } = dto;
+    const categotyObject = { category };
     if (!email) {
-      return this.goodService.getGoodsByCategory(dto);
+      return this.goodService.getGoodsByCategory(dto, options);
     }
-    return this.goodService.getGoodsByDiscountСlassificationUser(email, dto);
+    return this.goodService.getGoodsByDiscountСlassificationUser(
+      email,
+      categotyObject,
+      options,
+    );
   }
   // Этот метод нужен будет для получения определенных товаров (н-р по распродаже и т.д.)
   @Post("goodsbyIds")
   // @UseGuards(JwtAuthGuard)
-  async goodsbyIds(@Body() dto: GoodIdsDto) {
-    return this.goodService.getGoodsByIds(dto);
+  async goodsbyIds(
+    @Body() dto: GoodIdsDto,
+    @Query("offset") offset?: number,
+    @Query("limit") limit?: number,
+  ) {
+    const options = { offset, limit };
+    return this.goodService.getGoodsByIds(dto, options);
   }
 
   // Специальный метод жизненного цикла nestjs - инициализирует самозапускающуюся ф-ую
