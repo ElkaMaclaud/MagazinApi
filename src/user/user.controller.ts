@@ -12,7 +12,6 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { UserDto } from "./dto/user.dto";
 import { AuthDto } from "./dto/auth.dto";
 import { ALREADY_REGISTERED_ERROR } from "./user.constant";
 import { JwtAuthGuard } from "./guards/jwt.guard";

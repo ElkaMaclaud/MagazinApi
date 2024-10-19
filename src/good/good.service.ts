@@ -19,9 +19,16 @@ export class GoodService {
 
     if (typeof value === "string") {
       matchCondition[value] = { $exists: true };
-    } else if (typeof value === "object" && Object.keys(value).length > 0) {
-      const dynamicField = Object.keys(value)[0];
-      matchCondition[dynamicField] = { $in: [value[dynamicField]] };
+    } else if (typeof value === "object") {
+      const totalField = Object.keys(value)
+      for(const key of totalField) {
+        if(key === "category") {
+          matchCondition[key] = {[key]: { $in: [value[key]] }}
+        } else if(key === "sort") {
+          matchCondition[key] = { [value[key]]: 1 }
+        };
+      }
+
     }
     return matchCondition;
   }
@@ -33,10 +40,11 @@ export class GoodService {
   ): Promise<DocumentType<GoodModel>[] | void> {
     const offset = options.offset || 0
     const limit = options.limit || 50
+    const sortField = this.buildMatchCondition(value).sort || {"price": 1}
     return await this.goodModel
       .aggregate([
         {
-          $match: this.buildMatchCondition(value),
+          $match: this.buildMatchCondition(value).category,
         },
         {
           $lookup: {
@@ -156,6 +164,7 @@ export class GoodService {
             user: 0,
           },
         },
+        { $sort: sortField },
         { $skip: offset },
         { $limit: limit },
       ])
