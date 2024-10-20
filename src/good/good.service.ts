@@ -20,15 +20,14 @@ export class GoodService {
     if (typeof value === "string") {
       matchCondition[value] = { $exists: true };
     } else if (typeof value === "object") {
-      const totalField = Object.keys(value)
-      for(const key of totalField) {
-        if(key === "category") {
-          matchCondition[key] = {[key]: { $in: [value[key]] }}
-        } else if(key === "sort") {
-          matchCondition[key] = { [value[key]]: 1 }
-        };
+      const totalField = Object.keys(value);
+      for (const key of totalField) {
+        if (key === "category") {
+          matchCondition[key] = { [key]: { $in: [value[key]] } };
+        } else if (key === "sort") {
+          matchCondition[key] = { [value[key]]: 1 };
+        }
       }
-
     }
     return matchCondition;
   }
@@ -38,13 +37,16 @@ export class GoodService {
     value: string | { [key: string]: string },
     options: OptionsLimits,
   ): Promise<DocumentType<GoodModel>[] | void> {
-    const offset = options.offset || 0
-    const limit = options.limit || 50
-    const sortField = this.buildMatchCondition(value).sort || {"price": 1}
+    const offset = options.offset || 0;
+    const limit = options.limit || 50;
+    const sortField = this.buildMatchCondition(value).sort || { price: 1 };
+    const existsFilter =
+      this.buildMatchCondition(value).category ||
+      this.buildMatchCondition(value);
     return await this.goodModel
       .aggregate([
         {
-          $match: this.buildMatchCondition(value).category,
+          $match: existsFilter,
         },
         {
           $lookup: {
@@ -194,7 +196,7 @@ export class GoodService {
     dto: GoodIdsDto,
     options: OptionsLimits,
   ): Promise<DocumentType<GoodModel>[] | void> {
-    const query = this.goodModel.find({ _id: { $in: dto.ids } })
+    const query = this.goodModel.find({ _id: { $in: dto.ids } });
     if (options.offset) {
       query.skip(options.offset);
     }
@@ -209,7 +211,7 @@ export class GoodService {
     dto: string,
     options: OptionsLimits,
   ): Promise<DocumentType<GoodModel>[] | void> {
-    const query = this.goodModel.find({ [dto]: { $exists: true } })
+    const query = this.goodModel.find({ [dto]: { $exists: true } });
     if (options.offset) {
       query.skip(options.offset);
     }
