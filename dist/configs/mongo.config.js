@@ -4,10 +4,6 @@ exports.getMongoConfig = void 0;
 const getMongoConfig = async (configService) => {
     return {
         uri: getMongoConnect(configService),
-        options: {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        },
     };
 };
 exports.getMongoConfig = getMongoConfig;
