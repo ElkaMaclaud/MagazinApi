@@ -1,11 +1,14 @@
-/// <reference types="mongoose" />
 import { UserService } from "./user.service";
 import { AuthDto } from "./dto/auth.dto";
 import { IDelivery } from "./user.model";
 export declare class UserController {
     private readonly userService;
     constructor(userService: UserService);
-    register(dto: AuthDto): Promise<import("mongoose").Document>;
+    register(dto: AuthDto): Promise<import("mongoose").Document<unknown, import("@typegoose/typegoose/lib/types").BeAnObject, import("./user.model").UserModel> & Omit<import("./user.model").UserModel & Required<{
+        _id: import("mongoose").Types.ObjectId;
+    }> & {
+        __v?: number;
+    }, "typegooseName"> & import("@typegoose/typegoose/lib/types").IObjectWithTypegooseFunction>;
     login({ email: login, password }: AuthDto): Promise<{
         access_token: string;
     }>;
@@ -15,7 +18,11 @@ export declare class UserController {
     ChooseAll(req: any, dto: {
         on: boolean;
     }, email: string): Promise<import("./user.model").IUserGood[]>;
-    getUserData(email: string): Promise<import("@typegoose/typegoose").DocumentType<import("./user.model").UserModel>>;
+    getUserData(email: string): Promise<import("mongoose").Document<unknown, import("@typegoose/typegoose/lib/types").BeAnObject, import("./user.model").UserModel> & Omit<import("./user.model").UserModel & Required<{
+        _id: import("mongoose").Types.ObjectId;
+    }> & {
+        __v?: number;
+    }, "typegooseName"> & import("@typegoose/typegoose/lib/types").IObjectWithTypegooseFunction>;
     updateUserData(dto: {
         name: string;
         phone: string;
@@ -33,9 +40,7 @@ export declare class UserController {
     }, email: string): Promise<import("./user.model").IUserGood>;
     addFavorites(req: any, dto: {
         id: string;
-    }, email: string): Promise<{
-        id: string;
-    }>;
+    }, email: string): Promise<any>;
     addOrder(req: any, dto: {
         ids: string[];
     }, email: string): Promise<string[]>;

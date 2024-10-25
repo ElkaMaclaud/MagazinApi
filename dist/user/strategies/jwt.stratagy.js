@@ -28,9 +28,9 @@ let JwtStratagy = class JwtStratagy extends (0, passport_1.PassportStrategy)(pas
         return email;
     }
 };
-JwtStratagy = __decorate([
+exports.JwtStratagy = JwtStratagy;
+exports.JwtStratagy = JwtStratagy = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [config_1.ConfigService])
 ], JwtStratagy);
-exports.JwtStratagy = JwtStratagy;
 //# sourceMappingURL=jwt.stratagy.js.map

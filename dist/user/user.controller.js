@@ -90,6 +90,7 @@ let UserController = class UserController {
         return result;
     }
 };
+exports.UserController = UserController;
 __decorate([
     (0, common_1.Post)("auth/register"),
     __param(0, (0, common_1.Body)()),
@@ -243,9 +244,8 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object, String]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "deleteBasket", null);
-UserController = __decorate([
+exports.UserController = UserController = __decorate([
     (0, common_1.Controller)("user"),
     __metadata("design:paramtypes", [user_service_1.UserService])
 ], UserController);
-exports.UserController = UserController;
 //# sourceMappingURL=user.controller.js.map

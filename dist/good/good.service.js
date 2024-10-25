@@ -276,10 +276,10 @@ let GoodService = class GoodService {
         return result[0];
     }
 };
-GoodService = __decorate([
+exports.GoodService = GoodService;
+exports.GoodService = GoodService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, nestjs_typegoose_1.InjectModel)(good_model_1.GoodModel)),
     __metadata("design:paramtypes", [Object])
 ], GoodService);
-exports.GoodService = GoodService;
 //# sourceMappingURL=good.service.js.map

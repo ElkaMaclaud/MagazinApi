@@ -7,5 +7,5 @@ export declare class ReviewService {
     create(dto: ReviewDto): Promise<DocumentType<ReviewModel>>;
     delete(id: string): Promise<DocumentType<ReviewModel> | null>;
     findByGoodId(goodId: string): Promise<DocumentType<ReviewModel>[]>;
-    deleteByGoodId(goodId: string): Promise<any>;
+    deleteByGoodId(goodId: string): Promise<import("mongodb").DeleteResult>;
 }

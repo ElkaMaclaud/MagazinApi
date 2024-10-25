@@ -19,7 +19,8 @@ const jwt_stratagy_1 = require("./strategies/jwt.stratagy");
 const passport_1 = require("@nestjs/passport");
 let UserModule = class UserModule {
 };
-UserModule = __decorate([
+exports.UserModule = UserModule;
+exports.UserModule = UserModule = __decorate([
     (0, common_1.Module)({
         controllers: [user_controller_1.UserController],
         imports: [
@@ -42,5 +43,4 @@ UserModule = __decorate([
         providers: [user_service_1.UserService, jwt_stratagy_1.JwtStratagy],
     })
 ], UserModule);
-exports.UserModule = UserModule;
 //# sourceMappingURL=user.module.js.map

@@ -17,7 +17,8 @@ const passport_1 = require("@nestjs/passport");
 const jwt_websocketStrategy_1 = require("./strategies/jwt.websocketStrategy");
 let SocketModule = class SocketModule {
 };
-SocketModule = __decorate([
+exports.SocketModule = SocketModule;
+exports.SocketModule = SocketModule = __decorate([
     (0, common_1.Module)({
         imports: [
             nestjs_typegoose_1.TypegooseModule.forFeature([]),
@@ -32,5 +33,4 @@ SocketModule = __decorate([
         providers: [socket_service_1.SocketService, jwt_websocketStrategy_1.WebSocketJwtStrategy],
     })
 ], SocketModule);
-exports.SocketModule = SocketModule;
 //# sourceMappingURL=socket.module.js.map

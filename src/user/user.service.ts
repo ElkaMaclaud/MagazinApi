@@ -515,10 +515,11 @@ export class UserService {
         ],
         { new: true, useFindAndModify: false },
       )
-      .exec()) as UserModel & { existing?: boolean };
-
+      .exec()) as unknown as UserModel & { existing?: boolean };
+      // .lean() 
+      // .exec() as UserModel & { existing?: boolean };
     // const existing = updateResult["isExisting"];
-    let result = { id: goodId };
+    let result;
     if (updateResult.favorites.includes(goodId)) {
       result = await this.userModel
         .aggregate([

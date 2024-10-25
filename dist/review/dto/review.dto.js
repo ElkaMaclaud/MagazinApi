@@ -14,6 +14,7 @@ const typegoose_1 = require("@typegoose/typegoose");
 const mongoose_1 = require("mongoose");
 class ReviewDto {
 }
+exports.ReviewDto = ReviewDto;
 __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", String)
@@ -36,7 +37,6 @@ __decorate([
 ], ReviewDto.prototype, "productId", void 0);
 __decorate([
     (0, typegoose_1.prop)(),
-    __metadata("design:type", Object)
+    __metadata("design:type", mongoose_1.Types.ObjectId)
 ], ReviewDto.prototype, "goodId", void 0);
-exports.ReviewDto = ReviewDto;
 //# sourceMappingURL=review.dto.js.map

@@ -33,9 +33,9 @@ let WebSocketJwtStrategy = class WebSocketJwtStrategy {
         }
     }
 };
-WebSocketJwtStrategy = __decorate([
+exports.WebSocketJwtStrategy = WebSocketJwtStrategy;
+exports.WebSocketJwtStrategy = WebSocketJwtStrategy = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [config_1.ConfigService, jwt_1.JwtService])
 ], WebSocketJwtStrategy);
-exports.WebSocketJwtStrategy = WebSocketJwtStrategy;
 //# sourceMappingURL=jwt.websocketStrategy.js.map

@@ -13,9 +13,9 @@ exports.GoodIdsDto = void 0;
 const typegoose_1 = require("@typegoose/typegoose");
 class GoodIdsDto {
 }
+exports.GoodIdsDto = GoodIdsDto;
 __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", Array)
 ], GoodIdsDto.prototype, "ids", void 0);
-exports.GoodIdsDto = GoodIdsDto;
 //# sourceMappingURL=find-goods.dto.js.map

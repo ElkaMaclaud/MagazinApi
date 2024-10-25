@@ -55,6 +55,7 @@ let GoodController = class GoodController {
         return this.goodService.getGoodsByIds(dto, options);
     }
 };
+exports.GoodController = GoodController;
 __decorate([
     (0, common_1.Get)("goodsbySale"),
     (0, common_1.UseGuards)(jwtAuthGuard_1.JwtAuthGuard),
@@ -104,9 +105,8 @@ __decorate([
     __metadata("design:paramtypes", [find_goods_dto_1.GoodIdsDto, Number, Number]),
     __metadata("design:returntype", Promise)
 ], GoodController.prototype, "goodsbyIds", null);
-GoodController = __decorate([
+exports.GoodController = GoodController = __decorate([
     (0, common_1.Controller)("good"),
     __metadata("design:paramtypes", [good_service_1.GoodService])
 ], GoodController);
-exports.GoodController = GoodController;
 //# sourceMappingURL=good.controller.js.map

@@ -24,6 +24,7 @@ __decorate([
 ], GoodCharacteristic.prototype, "value", void 0);
 class GoodModel extends defaultClasses_1.TimeStamps {
 }
+exports.GoodModel = GoodModel;
 __decorate([
     (0, typegoose_1.prop)({ type: () => [String] }),
     __metadata("design:type", Array)
@@ -64,5 +65,4 @@ __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", Boolean)
 ], GoodModel.prototype, "discount", void 0);
-exports.GoodModel = GoodModel;
 //# sourceMappingURL=good.model.js.map

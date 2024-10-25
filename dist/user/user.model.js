@@ -14,6 +14,7 @@ const typegoose_1 = require("@typegoose/typegoose");
 const defaultClasses_1 = require("@typegoose/typegoose/lib/defaultClasses");
 class IUserGood {
 }
+exports.IUserGood = IUserGood;
 __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", String)
@@ -30,9 +31,9 @@ __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", Boolean)
 ], IUserGood.prototype, "choice", void 0);
-exports.IUserGood = IUserGood;
 class IInfoPublik {
 }
+exports.IInfoPublik = IInfoPublik;
 __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", String)
@@ -45,9 +46,9 @@ __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", Number)
 ], IInfoPublik.prototype, "age", void 0);
-exports.IInfoPublik = IInfoPublik;
 class IInfoPrivate {
 }
+exports.IInfoPrivate = IInfoPrivate;
 __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", String)
@@ -72,9 +73,9 @@ __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", String)
 ], IInfoPrivate.prototype, "role", void 0);
-exports.IInfoPrivate = IInfoPrivate;
 class IDelivery {
 }
+exports.IDelivery = IDelivery;
 __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", String)
@@ -87,9 +88,9 @@ __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", String)
 ], IDelivery.prototype, "choice", void 0);
-exports.IDelivery = IDelivery;
 class UserModel extends defaultClasses_1.TimeStamps {
 }
+exports.UserModel = UserModel;
 __decorate([
     (0, typegoose_1.prop)({ type: () => IInfoPublik }),
     __metadata("design:type", IInfoPublik)
@@ -114,5 +115,4 @@ __decorate([
     (0, typegoose_1.prop)({ type: () => IDelivery }),
     __metadata("design:type", IDelivery)
 ], UserModel.prototype, "delivery", void 0);
-exports.UserModel = UserModel;
 //# sourceMappingURL=user.model.js.map
