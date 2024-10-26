@@ -11,12 +11,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SocketService = void 0;
 const common_1 = require("@nestjs/common");
 const websockets_1 = require("@nestjs/websockets");
 const socket_io_1 = require("socket.io");
 const user_emailFromWebsocket_decorator_1 = require("../decorators/user-emailFromWebsocket.decorator");
+const jwt_guard_1 = require("../user/guards/jwt.guard");
 const jwt_guardWebsocket_1 = require("./guards/jwt.guardWebsocket");
 let SocketService = class SocketService {
     constructor() {
@@ -35,10 +37,9 @@ let SocketService = class SocketService {
         this.server.emit("message", "Ваше сообщение: " + payload);
     }
 };
-exports.SocketService = SocketService;
 __decorate([
     (0, websockets_1.WebSocketServer)(),
-    __metadata("design:type", socket_io_1.Server)
+    __metadata("design:type", typeof (_a = typeof socket_io_1.Server !== "undefined" && socket_io_1.Server) === "function" ? _a : Object)
 ], SocketService.prototype, "server", void 0);
 __decorate([
     (0, common_1.UseGuards)(jwt_guardWebsocket_1.JwtAuthGuardWebsocket),
@@ -53,7 +54,7 @@ __decorate([
     __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", void 0)
 ], SocketService.prototype, "handleMessage", null);
-exports.SocketService = SocketService = __decorate([
+SocketService = __decorate([
     (0, websockets_1.WebSocketGateway)({
         cors: {
             origin: "*",
@@ -61,4 +62,5 @@ exports.SocketService = SocketService = __decorate([
     }),
     __metadata("design:paramtypes", [])
 ], SocketService);
+exports.SocketService = SocketService;
 //# sourceMappingURL=socket.service.js.map

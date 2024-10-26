@@ -557,10 +557,10 @@ let UserService = class UserService {
         return this.deleteGood(email, id, "basket");
     }
 };
-exports.UserService = UserService;
-exports.UserService = UserService = __decorate([
+UserService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, nestjs_typegoose_1.InjectModel)(user_model_1.UserModel)),
     __metadata("design:paramtypes", [Object, jwt_1.JwtService])
 ], UserService);
+exports.UserService = UserService;
 //# sourceMappingURL=user.service.js.map

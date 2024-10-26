@@ -13,7 +13,6 @@ exports.AuthDto = void 0;
 const typegoose_1 = require("@typegoose/typegoose");
 class AuthDto {
 }
-exports.AuthDto = AuthDto;
 __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", String)
@@ -42,4 +41,5 @@ __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", String)
 ], AuthDto.prototype, "typegooseName", void 0);
+exports.AuthDto = AuthDto;
 //# sourceMappingURL=auth.dto.js.map

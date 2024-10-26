@@ -17,8 +17,7 @@ const user_module_1 = require("./user/user.module");
 const socket_module_1 = require("./socket/socket.module");
 let AppModule = class AppModule {
 };
-exports.AppModule = AppModule;
-exports.AppModule = AppModule = __decorate([
+AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             config_1.ConfigModule.forRoot(),
@@ -34,4 +33,5 @@ exports.AppModule = AppModule = __decorate([
         ],
     })
 ], AppModule);
+exports.AppModule = AppModule;
 //# sourceMappingURL=app.module.js.map

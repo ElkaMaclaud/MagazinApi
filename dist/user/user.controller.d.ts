@@ -1,14 +1,11 @@
+/// <reference types="mongoose" />
 import { UserService } from "./user.service";
 import { AuthDto } from "./dto/auth.dto";
 import { IDelivery } from "./user.model";
 export declare class UserController {
     private readonly userService;
     constructor(userService: UserService);
-    register(dto: AuthDto): Promise<import("mongoose").Document<unknown, import("@typegoose/typegoose/lib/types").BeAnObject, import("./user.model").UserModel> & Omit<import("./user.model").UserModel & Required<{
-        _id: import("mongoose").Types.ObjectId;
-    }> & {
-        __v?: number;
-    }, "typegooseName"> & import("@typegoose/typegoose/lib/types").IObjectWithTypegooseFunction>;
+    register(dto: AuthDto): Promise<import("mongoose").Document>;
     login({ email: login, password }: AuthDto): Promise<{
         access_token: string;
     }>;
@@ -18,11 +15,7 @@ export declare class UserController {
     ChooseAll(req: any, dto: {
         on: boolean;
     }, email: string): Promise<import("./user.model").IUserGood[]>;
-    getUserData(email: string): Promise<import("mongoose").Document<unknown, import("@typegoose/typegoose/lib/types").BeAnObject, import("./user.model").UserModel> & Omit<import("./user.model").UserModel & Required<{
-        _id: import("mongoose").Types.ObjectId;
-    }> & {
-        __v?: number;
-    }, "typegooseName"> & import("@typegoose/typegoose/lib/types").IObjectWithTypegooseFunction>;
+    getUserData(email: string): Promise<import("@typegoose/typegoose").DocumentType<import("./user.model").UserModel>>;
     updateUserData(dto: {
         name: string;
         phone: string;

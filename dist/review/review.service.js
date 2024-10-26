@@ -36,10 +36,10 @@ let ReviewService = class ReviewService {
             .exec();
     }
 };
-exports.ReviewService = ReviewService;
-exports.ReviewService = ReviewService = __decorate([
+ReviewService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, nestjs_typegoose_1.InjectModel)(review_model_1.ReviewModel)),
     __metadata("design:paramtypes", [Object])
 ], ReviewService);
+exports.ReviewService = ReviewService;
 //# sourceMappingURL=review.service.js.map

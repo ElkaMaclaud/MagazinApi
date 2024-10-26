@@ -1,3 +1,4 @@
+/// <reference types="mongoose" />
 import { IDelivery, IInfoPrivate, UserModel } from "./user.model";
 import { ModelType } from "@typegoose/typegoose/lib/types";
 import { JwtService } from "@nestjs/jwt";
@@ -6,16 +7,8 @@ export declare class UserService {
     private readonly userModel;
     private readonly jwtService;
     constructor(userModel: ModelType<UserModel>, jwtService: JwtService);
-    registerUser(dto: AuthDto): Promise<import("mongoose").Document<unknown, import("@typegoose/typegoose/lib/types").BeAnObject, UserModel> & Omit<UserModel & Required<{
-        _id: import("mongoose").Types.ObjectId;
-    }> & {
-        __v?: number;
-    }, "typegooseName"> & import("@typegoose/typegoose/lib/types").IObjectWithTypegooseFunction>;
-    findUser(email: string): Promise<import("mongoose").Document<unknown, import("@typegoose/typegoose/lib/types").BeAnObject, UserModel> & Omit<UserModel & Required<{
-        _id: import("mongoose").Types.ObjectId;
-    }> & {
-        __v?: number;
-    }, "typegooseName"> & import("@typegoose/typegoose/lib/types").IObjectWithTypegooseFunction>;
+    registerUser(dto: AuthDto): Promise<import("mongoose").Document>;
+    findUser(email: string): Promise<import("@typegoose/typegoose/lib/types").DocumentType<UserModel>>;
     validateUser(email: string, password: string): Promise<Pick<IInfoPrivate, "email">>;
     login(email: string): Promise<{
         access_token: string;
@@ -24,11 +17,7 @@ export declare class UserService {
     getBasket(email: string, options: any): Promise<any>;
     getFavorites(email: string, options: any): Promise<any>;
     getOrders(email: string, options: any): Promise<any>;
-    getUserData(email: string): Promise<import("mongoose").Document<unknown, import("@typegoose/typegoose/lib/types").BeAnObject, UserModel> & Omit<UserModel & Required<{
-        _id: import("mongoose").Types.ObjectId;
-    }> & {
-        __v?: number;
-    }, "typegooseName"> & import("@typegoose/typegoose/lib/types").IObjectWithTypegooseFunction>;
+    getUserData(email: string): Promise<import("@typegoose/typegoose/lib/types").DocumentType<UserModel>>;
     updateUserData(dto: {
         name: string;
         phone: string;

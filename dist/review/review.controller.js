@@ -33,7 +33,6 @@ let ReviewController = class ReviewController {
         }
     }
 };
-exports.ReviewController = ReviewController;
 __decorate([
     (0, common_1.HttpCode)(200),
     (0, common_1.Post)("create"),
@@ -55,8 +54,9 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ReviewController.prototype, "delete", null);
-exports.ReviewController = ReviewController = __decorate([
+ReviewController = __decorate([
     (0, common_1.Controller)("review"),
     __metadata("design:paramtypes", [review_service_1.ReviewService])
 ], ReviewController);
+exports.ReviewController = ReviewController;
 //# sourceMappingURL=review.controller.js.map

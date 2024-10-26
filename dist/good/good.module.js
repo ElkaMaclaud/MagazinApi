@@ -17,8 +17,7 @@ const jwt_1 = require("@nestjs/jwt");
 const jwt_config_1 = require("../configs/jwt.config");
 let GoodModule = class GoodModule {
 };
-exports.GoodModule = GoodModule;
-exports.GoodModule = GoodModule = __decorate([
+GoodModule = __decorate([
     (0, common_1.Module)({
         controllers: [good_controller_1.GoodController],
         imports: [
@@ -40,4 +39,5 @@ exports.GoodModule = GoodModule = __decorate([
         providers: [good_service_1.GoodService],
     })
 ], GoodModule);
+exports.GoodModule = GoodModule;
 //# sourceMappingURL=good.module.js.map

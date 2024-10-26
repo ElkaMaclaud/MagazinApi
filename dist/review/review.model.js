@@ -15,7 +15,6 @@ const defaultClasses_1 = require("@typegoose/typegoose/lib/defaultClasses");
 const mongoose_1 = require("mongoose");
 class ReviewModel extends defaultClasses_1.TimeStamps {
 }
-exports.ReviewModel = ReviewModel;
 __decorate([
     (0, typegoose_1.prop)(),
     __metadata("design:type", String)
@@ -34,6 +33,7 @@ __decorate([
 ], ReviewModel.prototype, "rating", void 0);
 __decorate([
     (0, typegoose_1.prop)(),
-    __metadata("design:type", mongoose_1.Types.ObjectId)
+    __metadata("design:type", Object)
 ], ReviewModel.prototype, "goodId", void 0);
+exports.ReviewModel = ReviewModel;
 //# sourceMappingURL=review.model.js.map

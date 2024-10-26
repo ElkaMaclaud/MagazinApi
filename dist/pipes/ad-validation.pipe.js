@@ -21,8 +21,8 @@ let IdValidationPipe = class IdValidationPipe {
         return value;
     }
 };
-exports.IdValidationPipe = IdValidationPipe;
-exports.IdValidationPipe = IdValidationPipe = __decorate([
+IdValidationPipe = __decorate([
     (0, common_1.Injectable)()
 ], IdValidationPipe);
+exports.IdValidationPipe = IdValidationPipe;
 //# sourceMappingURL=ad-validation.pipe.js.map

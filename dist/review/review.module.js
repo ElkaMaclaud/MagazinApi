@@ -14,8 +14,7 @@ const review_model_1 = require("./review.model");
 const review_service_1 = require("./review.service");
 let ReviewModule = class ReviewModule {
 };
-exports.ReviewModule = ReviewModule;
-exports.ReviewModule = ReviewModule = __decorate([
+ReviewModule = __decorate([
     (0, common_1.Module)({
         controllers: [review_controller_1.ReviewController],
         imports: [
@@ -31,4 +30,5 @@ exports.ReviewModule = ReviewModule = __decorate([
         providers: [review_service_1.ReviewService],
     })
 ], ReviewModule);
+exports.ReviewModule = ReviewModule;
 //# sourceMappingURL=review.module.js.map
