@@ -166,7 +166,7 @@ export class GoodService {
             user: 0,
           },
         },
-        { $sort: sortField },
+        // { $sort: sortField },
         { $skip: offset },
         { $limit: limit },
       ])

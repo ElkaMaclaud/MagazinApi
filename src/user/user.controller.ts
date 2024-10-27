@@ -20,7 +20,7 @@ import { IDelivery } from "./user.model";
 
 @Controller("user")
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Post("auth/register")
   async register(@Body() dto: AuthDto) {
@@ -122,7 +122,16 @@ export class UserController {
     @UserEmail() email: string,
   ) {
     const id = dto.id;
-    return this.userService.addBasket(email, id);
+    return this.userService.addBasket(id, email);
+  }
+
+  @Patch("addBasketGetAuto")
+  async addBasketGetAuto(
+    @Req() req,
+    @Body() dto: { id: string },
+  ) {
+    const id = dto.id;
+    return this.userService.addBasket(id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -144,7 +153,16 @@ export class UserController {
     @UserEmail() email: string,
   ) {
     const id = dto.id;
-    return this.userService.toggleFavorites(email, id);
+    return this.userService.toggleFavorites(id, email);
+  }
+
+  @Patch("toggleFavoritesGetAuto")
+  async toggleFavoritesGetAuto(
+    @Req() req,
+    @Body() dto: { id: string },
+  ) {
+    const id = dto.id;
+    return this.userService.toggleFavorites(id);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -26,14 +26,15 @@ export declare class UserService {
         name: string;
     }>;
     updateDelivery(dto: IDelivery, email: string): Promise<IDelivery>;
-    updateGoodToBasket(email: string, goodId: string, operand?: string): Promise<any>;
+    updateGoodToBasket(email: string, goodId: string, operand?: string, token?: string): Promise<any>;
     deleteGood(email: string, id: string, field: string): Promise<{
         id: string;
     }>;
-    addBasket(email: string, id: string): Promise<any>;
-    toggleChoice(email: string, goodId: string): Promise<import("./user.model").IUserGood>;
+    addBasket(id: string, email?: string): Promise<any>;
+    toggleChoice(goodId: string, email: string): Promise<import("./user.model").IUserGood>;
     ChooseAll(email: string, on: boolean): Promise<import("./user.model").IUserGood[]>;
-    toggleFavorites(email: string, goodId: string): Promise<any>;
+    toggleFavorites(goodId: string, email?: string): Promise<any>;
+    toggleFavoritesByEmail(goodId: string, email?: string, token?: string): Promise<any>;
     addOrder(email: string, ids: string[]): Promise<string[]>;
     subBasket(email: string, id: string): Promise<any>;
     deleteSelected(email: string): Promise<import("./user.model").IUserGood[]>;

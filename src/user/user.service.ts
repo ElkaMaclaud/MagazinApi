@@ -12,7 +12,7 @@ export class UserService {
   constructor(
     @InjectModel(UserModel) private readonly userModel: ModelType<UserModel>,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   async registerUser(dto: AuthDto) {
     const salt = await genSalt(10);
@@ -23,8 +23,8 @@ export class UserService {
         age: 20,
       },
       privates: {
-        phone: dto.phone || "",
-        dateOfBirth: new Date(dto.dateofBirth) || new Date(),
+        phone: dto?.phone || "",
+        dateOfBirth: new Date(dto?.dateofBirth) || new Date(),
         role: "user",
         email: dto.email,
         passwordHash: await hash(dto.password, salt),
@@ -255,7 +255,7 @@ export class UserService {
     return updatedUser.delivery;
   }
 
-  async updateGoodToBasket(email: string, goodId: string, operand = "add") {
+  async updateGoodToBasket(email: string, goodId: string, operand = "add", token?: string) {
     let operator = "add";
     if (operand === "sub") {
       operator = "subtract";
@@ -399,6 +399,9 @@ export class UserService {
         },
       ])
       .exec();
+    if (token) {
+      return { result: result[0]?.updated, token }
+    }
     return result[0]?.updated || {};
   }
 
@@ -412,8 +415,20 @@ export class UserService {
     return { id };
   }
 
-  async addBasket(email: string, id: string) {
-    return this.updateGoodToBasket(email, id);
+  async addBasket(id: string, email?: string) {
+    if (email) {
+      return this.updateGoodToBasket(email, id);
+    }
+    const fakeEmail = `${Math.random().toString(36).substring(2, 15)}@mail.com`
+    const dto = {
+      email: fakeEmail,
+      dateofBirth: "2024-10-27",
+      password: ""
+    }
+    await this.registerUser(dto)
+    const access_token = await this.jwtService.signAsync({email: fakeEmail})
+    return this.updateGoodToBasket(fakeEmail, id, "add", access_token)
+
   }
   async toggleChoice(email: string, goodId: string) {
     const updated = await this.userModel
@@ -490,7 +505,22 @@ export class UserService {
       .exec();
     return updated.basket;
   }
-  async toggleFavorites(email: string, goodId: string) {
+  async toggleFavorites(goodId: string, email?: string) {
+    if(email) {
+      return this.toggleFavoritesByEmail(goodId, email)
+    }
+    const fakeEmail = `${Math.random().toString(36).substring(2, 15)}@mail.com`
+    const dto = {
+      email: fakeEmail,
+      dateofBirth: "2024-10-27",
+      password: ""
+    }
+    await this.registerUser(dto)
+    const access_token = await this.jwtService.signAsync({email: fakeEmail})
+    return this.toggleFavoritesByEmail(goodId, fakeEmail, access_token)
+    
+  }
+  async toggleFavoritesByEmail(goodId: string, email?: string, token?: string) {
     const updateResult = (await this.userModel
       .findOneAndUpdate(
         { "privates.email": email },
@@ -516,8 +546,8 @@ export class UserService {
         { new: true, useFindAndModify: false },
       )
       .exec()) as unknown as UserModel & { existing?: boolean };
-      // .lean() 
-      // .exec() as UserModel & { existing?: boolean };
+    // .lean() 
+    // .exec() as UserModel & { existing?: boolean };
     // const existing = updateResult["isExisting"];
     let result;
     if (updateResult.favorites.includes(goodId)) {
@@ -581,10 +611,12 @@ export class UserService {
           },
         ])
         .exec();
-
-      result = result[0]?.updated;
+      result = result[0]?.updated; 
+      if (token) {
+        return {result, token}
+      }
     }
-    return result;
+    return result || {};
   }
   async addOrder(email: string, ids: string[]) {
     const updated = await this.userModel.findOneAndUpdate(

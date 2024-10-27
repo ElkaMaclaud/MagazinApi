@@ -28,12 +28,18 @@ export declare class UserController {
     addBasket(req: any, dto: {
         id: string;
     }, email: string): Promise<any>;
+    addBasketGetAuto(req: any, dto: {
+        id: string;
+    }): Promise<any>;
     toggleChoice(req: any, dto: {
         id: string;
     }, email: string): Promise<import("./user.model").IUserGood>;
     addFavorites(req: any, dto: {
         id: string;
     }, email: string): Promise<any>;
+    toggleFavoritesGetAuto(req: any, dto: {
+        id: string;
+    }): Promise<any>;
     addOrder(req: any, dto: {
         ids: string[];
     }, email: string): Promise<string[]>;

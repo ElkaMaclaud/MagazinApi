@@ -67,15 +67,23 @@ let UserController = class UserController {
     }
     async addBasket(req, dto, email) {
         const id = dto.id;
-        return this.userService.addBasket(email, id);
+        return this.userService.addBasket(id, email);
+    }
+    async addBasketGetAuto(req, dto) {
+        const id = dto.id;
+        return this.userService.addBasket(id);
     }
     async toggleChoice(req, dto, email) {
         const id = dto.id;
-        return this.userService.toggleChoice(email, id);
+        return this.userService.toggleChoice(id, email);
     }
     async addFavorites(req, dto, email) {
         const id = dto.id;
-        return this.userService.toggleFavorites(email, id);
+        return this.userService.toggleFavorites(id, email);
+    }
+    async toggleFavoritesGetAuto(req, dto) {
+        const id = dto.id;
+        return this.userService.toggleFavorites(id);
     }
     async addOrder(req, dto, email) {
         return this.userService.addOrder(email, dto.ids);
@@ -194,6 +202,14 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "addBasket", null);
 __decorate([
+    (0, common_1.Patch)("addBasketGetAuto"),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "addBasketGetAuto", null);
+__decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Patch)("toggleChoice"),
     __param(0, (0, common_1.Req)()),
@@ -213,6 +229,14 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object, String]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "addFavorites", null);
+__decorate([
+    (0, common_1.Patch)("toggleFavoritesGetAuto"),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "toggleFavoritesGetAuto", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Patch)("buy"),
