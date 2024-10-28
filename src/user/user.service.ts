@@ -14,7 +14,7 @@ export class UserService {
     private readonly jwtService: JwtService,
   ) { }
 
-  async registerUser(dto: AuthDto) {
+  async registerUser(dto: AuthDto, registered?: boolean) {
     const salt = await genSalt(10);
     const newUser = await this.userModel.create({
       publik: {
@@ -28,7 +28,7 @@ export class UserService {
         role: "user",
         email: dto.email,
         passwordHash: await hash(dto.password, salt),
-      },
+      }, 
       favorites: [],
       basket: [],
       order: [],
@@ -38,6 +38,7 @@ export class UserService {
         choice: "pickUpPoin",
       },
       typegooseName: "",
+      registered: registered === false ? false : true,
     });
     return newUser.save();
   }
@@ -210,7 +211,7 @@ export class UserService {
 
   async getUserData(email: string) {
     return this.userModel
-      .findOne({ "privates.email": email }, { publik: 1, privates: 1, delivery: 1 })
+      .findOne({ "privates.email": email }, { publik: 1, privates: 1, delivery: 1, registered: 1, _id: 1})
       .exec();
   }
 
@@ -423,9 +424,10 @@ export class UserService {
     const dto = {
       email: fakeEmail,
       dateofBirth: "2024-10-27",
-      password: ""
+      password: "",
+      registered: false
     }
-    await this.registerUser(dto)
+    await this.registerUser(dto, false)
     const access_token = await this.jwtService.signAsync({email: fakeEmail})
     return this.updateGoodToBasket(fakeEmail, id, "add", access_token)
 
@@ -513,9 +515,10 @@ export class UserService {
     const dto = {
       email: fakeEmail,
       dateofBirth: "2024-10-27",
-      password: ""
+      password: "",
+      registered: false
     }
-    await this.registerUser(dto)
+    await this.registerUser(dto, false)
     const access_token = await this.jwtService.signAsync({email: fakeEmail})
     return this.toggleFavoritesByEmail(goodId, fakeEmail, access_token)
     

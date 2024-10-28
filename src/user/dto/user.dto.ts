@@ -5,6 +5,7 @@ export class UserDto {
   basket?: IUserGood[];
   order?: string[];
   delivery: IDelivery;
+  registered: boolean;
 }
 
 export interface IUserGood {

@@ -91,6 +91,10 @@ exports.IDelivery = IDelivery;
 class UserModel extends defaultClasses_1.TimeStamps {
 }
 __decorate([
+    (0, typegoose_1.prop)(),
+    __metadata("design:type", Boolean)
+], UserModel.prototype, "registered", void 0);
+__decorate([
     (0, typegoose_1.prop)({ type: () => IInfoPublik }),
     __metadata("design:type", IInfoPublik)
 ], UserModel.prototype, "publik", void 0);

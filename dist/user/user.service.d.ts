@@ -7,7 +7,7 @@ export declare class UserService {
     private readonly userModel;
     private readonly jwtService;
     constructor(userModel: ModelType<UserModel>, jwtService: JwtService);
-    registerUser(dto: AuthDto): Promise<import("mongoose").Document>;
+    registerUser(dto: AuthDto, registered?: boolean): Promise<import("mongoose").Document>;
     findUser(email: string): Promise<import("@typegoose/typegoose/lib/types").DocumentType<UserModel>>;
     validateUser(email: string, password: string): Promise<Pick<IInfoPrivate, "email">>;
     login(email: string): Promise<{
@@ -31,7 +31,7 @@ export declare class UserService {
         id: string;
     }>;
     addBasket(id: string, email?: string): Promise<any>;
-    toggleChoice(goodId: string, email: string): Promise<import("./user.model").IUserGood>;
+    toggleChoice(email: string, goodId: string): Promise<import("./user.model").IUserGood>;
     ChooseAll(email: string, on: boolean): Promise<import("./user.model").IUserGood[]>;
     toggleFavorites(goodId: string, email?: string): Promise<any>;
     toggleFavoritesByEmail(goodId: string, email?: string, token?: string): Promise<any>;

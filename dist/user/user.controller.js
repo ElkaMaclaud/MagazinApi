@@ -75,7 +75,7 @@ let UserController = class UserController {
     }
     async toggleChoice(req, dto, email) {
         const id = dto.id;
-        return this.userService.toggleChoice(id, email);
+        return this.userService.toggleChoice(email, id);
     }
     async addFavorites(req, dto, email) {
         const id = dto.id;

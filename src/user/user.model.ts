@@ -56,6 +56,9 @@ export class IDelivery {
 
 export interface UserModel extends Base {}
 export class UserModel extends TimeStamps {
+  @prop()
+  registered: boolean;
+
   @prop({ type: () => IInfoPublik })
   publik: IInfoPublik;
 

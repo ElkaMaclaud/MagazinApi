@@ -26,6 +26,7 @@ export declare class IDelivery {
 export interface UserModel extends Base {
 }
 export declare class UserModel extends TimeStamps {
+    registered: boolean;
     publik: IInfoPublik;
     privates: IInfoPrivate;
     favorites?: string[];

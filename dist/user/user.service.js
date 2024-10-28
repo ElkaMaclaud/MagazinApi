@@ -24,7 +24,7 @@ let UserService = class UserService {
         this.userModel = userModel;
         this.jwtService = jwtService;
     }
-    async registerUser(dto) {
+    async registerUser(dto, registered) {
         const salt = await (0, bcryptjs_1.genSalt)(10);
         const newUser = await this.userModel.create({
             publik: {
@@ -48,6 +48,7 @@ let UserService = class UserService {
                 choice: "pickUpPoin",
             },
             typegooseName: "",
+            registered: registered === false ? false : true,
         });
         return newUser.save();
     }
@@ -201,7 +202,7 @@ let UserService = class UserService {
     }
     async getUserData(email) {
         return this.userModel
-            .findOne({ "privates.email": email }, { publik: 1, privates: 1, delivery: 1 })
+            .findOne({ "privates.email": email }, { publik: 1, privates: 1, delivery: 1, registered: 1, _id: 1 })
             .exec();
     }
     async updateUserData(dto, email) {
@@ -391,13 +392,14 @@ let UserService = class UserService {
         const dto = {
             email: fakeEmail,
             dateofBirth: "2024-10-27",
-            password: ""
+            password: "",
+            registered: false
         };
-        await this.registerUser(dto);
+        await this.registerUser(dto, false);
         const access_token = await this.jwtService.signAsync({ email: fakeEmail });
         return this.updateGoodToBasket(fakeEmail, id, "add", access_token);
     }
-    async toggleChoice(goodId, email) {
+    async toggleChoice(email, goodId) {
         const updated = await this.userModel
             .findOneAndUpdate({ "privates.email": email }, [
             {
@@ -457,9 +459,10 @@ let UserService = class UserService {
         const dto = {
             email: fakeEmail,
             dateofBirth: "2024-10-27",
-            password: ""
+            password: "",
+            registered: false
         };
-        await this.registerUser(dto);
+        await this.registerUser(dto, false);
         const access_token = await this.jwtService.signAsync({ email: fakeEmail });
         return this.toggleFavoritesByEmail(goodId, fakeEmail, access_token);
     }
