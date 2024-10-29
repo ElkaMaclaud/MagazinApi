@@ -39,15 +39,15 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get("basket")
-  async getBasket(
+  @Get("cart")
+  async getCart(
     @Req() req,
     @UserEmail() email: string,
     @Query("offset") offset?: number,
     @Query("limit") limit?: number,
   ) {
     const options = { offset, limit };
-    return this.userService.getBasket(email, options);
+    return this.userService.getCart(email, options);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -109,7 +109,7 @@ __decorate([
 __decorate([
     (0, typegoose_1.prop)({ type: () => [IUserGood] }),
     __metadata("design:type", Array)
-], UserModel.prototype, "basket", void 0);
+], UserModel.prototype, "cart", void 0);
 __decorate([
     (0, typegoose_1.prop)({ type: () => [String] }),
     __metadata("design:type", Array)

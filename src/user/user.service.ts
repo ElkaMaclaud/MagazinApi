@@ -30,7 +30,7 @@ export class UserService {
         passwordHash: await hash(dto.password, salt),
       }, 
       favorites: [],
-      basket: [],
+      cart: [],
       order: [],
       delivery: {
         address: "",
@@ -90,7 +90,7 @@ export class UserService {
             let: {
               goodId: {
                 $cond: {
-                  if: { $eq: [field, "basket"] },
+                  if: { $eq: [field, "cart"] },
                   then: `$${field}.goodId`,
                   else: `$${field}`,
                 },
@@ -110,7 +110,7 @@ export class UserService {
           $addFields: {
             [field]: {
               $cond: {
-                if: { $eq: [field, "basket"] },
+                if: { $eq: [field, "cart"] },
                 then: {
                   // Объединение полей
                   $mergeObjects: [
@@ -125,11 +125,11 @@ export class UserService {
                     then: {
                       $let: {
                         vars: {
-                          basketItem: {
+                          cartItem: {
                             $arrayElemAt: [
                               {
                                 $filter: {
-                                  input: "$basket",
+                                  input: "$cart",
                                   as: "item",
                                   cond: {
                                     $eq: [
@@ -146,7 +146,7 @@ export class UserService {
                         in: {
                           $mergeObjects: [
                             { goodId: { $toString: `$${field}` } },
-                            { count: "$$basketItem.count" },
+                            { count: "$$cartItem.count" },
                             { favorite: true },
                             { $arrayElemAt: ["$goodInfo", 0] },
                           ],
@@ -197,8 +197,8 @@ export class UserService {
     return result[0]?.[field] || [];
   }
 
-  async getBasket(email: string, options) {
-    return this.getData(email, "basket", options);
+  async getCart(email: string, options) {
+    return this.getData(email, "cart", options);
   }
 
   async getFavorites(email: string, options) {
@@ -256,7 +256,7 @@ export class UserService {
     return updatedUser.delivery;
   }
 
-  async updateGoodToBasket(email: string, goodId: string, operand = "add", token?: string) {
+  async updateGoodTocart(email: string, goodId: string, operand = "add", token?: string) {
     let operator = "add";
     if (operand === "sub") {
       operator = "subtract";
@@ -267,10 +267,10 @@ export class UserService {
       [
         {
           $set: {
-            isExisting: { $in: [goodId, "$basket.goodId"] },
+            isExisting: { $in: [goodId, "$cart.goodId"] },
             existingItem: {
               $filter: {
-                input: "$basket",
+                input: "$cart",
                 as: "item",
                 cond: { $eq: ["$$item.goodId", goodId] },
               },
@@ -279,7 +279,7 @@ export class UserService {
         },
         {
           $set: {
-            basket: {
+            cart: {
               $cond: {
                 if: "$isExisting",
                 then: {
@@ -306,14 +306,14 @@ export class UserService {
                     },
                     then: {
                       $filter: {
-                        input: "$basket",
+                        input: "$cart",
                         as: "item",
                         cond: { $ne: ["$$item.goodId", goodId] },
                       },
                     },
                     else: {
                       $map: {
-                        input: "$basket",
+                        input: "$cart",
                         as: "item",
                         in: {
                           $cond: {
@@ -336,11 +336,11 @@ export class UserService {
                     if: { $eq: [operand, "add"] },
                     then: {
                       $concatArrays: [
-                        "$basket",
+                        "$cart",
                         [{ goodId: goodId, count: 1, choice: true }],
                       ],
                     },
-                    else: "$basket",
+                    else: "$cart",
                   },
                 },
               },
@@ -380,7 +380,7 @@ export class UserService {
                   $arrayElemAt: [
                     {
                       $filter: {
-                        input: "$basket",
+                        input: "$cart",
                         as: "item",
                         cond: { $eq: ["$$item.goodId", goodId] },
                       },
@@ -418,7 +418,7 @@ export class UserService {
 
   async addToCart(id: string, email?: string) {
     if (email) {
-      return this.updateGoodToBasket(email, id);
+      return this.updateGoodTocart(email, id);
     }
     const fakeEmail = `${Math.random().toString(36).substring(2, 15)}@mail.com`
     const dto = {
@@ -429,7 +429,7 @@ export class UserService {
     }
     await this.registerUser(dto, false)
     const access_token = await this.jwtService.signAsync({email: fakeEmail})
-    return this.updateGoodToBasket(fakeEmail, id, "add", access_token)
+    return this.updateGoodTocart(fakeEmail, id, "add", access_token)
 
   }
   async toggleSelect(email: string, goodId: string) {
@@ -439,9 +439,9 @@ export class UserService {
         [
           {
             $set: {
-              basket: {
+              cart: {
                 $map: {
-                  input: "$basket",
+                  input: "$cart",
                   as: "item",
                   in: {
                     $cond: {
@@ -481,7 +481,7 @@ export class UserService {
         { new: true, useFindAndModify: false },
       )
       .exec();
-    return updated.basket.find((good) => good.goodId === goodId);
+    return updated.cart.find((good) => good.goodId === goodId);
   }
   async selectAll(email: string, on: boolean) {
     const updated = await this.userModel
@@ -490,9 +490,9 @@ export class UserService {
         [
           {
             $set: {
-              basket: {
+              cart: {
                 $map: {
-                  input: "$basket",
+                  input: "$cart",
                   as: "item",
                   in: {
                     $mergeObjects: ["$$item", { choice: on }],
@@ -505,7 +505,7 @@ export class UserService {
         { new: true, useFindAndModify: false },
       )
       .exec();
-    return updated.basket;
+    return updated.cart;
   }
   async toggleFavorites(goodId: string, email?: string) {
     if(email) {
@@ -595,7 +595,7 @@ export class UserService {
                     $arrayElemAt: [
                       {
                         $filter: {
-                          input: "$basket",
+                          input: "$cart",
                           as: "item",
                           cond: { $eq: ["$$item.goodId", goodId] },
                         },
@@ -626,7 +626,7 @@ export class UserService {
       { "privates.email": email },
       {
         $pull: {
-          basket: {
+          cart: {
             goodId: { $in: ids },
           },
         },
@@ -638,17 +638,17 @@ export class UserService {
   }
 
   async subFromCart(email: string, id: string) {
-    return this.updateGoodToBasket(email, id, "sub");
+    return this.updateGoodTocart(email, id, "sub");
   }
   async deleteSelected(email: string) {
-    const basket = await this.userModel.findOneAndUpdate(
+    const cart = await this.userModel.findOneAndUpdate(
       { "privates.email": email },
       [
         {
           $set: {
-            basket: {
+            cart: {
               $filter: {
-                input: "$basket",
+                input: "$cart",
                 as: "item",
                 cond: { $eq: ["$$item.choice", false] },
               },
@@ -658,9 +658,9 @@ export class UserService {
       ],
       { new: true, useFindAndModify: false },
     );
-    return basket.basket;
+    return cart.cart;
   }
   async removeFromCart(email: string, id: string) {
-    return this.deleteGood(email, id, "basket");
+    return this.deleteGood(email, id, "cart");
   }
 }

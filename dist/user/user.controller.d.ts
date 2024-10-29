@@ -9,10 +9,10 @@ export declare class UserController {
     login({ email: login, password }: AuthDto): Promise<{
         access_token: string;
     }>;
-    getBasket(req: any, email: string, offset?: number, limit?: number): Promise<any>;
+    getCart(req: any, email: string, offset?: number, limit?: number): Promise<any>;
     getFavorites(req: any, email: string, offset?: number, limit?: number): Promise<any>;
     getOrders(req: any, email: string, offset?: number, limit?: number): Promise<any>;
-    ChooseAll(req: any, dto: {
+    selectAll(req: any, dto: {
         on: boolean;
     }, email: string): Promise<import("./user.model").IUserGood[]>;
     getUserData(email: string): Promise<import("@typegoose/typegoose").DocumentType<import("./user.model").UserModel>>;
@@ -25,13 +25,13 @@ export declare class UserController {
     }>;
     updateDelivery(dto: IDelivery, email: string): Promise<IDelivery>;
     deleteSelected(req: any, email: string): Promise<import("./user.model").IUserGood[]>;
-    addBasket(req: any, dto: {
+    addToCart(req: any, dto: {
         id: string;
     }, email: string): Promise<any>;
-    addBasketGetAuto(req: any, dto: {
+    addToCartGetAuto(req: any, dto: {
         id: string;
     }): Promise<any>;
-    toggleChoice(req: any, dto: {
+    toggleSelect(req: any, dto: {
         id: string;
     }, email: string): Promise<import("./user.model").IUserGood>;
     addFavorites(req: any, dto: {
@@ -43,10 +43,10 @@ export declare class UserController {
     addOrder(req: any, dto: {
         ids: string[];
     }, email: string): Promise<string[]>;
-    subBasket(req: any, dto: {
+    subFromCart(req: any, dto: {
         id: string;
     }, email: string): Promise<any>;
-    deleteBasket(req: any, dto: {
+    removeFromCart(req: any, dto: {
         id: string;
     }, email: string): Promise<{
         id: string;

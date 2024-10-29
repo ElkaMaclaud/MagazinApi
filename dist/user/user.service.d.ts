@@ -14,7 +14,7 @@ export declare class UserService {
         access_token: string;
     }>;
     getData(email: string, field: string, options: any): Promise<any>;
-    getBasket(email: string, options: any): Promise<any>;
+    getCart(email: string, options: any): Promise<any>;
     getFavorites(email: string, options: any): Promise<any>;
     getOrders(email: string, options: any): Promise<any>;
     getUserData(email: string): Promise<import("@typegoose/typegoose/lib/types").DocumentType<UserModel>>;
@@ -26,19 +26,19 @@ export declare class UserService {
         name: string;
     }>;
     updateDelivery(dto: IDelivery, email: string): Promise<IDelivery>;
-    updateGoodToBasket(email: string, goodId: string, operand?: string, token?: string): Promise<any>;
+    updateGoodTocart(email: string, goodId: string, operand?: string, token?: string): Promise<any>;
     deleteGood(email: string, id: string, field: string): Promise<{
         id: string;
     }>;
-    addBasket(id: string, email?: string): Promise<any>;
-    toggleChoice(email: string, goodId: string): Promise<import("./user.model").IUserGood>;
-    ChooseAll(email: string, on: boolean): Promise<import("./user.model").IUserGood[]>;
+    addToCart(id: string, email?: string): Promise<any>;
+    toggleSelect(email: string, goodId: string): Promise<import("./user.model").IUserGood>;
+    selectAll(email: string, on: boolean): Promise<import("./user.model").IUserGood[]>;
     toggleFavorites(goodId: string, email?: string): Promise<any>;
     toggleFavoritesByEmail(goodId: string, email?: string, token?: string): Promise<any>;
     addOrder(email: string, ids: string[]): Promise<string[]>;
-    subBasket(email: string, id: string): Promise<any>;
+    subFromCart(email: string, id: string): Promise<any>;
     deleteSelected(email: string): Promise<import("./user.model").IUserGood[]>;
-    deleteBasket(email: string, id: string): Promise<{
+    removeFromCart(email: string, id: string): Promise<{
         id: string;
     }>;
 }

@@ -2,7 +2,7 @@ export class UserDto {
   publik: IInfoPublik;
   privates: IInfoPrivate;
   favorite?: IUserGood[];
-  basket?: IUserGood[];
+  cart?: IUserGood[];
   order?: string[];
   delivery: IDelivery;
   registered: boolean;

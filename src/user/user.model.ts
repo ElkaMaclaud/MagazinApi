@@ -69,7 +69,7 @@ export class UserModel extends TimeStamps {
   favorites?: string[];
 
   @prop({ type: () => [IUserGood] })
-  basket?: IUserGood[];
+  cart?: IUserGood[];
 
   @prop({ type: () => [String] })
   order?: string[];

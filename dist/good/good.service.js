@@ -78,11 +78,11 @@ let GoodService = class GoodService {
                                     $arrayElemAt: [
                                         {
                                             $filter: {
-                                                input: "$user.basket",
-                                                as: "basketItem",
+                                                input: "$user.cart",
+                                                as: "cartItem",
                                                 cond: {
                                                     $eq: [
-                                                        "$$basketItem.goodId",
+                                                        "$$cartItem.goodId",
                                                         { $toString: "$$ROOT._id" },
                                                     ],
                                                 },
@@ -200,9 +200,9 @@ let GoodService = class GoodService {
                         },
                         {
                             $addFields: {
-                                basket_item: {
+                                cart_item: {
                                     $filter: {
-                                        input: "$basket",
+                                        input: "$cart",
                                         as: "item",
                                         cond: { $eq: ["$$item.goodId", "$$goodId"] },
                                     },
@@ -211,7 +211,7 @@ let GoodService = class GoodService {
                         },
                         {
                             $project: {
-                                count: { $arrayElemAt: ["$basket_item.count", 0] },
+                                count: { $arrayElemAt: ["$cart_item.count", 0] },
                             },
                         },
                     ],

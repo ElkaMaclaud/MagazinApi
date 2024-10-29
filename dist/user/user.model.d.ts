@@ -30,7 +30,7 @@ export declare class UserModel extends TimeStamps {
     publik: IInfoPublik;
     privates: IInfoPrivate;
     favorites?: string[];
-    basket?: IUserGood[];
+    cart?: IUserGood[];
     order?: string[];
     delivery: IDelivery;
     typegooseName: string;

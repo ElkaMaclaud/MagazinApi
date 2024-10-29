@@ -40,7 +40,7 @@ let UserService = class UserService {
                 passwordHash: await (0, bcryptjs_1.hash)(dto.password, salt),
             },
             favorites: [],
-            basket: [],
+            cart: [],
             order: [],
             delivery: {
                 address: "",
@@ -87,7 +87,7 @@ let UserService = class UserService {
                     let: {
                         goodId: {
                             $cond: {
-                                if: { $eq: [field, "basket"] },
+                                if: { $eq: [field, "cart"] },
                                 then: `$${field}.goodId`,
                                 else: `$${field}`,
                             },
@@ -107,7 +107,7 @@ let UserService = class UserService {
                 $addFields: {
                     [field]: {
                         $cond: {
-                            if: { $eq: [field, "basket"] },
+                            if: { $eq: [field, "cart"] },
                             then: {
                                 $mergeObjects: [
                                     `$${field}`,
@@ -120,11 +120,11 @@ let UserService = class UserService {
                                     then: {
                                         $let: {
                                             vars: {
-                                                basketItem: {
+                                                cartItem: {
                                                     $arrayElemAt: [
                                                         {
                                                             $filter: {
-                                                                input: "$basket",
+                                                                input: "$cart",
                                                                 as: "item",
                                                                 cond: {
                                                                     $eq: [
@@ -141,7 +141,7 @@ let UserService = class UserService {
                                             in: {
                                                 $mergeObjects: [
                                                     { goodId: { $toString: `$${field}` } },
-                                                    { count: "$$basketItem.count" },
+                                                    { count: "$$cartItem.count" },
                                                     { favorite: true },
                                                     { $arrayElemAt: ["$goodInfo", 0] },
                                                 ],
@@ -191,8 +191,8 @@ let UserService = class UserService {
             .exec();
         return result[0]?.[field] || [];
     }
-    async getBasket(email, options) {
-        return this.getData(email, "basket", options);
+    async getCart(email, options) {
+        return this.getData(email, "cart", options);
     }
     async getFavorites(email, options) {
         return this.getData(email, "favorites", options);
@@ -235,7 +235,7 @@ let UserService = class UserService {
             .exec();
         return updatedUser.delivery;
     }
-    async updateGoodToBasket(email, goodId, operand = "add", token) {
+    async updateGoodTocart(email, goodId, operand = "add", token) {
         let operator = "add";
         if (operand === "sub") {
             operator = "subtract";
@@ -243,10 +243,10 @@ let UserService = class UserService {
         await this.userModel.updateOne({ "privates.email": email }, [
             {
                 $set: {
-                    isExisting: { $in: [goodId, "$basket.goodId"] },
+                    isExisting: { $in: [goodId, "$cart.goodId"] },
                     existingItem: {
                         $filter: {
-                            input: "$basket",
+                            input: "$cart",
                             as: "item",
                             cond: { $eq: ["$$item.goodId", goodId] },
                         },
@@ -255,7 +255,7 @@ let UserService = class UserService {
             },
             {
                 $set: {
-                    basket: {
+                    cart: {
                         $cond: {
                             if: "$isExisting",
                             then: {
@@ -281,14 +281,14 @@ let UserService = class UserService {
                                     },
                                     then: {
                                         $filter: {
-                                            input: "$basket",
+                                            input: "$cart",
                                             as: "item",
                                             cond: { $ne: ["$$item.goodId", goodId] },
                                         },
                                     },
                                     else: {
                                         $map: {
-                                            input: "$basket",
+                                            input: "$cart",
                                             as: "item",
                                             in: {
                                                 $cond: {
@@ -311,11 +311,11 @@ let UserService = class UserService {
                                     if: { $eq: [operand, "add"] },
                                     then: {
                                         $concatArrays: [
-                                            "$basket",
+                                            "$cart",
                                             [{ goodId: goodId, count: 1, choice: true }],
                                         ],
                                     },
-                                    else: "$basket",
+                                    else: "$cart",
                                 },
                             },
                         },
@@ -353,7 +353,7 @@ let UserService = class UserService {
                                 $arrayElemAt: [
                                     {
                                         $filter: {
-                                            input: "$basket",
+                                            input: "$cart",
                                             as: "item",
                                             cond: { $eq: ["$$item.goodId", goodId] },
                                         },
@@ -384,9 +384,9 @@ let UserService = class UserService {
             .exec();
         return { id };
     }
-    async addBasket(id, email) {
+    async addToCart(id, email) {
         if (email) {
-            return this.updateGoodToBasket(email, id);
+            return this.updateGoodTocart(email, id);
         }
         const fakeEmail = `${Math.random().toString(36).substring(2, 15)}@mail.com`;
         const dto = {
@@ -397,16 +397,16 @@ let UserService = class UserService {
         };
         await this.registerUser(dto, false);
         const access_token = await this.jwtService.signAsync({ email: fakeEmail });
-        return this.updateGoodToBasket(fakeEmail, id, "add", access_token);
+        return this.updateGoodTocart(fakeEmail, id, "add", access_token);
     }
-    async toggleChoice(email, goodId) {
+    async toggleSelect(email, goodId) {
         const updated = await this.userModel
             .findOneAndUpdate({ "privates.email": email }, [
             {
                 $set: {
-                    basket: {
+                    cart: {
                         $map: {
-                            input: "$basket",
+                            input: "$cart",
                             as: "item",
                             in: {
                                 $cond: {
@@ -429,16 +429,16 @@ let UserService = class UserService {
             },
         ], { new: true, useFindAndModify: false })
             .exec();
-        return updated.basket.find((good) => good.goodId === goodId);
+        return updated.cart.find((good) => good.goodId === goodId);
     }
-    async ChooseAll(email, on) {
+    async selectAll(email, on) {
         const updated = await this.userModel
             .findOneAndUpdate({ "privates.email": email }, [
             {
                 $set: {
-                    basket: {
+                    cart: {
                         $map: {
-                            input: "$basket",
+                            input: "$cart",
                             as: "item",
                             in: {
                                 $mergeObjects: ["$$item", { choice: on }],
@@ -449,7 +449,7 @@ let UserService = class UserService {
             },
         ], { new: true, useFindAndModify: false })
             .exec();
-        return updated.basket;
+        return updated.cart;
     }
     async toggleFavorites(goodId, email) {
         if (email) {
@@ -531,7 +531,7 @@ let UserService = class UserService {
                                     $arrayElemAt: [
                                         {
                                             $filter: {
-                                                input: "$basket",
+                                                input: "$cart",
                                                 as: "item",
                                                 cond: { $eq: ["$$item.goodId", goodId] },
                                             },
@@ -560,7 +560,7 @@ let UserService = class UserService {
     async addOrder(email, ids) {
         const updated = await this.userModel.findOneAndUpdate({ "privates.email": email }, {
             $pull: {
-                basket: {
+                cart: {
                     goodId: { $in: ids },
                 },
             },
@@ -568,16 +568,16 @@ let UserService = class UserService {
         }, { new: true, useFindAndModify: false });
         return updated.order;
     }
-    async subBasket(email, id) {
-        return this.updateGoodToBasket(email, id, "sub");
+    async subFromCart(email, id) {
+        return this.updateGoodTocart(email, id, "sub");
     }
     async deleteSelected(email) {
-        const basket = await this.userModel.findOneAndUpdate({ "privates.email": email }, [
+        const cart = await this.userModel.findOneAndUpdate({ "privates.email": email }, [
             {
                 $set: {
-                    basket: {
+                    cart: {
                         $filter: {
-                            input: "$basket",
+                            input: "$cart",
                             as: "item",
                             cond: { $eq: ["$$item.choice", false] },
                         },
@@ -585,10 +585,10 @@ let UserService = class UserService {
                 },
             },
         ], { new: true, useFindAndModify: false });
-        return basket.basket;
+        return cart.cart;
     }
-    async deleteBasket(email, id) {
-        return this.deleteGood(email, id, "basket");
+    async removeFromCart(email, id) {
+        return this.deleteGood(email, id, "cart");
     }
 };
 UserService = __decorate([

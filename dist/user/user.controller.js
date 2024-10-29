@@ -35,9 +35,9 @@ let UserController = class UserController {
         const { email } = await this.userService.validateUser(login, password);
         return this.userService.login(email);
     }
-    async getBasket(req, email, offset, limit) {
+    async getCart(req, email, offset, limit) {
         const options = { offset, limit };
-        return this.userService.getBasket(email, options);
+        return this.userService.getCart(email, options);
     }
     async getFavorites(req, email, offset, limit) {
         const options = { offset, limit };
@@ -47,8 +47,8 @@ let UserController = class UserController {
         const options = { offset, limit };
         return this.userService.getOrders(email, options);
     }
-    async ChooseAll(req, dto, email) {
-        return this.userService.ChooseAll(email, dto.on);
+    async selectAll(req, dto, email) {
+        return this.userService.selectAll(email, dto.on);
     }
     async getUserData(email) {
         return this.userService.getUserData(email);
@@ -65,17 +65,17 @@ let UserController = class UserController {
         const result = this.userService.deleteSelected(email);
         return result;
     }
-    async addBasket(req, dto, email) {
+    async addToCart(req, dto, email) {
         const id = dto.id;
-        return this.userService.addBasket(id, email);
+        return this.userService.addToCart(id, email);
     }
-    async addBasketGetAuto(req, dto) {
+    async addToCartGetAuto(req, dto) {
         const id = dto.id;
-        return this.userService.addBasket(id);
+        return this.userService.addToCart(id);
     }
-    async toggleChoice(req, dto, email) {
+    async toggleSelect(req, dto, email) {
         const id = dto.id;
-        return this.userService.toggleChoice(email, id);
+        return this.userService.toggleSelect(email, id);
     }
     async addFavorites(req, dto, email) {
         const id = dto.id;
@@ -88,13 +88,13 @@ let UserController = class UserController {
     async addOrder(req, dto, email) {
         return this.userService.addOrder(email, dto.ids);
     }
-    async subBasket(req, dto, email) {
+    async subFromCart(req, dto, email) {
         const id = dto.id;
-        return this.userService.subBasket(email, id);
+        return this.userService.subFromCart(email, id);
     }
-    async deleteBasket(req, dto, email) {
+    async removeFromCart(req, dto, email) {
         const id = dto.id;
-        const result = this.userService.deleteBasket(email, id);
+        const result = this.userService.removeFromCart(email, id);
         return result;
     }
 };
@@ -115,7 +115,7 @@ __decorate([
 ], UserController.prototype, "login", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
-    (0, common_1.Get)("basket"),
+    (0, common_1.Get)("cart"),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, user_email_decorator_1.UserEmail)()),
     __param(2, (0, common_1.Query)("offset")),
@@ -123,7 +123,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String, Number, Number]),
     __metadata("design:returntype", Promise)
-], UserController.prototype, "getBasket", null);
+], UserController.prototype, "getCart", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Get)("favorites"),
@@ -148,14 +148,14 @@ __decorate([
 ], UserController.prototype, "getOrders", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
-    (0, common_1.Patch)("ChooseAll"),
+    (0, common_1.Patch)("selectAll"),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __param(2, (0, user_email_decorator_1.UserEmail)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, String]),
     __metadata("design:returntype", Promise)
-], UserController.prototype, "ChooseAll", null);
+], UserController.prototype, "selectAll", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Get)("userData"),
@@ -193,32 +193,32 @@ __decorate([
 ], UserController.prototype, "deleteSelected", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
-    (0, common_1.Patch)("addBasket"),
+    (0, common_1.Patch)("addToCart"),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __param(2, (0, user_email_decorator_1.UserEmail)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, String]),
     __metadata("design:returntype", Promise)
-], UserController.prototype, "addBasket", null);
+], UserController.prototype, "addToCart", null);
 __decorate([
-    (0, common_1.Patch)("addBasketGetAuto"),
+    (0, common_1.Patch)("addToCartGetAuto"),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
-], UserController.prototype, "addBasketGetAuto", null);
+], UserController.prototype, "addToCartGetAuto", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
-    (0, common_1.Patch)("toggleChoice"),
+    (0, common_1.Patch)("toggleSelect"),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __param(2, (0, user_email_decorator_1.UserEmail)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, String]),
     __metadata("design:returntype", Promise)
-], UserController.prototype, "toggleChoice", null);
+], UserController.prototype, "toggleSelect", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Patch)("toggleFavorites"),
@@ -249,24 +249,24 @@ __decorate([
 ], UserController.prototype, "addOrder", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
-    (0, common_1.Patch)("subBasket"),
+    (0, common_1.Patch)("subFromCart"),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __param(2, (0, user_email_decorator_1.UserEmail)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, String]),
     __metadata("design:returntype", Promise)
-], UserController.prototype, "subBasket", null);
+], UserController.prototype, "subFromCart", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
-    (0, common_1.Patch)("deleteBasket"),
+    (0, common_1.Patch)("removeFromCart"),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __param(2, (0, user_email_decorator_1.UserEmail)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, String]),
     __metadata("design:returntype", Promise)
-], UserController.prototype, "deleteBasket", null);
+], UserController.prototype, "removeFromCart", null);
 UserController = __decorate([
     (0, common_1.Controller)("user"),
     __metadata("design:paramtypes", [user_service_1.UserService])
