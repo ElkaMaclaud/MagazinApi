@@ -75,13 +75,13 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch("ChooseAll")
-  async ChooseAll(
+  @Patch("selectAll")
+  async selectAll(
     @Req() req,
     @Body() dto: { on: boolean },
     @UserEmail() email: string,
   ) {
-    return this.userService.ChooseAll(email, dto.on);
+    return this.userService.selectAll(email, dto.on);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -115,34 +115,34 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch("addBasket")
-  async addBasket(
+  @Patch("addToCart")
+  async addToCart(
     @Req() req,
     @Body() dto: { id: string },
     @UserEmail() email: string,
   ) {
     const id = dto.id;
-    return this.userService.addBasket(id, email);
+    return this.userService.addToCart(id, email);
   }
 
-  @Patch("addBasketGetAuto")
-  async addBasketGetAuto(
+  @Patch("addToCartGetAuto")
+  async addToCartGetAuto(
     @Req() req,
     @Body() dto: { id: string },
   ) {
     const id = dto.id;
-    return this.userService.addBasket(id);
+    return this.userService.addToCart(id);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch("toggleChoice")
-  async toggleChoice(
+  @Patch("toggleSelect")
+  async toggleSelect(
     @Req() req,
     @Body() dto: { id: string },
     @UserEmail() email: string,
   ) {
     const id = dto.id;
-    return this.userService.toggleChoice(email, id);
+    return this.userService.toggleSelect(email, id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -179,25 +179,25 @@ export class UserController {
   // async buy(@Body() dto: IUserGood) {}
 
   @UseGuards(JwtAuthGuard)
-  @Patch("subBasket")
-  async subBasket(
+  @Patch("subFromCart")
+  async subFromCart(
     @Req() req,
     @Body() dto: { id: string },
     @UserEmail() email: string,
   ) {
     const id = dto.id;
-    return this.userService.subBasket(email, id);
+    return this.userService.subFromCart(email, id);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch("deleteBasket")
-  async deleteBasket(
+  @Patch("removeFromCart")
+  async removeFromCart(
     @Req() req,
     @Body() dto: { id: string },
     @UserEmail() email: string,
   ) {
     const id = dto.id;
-    const result = this.userService.deleteBasket(email, id);
+    const result = this.userService.removeFromCart(email, id);
     return result;
   }
 }

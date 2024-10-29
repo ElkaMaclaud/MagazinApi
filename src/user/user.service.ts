@@ -416,7 +416,7 @@ export class UserService {
     return { id };
   }
 
-  async addBasket(id: string, email?: string) {
+  async addToCart(id: string, email?: string) {
     if (email) {
       return this.updateGoodToBasket(email, id);
     }
@@ -432,7 +432,7 @@ export class UserService {
     return this.updateGoodToBasket(fakeEmail, id, "add", access_token)
 
   }
-  async toggleChoice(email: string, goodId: string) {
+  async toggleSelect(email: string, goodId: string) {
     const updated = await this.userModel
       .findOneAndUpdate(
         { "privates.email": email },
@@ -483,7 +483,7 @@ export class UserService {
       .exec();
     return updated.basket.find((good) => good.goodId === goodId);
   }
-  async ChooseAll(email: string, on: boolean) {
+  async selectAll(email: string, on: boolean) {
     const updated = await this.userModel
       .findOneAndUpdate(
         { "privates.email": email },
@@ -637,7 +637,7 @@ export class UserService {
     return updated.order;
   }
 
-  async subBasket(email: string, id: string) {
+  async subFromCart(email: string, id: string) {
     return this.updateGoodToBasket(email, id, "sub");
   }
   async deleteSelected(email: string) {
@@ -660,7 +660,7 @@ export class UserService {
     );
     return basket.basket;
   }
-  async deleteBasket(email: string, id: string) {
+  async removeFromCart(email: string, id: string) {
     return this.deleteGood(email, id, "basket");
   }
 }
