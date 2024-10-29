@@ -24,7 +24,7 @@ export class UserService {
       },
       privates: {
         phone: dto?.phone || "",
-        dateOfBirth: new Date(dto?.dateofBirth) || new Date(),
+        dateOfBirth: dto.dateofBirth ? new Date(dto.dateofBirth) : new Date(),
         role: "user",
         email: dto.email,
         passwordHash: await hash(dto.password, salt),

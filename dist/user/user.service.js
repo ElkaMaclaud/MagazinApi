@@ -34,7 +34,7 @@ let UserService = class UserService {
             },
             privates: {
                 phone: dto?.phone || "",
-                dateOfBirth: new Date(dto?.dateofBirth) || new Date(),
+                dateOfBirth: dto.dateofBirth ? new Date(dto.dateofBirth) : new Date(),
                 role: "user",
                 email: dto.email,
                 passwordHash: await (0, bcryptjs_1.hash)(dto.password, salt),
