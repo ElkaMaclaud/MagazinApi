@@ -7,8 +7,8 @@ import {
   WebSocketServer,
 } from "@nestjs/websockets";
 import { Server } from "socket.io";
-import { UserEmailSocket } from "src/decorators/user-emailFromWebsocket.decorator";
-import { JwtAuthGuard } from "src/user/guards/jwt.guard";
+import { UserEmailSocket } from "source/decorators/user-emailFromWebsocket.decorator";
+import { JwtAuthGuard } from "source/user/guards/jwt.guard";
 import { JwtAuthGuardWebsocket } from "./guards/jwt.guardWebsocket";
 
 @WebSocketGateway({

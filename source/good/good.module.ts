@@ -5,7 +5,7 @@ import { GoodModel } from "./good.model";
 import { GoodService } from './good.service';
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
-import { getJWTConfig } from "src/configs/jwt.config";
+import { getJWTConfig } from "source/configs/jwt.config";
 
 @Module({
   controllers: [GoodController],

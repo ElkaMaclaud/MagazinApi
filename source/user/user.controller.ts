@@ -15,7 +15,7 @@ import { UserService } from "./user.service";
 import { AuthDto } from "./dto/auth.dto";
 import { ALREADY_REGISTERED_ERROR } from "./user.constant";
 import { JwtAuthGuard } from "./guards/jwt.guard";
-import { UserEmail } from "src/decorators/user-email.decorator";
+import { UserEmail } from "source/decorators/user-email.decorator";
 import { IDelivery } from "./user.model";
 
 @Controller("user")

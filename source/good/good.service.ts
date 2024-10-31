@@ -431,7 +431,7 @@ export class GoodService {
   // Собственно нет и фронта для продавцов, так что Функцию для создания товаров будет излишней пока...
 
   // async writeDataToBD() {
-  //   const filePath = path.join(process.cwd(), "./src/database", "data.json");
+  //   const filePath = path.join(process.cwd(), "./source/database", "data.json");
   //   const rawdata = fs.readFileSync(filePath, "utf8");
   //   const data: { good: GoodDto[] } = JSON.parse(rawdata);
   //   await this.goodModel.insertMany(data.good);

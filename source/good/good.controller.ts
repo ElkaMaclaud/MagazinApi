@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 import { GoodDto, GoodIdsDto, OptionsLimits } from "./dto/find-goods.dto";
 import { GoodService } from "./good.service";
-import { UserEmail } from "src/decorators/user-email.decoratorIfAuto";
+import { UserEmail } from "source/decorators/user-email.decoratorIfAuto";
 import { JwtAuthGuard } from "./guards/jwtAuthGuard";
 
 @Controller("good")
