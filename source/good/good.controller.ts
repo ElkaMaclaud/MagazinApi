@@ -95,6 +95,34 @@ export class GoodController {
     const options = { offset, limit };
     return this.goodService.getGoodsByIds(dto, options);
   }
+  async getGoodFindByKeyword() {
+    try {
+        const email = req.userEmail;
+        const keyWord = req.query.keyWord
+        const offset = req.query.offset ? parseInt(req.query.offset) : undefined;
+        const limit = req.query.limit ? parseInt(req.query.limit) : undefined;
+        const options = { offset, limit };
+        if (!email) {
+            const goods = await this.goodService.getGoodFindByKeyword(keyWord, options);
+            return res.json(goods);
+        }
+        const goods = await this.goodService.getGoodsByDiscountСlassificationUser(email, { keyWord }, options);
+        return res.json(goods);
+    } catch (error) {
+        return res.status(403).json({ success: false, message: error })
+    }
+  }
+    async createSelers() {
+      try {
+          const dto = req.body
+          await this.goodService.createSelers(dto)
+          return res.json({ success: true, message: "Успешно!" })
+      } catch (error) {
+          return res.status(403).json({ success: false, message: error })
+      }
+  }
+}
+
 
   // Специальный метод жизненного цикла nestjs - инициализирует самозапускающуюся ф-ую
 

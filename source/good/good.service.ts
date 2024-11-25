@@ -12,7 +12,7 @@ import { GoodIdsDto, OptionsLimits } from "./dto/find-goods.dto";
 export class GoodService {
   constructor(
     @InjectModel(GoodModel) private readonly goodModel: ModelType<GoodModel>,
-  ) {}
+  ) { }
 
   buildMatchCondition(value: string | { [key: string]: string }) {
     const matchCondition: { [key: string]: any } = {};
@@ -32,145 +32,189 @@ export class GoodService {
     return matchCondition;
   }
 
+  buildMatchConditionByKeyword(keyword: string) {
+    const searchQuery = {
+      $or: [
+        { brand: { $regex: keyword, $options: 'i' } },
+        { name: { $regex: keyword, $options: 'i' } },
+        { description: { $regex: keyword, $options: 'i' } },
+        { category: { $regex: keyword, $options: 'i' } },
+        { characteristics: { $regex: keyword, $options: 'i' } },
+        { 'characteristics.name': { $regex: keyword, $options: 'i' } },
+        { 'characteristics.value': { $regex: keyword, $options: 'i' } }
+      ]
+    };
+    return searchQuery;
+  }
+
   async getGoodsByDiscountСlassificationUser(
     email: string,
     value: string | { [key: string]: string },
     options: OptionsLimits,
   ): Promise<DocumentType<GoodModel>[] | void> {
-    const offset = options.offset || 0;
-    const limit = options.limit || 50;
+    const offset = options?.offset || 0;
+    const limit = options?.limit || 50;
+    let query;
     const sortField = this.buildMatchCondition(value).sort || { price: 1 };
-    const existsFilter =
-      this.buildMatchCondition(value).category ||
-      this.buildMatchCondition(value);
+    if (typeof value === "object" && value.hasOwnProperty("keyWord")) {
+      query = this.buildMatchConditionByKeyword(value.keyWord)
+    } else {
+      query =
+        this.buildMatchCondition(value).category ||
+        this.buildMatchCondition(value);
+    }
     return await this.goodModel
-      .aggregate([
-        {
-          $match: existsFilter,
-        },
-        {
-          $lookup: {
-            from: "User",
-            let: { userEmail: email },
-            pipeline: [
-              {
-                $match: {
-                  $expr: { $eq: ["$privates.email", "$$userEmail"] },
-                },
+    .aggregate([
+      {
+        $match: query,
+      },
+      {
+        $lookup: {
+          from: "User",
+          let: { userEmail: email },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: ["$privates.email", "$$userEmail"] },
               },
-            ],
-            as: "user",
-          },
+            },
+          ],
+          as: "user",
         },
-        {
-          $unwind: {
-            path: "$user",
-            preserveNullAndEmptyArrays: true,
-          },
+      },
+      {
+        $unwind: {
+          path: "$user",
+          preserveNullAndEmptyArrays: true,
         },
-        {
-          $addFields: {
-            count: {
-              $let: {
-                vars: {
-                  matchedItem: {
-                    $arrayElemAt: [
-                      {
-                        $filter: {
-                          input: "$user.cart",
-                          as: "cartItem",
-                          cond: {
-                            $eq: [
-                              "$$cartItem.goodId",
-                              { $toString: "$$ROOT._id" },
-                            ],
-                          },
+      },
+      {
+        $addFields: {
+          user: { $ifNull: ["$user", null] }
+        }
+      },
+      {
+        $addFields: {
+          count: {
+            $let: {
+              vars: {
+                matchedItem: {
+                  $arrayElemAt: [
+                    {
+                      $filter: {
+                        input: { $ifNull: ["$user.cart", []] },
+                        as: "cartItem",
+                        cond: {
+                          $eq: [
+                            "$$cartItem.goodId",
+                            { $toString: "$$ROOT._id" },
+                          ],
                         },
                       },
-                      0,
-                    ],
-                  },
+                    },
+                    0,
+                  ],
                 },
-                in: {
-                  $cond: {
-                    if: { $ne: ["$$matchedItem", null] },
-                    then: "$$matchedItem.count",
-                    else: 0,
-                  },
+              },
+              in: {
+                $cond: {
+                  if: { $ne: ["$$matchedItem", null] },
+                  then: "$$matchedItem.count",
+                  else: 0,
                 },
               },
             },
           },
         },
-        {
-          $addFields: {
-            favorite: {
-              $let: {
-                vars: {
-                  matchedFavorite: {
-                    $arrayElemAt: [
-                      {
-                        $filter: {
-                          input: "$user.favorites",
-                          as: "favoriteItem",
-                          cond: {
-                            $eq: [
-                              "$$favoriteItem",
-                              { $toString: "$$ROOT._id" },
-                            ],
+      },
+      {
+        $addFields: {
+          favorite: {
+            $cond: {
+              if: { $ne: ["$user", null] },
+              then: {
+                $let: {
+                  vars: {
+                    matchedFavorite: {
+                      $arrayElemAt: [
+                        {
+                          $filter: {
+                            input: { $ifNull: ["$user.favorites", []] },
+                            as: "favoriteItem",
+                            cond: {
+                              $eq: [
+                                "$$favoriteItem",
+                                { $toString: "$$ROOT._id" },
+                              ],
+                            },
                           },
                         },
-                      },
-                      0,
-                    ],
+                        0,
+                      ],
+                    },
                   },
-                },
-                in: {
-                  $cond: {
-                    if: { $gt: [{ $type: "$$matchedFavorite" }, "missing"] },
-                    then: true,
-                    else: "$$REMOVE",
+                  in: {
+                    $cond: {
+                      if: { $gt: [{ $type: "$$matchedFavorite" }, "missing"] },
+                      then: true,
+                      else: "$$REMOVE",
+                    },
                   },
                 },
               },
+              else: "$$REMOVE",
             },
           },
         },
-        // Проверка того, что входит в  matched:
-        // {
-        //   $addFields: {
-        //     matchedFavorite: {
-        //       $let: {
-        //         vars: {
-        //           matched: {
-        //             $filter: {
-        //               input: "$user.favorites",
-        //               as: "favoriteItem",
-        //               cond: { $eq: ["$$favoriteItem", { $toString: "$$ROOT._id" }] }
-        //             }
-        //           }
-        //         },
-        //         in: {
-        //           matched: {
-        //             $arrayElemAt: ["$$matched", 0]
-        //           },
-        //           rootId: { $toString: "$$ROOT._id" },
-        //           favoriteExists: { $cond: { if: { $ne: ["$$matched", null] }, then: true, else: false } }
-        //         }
-        //       }
-        //     }
-        //   }
-        // },
-        {
-          $project: {
-            user: 0,
-          },
+      },
+      // Проверка того, что входит в  matched:
+      // {
+      //   $addFields: {
+      //     matchedFavorite: {
+      //       $let: {
+      //         vars: {
+      //           matched: {
+      //             $filter: {
+      //               input: "$user.favorites",
+      //               as: "favoriteItem",
+      //               cond: { $eq: ["$$favoriteItem", { $toString: "$$ROOT._id" }] }
+      //             }
+      //           }
+      //         },
+      //         in: {
+      //           matched: {
+      //             $arrayElemAt: ["$$matched", 0]
+      //           },
+      //           rootId: { $toString: "$$ROOT._id" },
+      //           favoriteExists: { $cond: { if: { $ne: ["$$matched", null] }, then: true, else: false } }
+      //         }
+      //       }
+      //     }
+      //   }
+      // },
+      {
+        $project: {
+          user: 0,
         },
-        // { $sort: sortField },
-        { $skip: offset },
-        { $limit: limit },
-      ])
-      .exec();
+      },
+      // { $sort: sortField },
+      { $skip: offset },
+      { $limit: limit },
+    ])
+    .exec();
+  }
+  async getGoodFindByKeyword(
+    keyWord, options
+  ) {
+    const query = this.goodModel.find(this.buildMatchConditionByKeyword(keyWord));
+    if (options.offset) {
+      query.skip(options.offset);
+    }
+    if (options.limit) {
+      query.limit(options.limit);
+    }
+
+    return query.exec();
   }
 
   async getGoodsByCategory(

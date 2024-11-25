@@ -29,7 +29,7 @@ export class SocketService implements OnGatewayConnection, OnGatewayDisconnect {
   @UseGuards(JwtAuthGuardWebsocket)
   handleConnection(@UserEmailSocket() email: string) {
     console.log("CONNECTED");
-    this.firsConnect  && this.server.emit("message", "Hello from server, ElkaMaclaud");
+    this.firsConnect && this.server.emit("message", "Hello from server, ElkaMaclaud");
     this.firsConnect = false
   }
 
