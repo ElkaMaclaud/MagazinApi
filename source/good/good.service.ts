@@ -366,6 +366,7 @@ export class GoodService {
     return result[0];
   }
 
+
   // Второй вариант агрегации!!!
   // Более интуитивный!
 

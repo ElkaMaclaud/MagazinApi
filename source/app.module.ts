@@ -6,6 +6,7 @@ import { TypegooseModule } from "nestjs-typegoose";
 import { getMongoConfig } from "./configs/mongo.config";
 import { UserModule } from "./user/user.module";
 import { SocketModule } from './socket/socket.module';
+import { SellerModule } from './seller/seller.model';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -18,6 +19,7 @@ import { SocketModule } from './socket/socket.module';
     ReviewModule,
     UserModule,
     SocketModule,
+    SellerModule,
   ],
 })
 export class AppModule {}

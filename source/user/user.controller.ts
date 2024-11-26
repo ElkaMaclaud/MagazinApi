@@ -41,7 +41,6 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get("cart")
   async getCart(
-    @Req() req,
     @UserEmail() email: string,
     @Query("offset") offset?: number,
     @Query("limit") limit?: number,
@@ -53,7 +52,6 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get("favorites")
   async getFavorites(
-    @Req() req,
     @UserEmail() email: string,
     @Query("offset") offset?: number,
     @Query("limit") limit?: number,
@@ -65,7 +63,6 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get("orders")
   async getOrders(
-    @Req() req,
     @UserEmail() email: string,
     @Query("offset") offset?: number,
     @Query("limit") limit?: number,
@@ -77,7 +74,6 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Patch("selectAll")
   async selectAll(
-    @Req() req,
     @Body() dto: { on: boolean },
     @UserEmail() email: string,
   ) {
