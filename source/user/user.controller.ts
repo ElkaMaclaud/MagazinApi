@@ -105,15 +105,14 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Delete("deleteSelected")
-  async deleteSelected(@Req() req, @UserEmail() email: string) {
+  async deleteSelected(@UserEmail() email: string) {
     const result = this.userService.deleteSelected(email);
     return result;
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch("addToCart")
+  @Patch("cart")
   async addToCart(
-    @Req() req,
     @Body() dto: { id: string },
     @UserEmail() email: string,
   ) {
@@ -123,7 +122,6 @@ export class UserController {
 
   @Patch("addToCartGetAuto")
   async addToCartGetAuto(
-    @Req() req,
     @Body() dto: { id: string },
   ) {
     const id = dto.id;
@@ -133,7 +131,6 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Patch("toggleSelect")
   async toggleSelect(
-    @Req() req,
     @Body() dto: { id: string },
     @UserEmail() email: string,
   ) {
@@ -144,7 +141,6 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Patch("toggleFavorites")
   async addFavorites(
-    @Req() req,
     @Body() dto: { id: string },
     @UserEmail() email: string,
   ) {
@@ -154,7 +150,6 @@ export class UserController {
 
   @Patch("toggleFavoritesGetAuto")
   async toggleFavoritesGetAuto(
-    @Req() req,
     @Body() dto: { id: string },
   ) {
     const id = dto.id;
@@ -164,7 +159,6 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Patch("buy")
   async addOrder(
-    @Req() req,
     @Body() dto: { ids: string[] },
     @UserEmail() email: string,
   ) {
@@ -177,7 +171,6 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Patch("subFromCart")
   async subFromCart(
-    @Req() req,
     @Body() dto: { id: string },
     @UserEmail() email: string,
   ) {
@@ -188,7 +181,6 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Patch("removeFromCart")
   async removeFromCart(
-    @Req() req,
     @Body() dto: { id: string },
     @UserEmail() email: string,
   ) {
