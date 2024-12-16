@@ -6,12 +6,14 @@ import { JwtService } from "@nestjs/jwt";
 import { genSalt, hash, compare } from "bcryptjs";
 import { AuthDto } from "./dto/auth.dto";
 import { USER_NOT_FOUND_ERROR, WRONG_PASSWORD_ERROR } from "./user.constant";
+import { Chat } from "source/chat/chat.model";
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(UserModel) private readonly userModel: ModelType<UserModel>,
-    private readonly jwtService: JwtService,
+    @InjectModel(Chat) private readonly chatModel: ModelType<Chat>,
+    private readonly jwtService: JwtService
   ) { }
 
   async registerUser(dto: AuthDto, registered?: boolean) {
@@ -209,10 +211,50 @@ export class UserService {
     return this.getData(email, "order", options);
   }
 
+  async getAllChats(email: string) {
+    return await this.userModel
+      .findOne({ "privates.email": email })
+      .select('chats')
+      .populate('chats')
+      .exec();
+  }
+
   async getUserData(email: string) {
     return this.userModel
       .findOne({ "privates.email": email }, { publik: 1, privates: 1, delivery: 1, registered: 1, _id: 1})
       .exec();
+  }
+
+  async createNewChat(dto) {
+    const { userId, id, userTitle, titleId } = dto
+    const chat = await this.chatModel.create({
+      participants: [{ userId, title: userTitle }, { userId: id, title: titleId }],
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
+    const updateQuery = {
+      $push: { chats: { $each: [chat._id], $position: 0 } }
+    };
+    let user;
+    if (id === "672661ab9648816708d509ca") {
+      await this.userModel.updateMany(
+        { _id: { $in: [userId, id] } },
+        updateQuery,
+        { new: true }
+      )
+      user = await this.userModel.findById(userId).populate('chats').exec();
+    } else {
+      user = await this.userModel.findOneAndUpdate(
+        { _id: userId },
+        updateQuery,
+        { new: true }
+      ).populate('chats').exec()
+    }
+    const socket = activeSockets[id];
+    if (socket) {
+      socket.emit("new chat", chat);
+    }
+    return { chats: user.chats }
   }
 
   async updateUserData(dto: { name: string; phone: string }, email: string) {

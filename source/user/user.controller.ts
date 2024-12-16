@@ -80,6 +80,19 @@ export class UserController {
     return this.userService.selectAll(email, dto.on);
   }
 
+
+  @UseGuards(JwtAuthGuard)
+  @Get("getAllChats")
+  async getAllChats(@UserEmail() email: string,) {
+      return this.userService.getAllChats(email);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post("createNewChat")
+  async createNewChat(@Body () dto: { userId: string, title: string }, @UserEmail() email: string) {
+      return this.userService.createNewChat(dto);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get("userData")
   async getUserData(@UserEmail() email: string) {

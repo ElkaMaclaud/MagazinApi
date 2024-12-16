@@ -8,6 +8,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { getJWTConfig } from "source/configs/jwt.config";
 import { JwtStratagy } from "./strategies/jwt.stratagy";
 import { PassportModule } from "@nestjs/passport";
+import { Chat } from "source/chat/chat.model";
 
 @Module({
   controllers: [UserController],
@@ -17,6 +18,12 @@ import { PassportModule } from "@nestjs/passport";
         typegooseClass: UserModel,
         schemaOptions: {
           collection: "User",
+        },
+      },
+      {
+        typegooseClass: Chat,
+        schemaOptions: {
+          collection: 'Chat',
         },
       },
     ]),
