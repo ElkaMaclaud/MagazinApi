@@ -30,7 +30,7 @@ export class UserService {
         role: "user",
         email: dto.email,
         passwordHash: await hash(dto.password, salt),
-      }, 
+      },
       favorites: [],
       cart: [],
       order: [],
@@ -69,8 +69,9 @@ export class UserService {
 
   async login(email: string) {
     const payload = { email };
+    const secret = process.env.JWT_SECRET
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: await this.jwtService.signAsync(payload, { secret }),
     };
   }
 
@@ -221,7 +222,7 @@ export class UserService {
 
   async getUserData(email: string) {
     return this.userModel
-      .findOne({ "privates.email": email }, { publik: 1, privates: 1, delivery: 1, registered: 1, _id: 1})
+      .findOne({ "privates.email": email }, { publik: 1, privates: 1, delivery: 1, registered: 1, _id: 1 })
       .exec();
   }
 
@@ -470,7 +471,7 @@ export class UserService {
       registered: false
     }
     await this.registerUser(dto, false)
-    const access_token = await this.jwtService.signAsync({email: fakeEmail})
+    const access_token = await this.jwtService.signAsync({ email: fakeEmail })
     return this.updateGoodTocart(fakeEmail, id, "add", access_token)
 
   }
@@ -550,7 +551,7 @@ export class UserService {
     return updated.cart;
   }
   async toggleFavorites(goodId: string, email?: string) {
-    if(email) {
+    if (email) {
       return this.toggleFavoritesByEmail(goodId, email)
     }
     const fakeEmail = `${Math.random().toString(36).substring(2, 15)}@mail.com`
@@ -561,9 +562,9 @@ export class UserService {
       registered: false
     }
     await this.registerUser(dto, false)
-    const access_token = await this.jwtService.signAsync({email: fakeEmail})
+    const access_token = await this.jwtService.signAsync({ email: fakeEmail })
     return this.toggleFavoritesByEmail(goodId, fakeEmail, access_token)
-    
+
   }
   async toggleFavoritesByEmail(goodId: string, email?: string, token?: string) {
     const updateResult = (await this.userModel
@@ -656,9 +657,9 @@ export class UserService {
           },
         ])
         .exec();
-      result = result[0]?.updated; 
+      result = result[0]?.updated;
       if (token) {
-        return {result, token}
+        return { result, token }
       }
     }
     return result || {};
