@@ -8,6 +8,7 @@ import { UserModule } from "./user/user.module";
 import { SocketModule } from './socket/socket.module';
 import { SellerModule } from './seller/seller.model';
 import { ChatModule } from './chat/chat.module';
+import { MessengerModule } from './messenger/messenger.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -22,6 +23,7 @@ import { ChatModule } from './chat/chat.module';
     SocketModule,
     SellerModule,
     ChatModule,
+    MessengerModule,
   ],
 })
 export class AppModule {}
