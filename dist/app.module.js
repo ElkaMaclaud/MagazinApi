@@ -14,7 +14,8 @@ const config_1 = require("@nestjs/config");
 const nestjs_typegoose_1 = require("nestjs-typegoose");
 const mongo_config_1 = require("./configs/mongo.config");
 const user_module_1 = require("./user/user.module");
-const socket_module_1 = require("./socket/socket.module");
+const chat_module_1 = require("./chat/chat.module");
+const messenger_module_1 = require("./messenger/messenger.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -29,7 +30,9 @@ AppModule = __decorate([
             good_module_1.GoodModule,
             review_module_1.ReviewModule,
             user_module_1.UserModule,
-            socket_module_1.SocketModule,
+            messenger_module_1.MessengerModule,
+            chat_module_1.ChatModule,
+            messenger_module_1.MessengerModule,
         ],
     })
 ], AppModule);

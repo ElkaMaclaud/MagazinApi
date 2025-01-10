@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { Schema as MongooseSchema } from 'mongoose';
+import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses"
 
 export type MessengeDocument = MessengeModel & Document;
 

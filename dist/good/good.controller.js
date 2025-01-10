@@ -22,7 +22,7 @@ let GoodController = class GoodController {
     constructor(goodService) {
         this.goodService = goodService;
     }
-    async goodsbySale(req, email, offset, limit) {
+    async goodsbySale(email, offset, limit) {
         const options = { offset, limit };
         if (!email) {
             return this.goodService.getGoodsByDiscountСlassification("sale", options);
@@ -36,7 +36,7 @@ let GoodController = class GoodController {
         }
         return this.goodService.getGoodsByDiscountСlassificationUser(email, "discount", options);
     }
-    async getGoodById(id, req, email) {
+    async getGoodById(id, email) {
         if (!email) {
             return this.goodService.getGoodById(id);
         }
@@ -54,16 +54,22 @@ let GoodController = class GoodController {
         const options = { offset, limit };
         return this.goodService.getGoodsByIds(dto, options);
     }
+    async getGoodFindByKeyword(email, keyWord, offset, limit) {
+        const options = { offset, limit };
+        if (!email) {
+            return this.goodService.getGoodFindByKeyword(keyWord, options);
+        }
+        return this.goodService.getGoodsByDiscountСlassificationUser(email, { keyWord }, options);
+    }
 };
 __decorate([
     (0, common_1.Get)("goodsbySale"),
     (0, common_1.UseGuards)(jwtAuthGuard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, user_email_decoratorIfAuto_1.UserEmail)()),
-    __param(2, (0, common_1.Query)("offset")),
-    __param(3, (0, common_1.Query)("limit")),
+    __param(0, (0, user_email_decoratorIfAuto_1.UserEmail)()),
+    __param(1, (0, common_1.Query)("offset")),
+    __param(2, (0, common_1.Query)("limit")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, Number, Number]),
+    __metadata("design:paramtypes", [String, Number, Number]),
     __metadata("design:returntype", Promise)
 ], GoodController.prototype, "goodsbySale", null);
 __decorate([
@@ -80,10 +86,9 @@ __decorate([
     (0, common_1.Get)(":id"),
     (0, common_1.UseGuards)(jwtAuthGuard_1.JwtAuthGuard),
     __param(0, (0, common_1.Param)("id")),
-    __param(1, (0, common_1.Req)()),
-    __param(2, (0, user_email_decoratorIfAuto_1.UserEmail)()),
+    __param(1, (0, user_email_decoratorIfAuto_1.UserEmail)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object, String]),
+    __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], GoodController.prototype, "getGoodById", null);
 __decorate([
@@ -104,6 +109,16 @@ __decorate([
     __metadata("design:paramtypes", [find_goods_dto_1.GoodIdsDto, Number, Number]),
     __metadata("design:returntype", Promise)
 ], GoodController.prototype, "goodsbyIds", null);
+__decorate([
+    (0, common_1.Get)("getGoodFindByKeyword"),
+    __param(0, (0, user_email_decoratorIfAuto_1.UserEmail)()),
+    __param(1, (0, common_1.Query)("keyWord")),
+    __param(2, (0, common_1.Query)("offset")),
+    __param(3, (0, common_1.Query)("limit")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, Number, Number]),
+    __metadata("design:returntype", Promise)
+], GoodController.prototype, "getGoodFindByKeyword", null);
 GoodController = __decorate([
     (0, common_1.Controller)("good"),
     __metadata("design:paramtypes", [good_service_1.GoodService])

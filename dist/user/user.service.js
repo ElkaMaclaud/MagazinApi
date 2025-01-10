@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserService = void 0;
 const common_1 = require("@nestjs/common");
@@ -19,9 +20,11 @@ const user_model_1 = require("./user.model");
 const jwt_1 = require("@nestjs/jwt");
 const bcryptjs_1 = require("bcryptjs");
 const user_constant_1 = require("./user.constant");
+const chat_model_1 = require("../chat/chat.model");
 let UserService = class UserService {
-    constructor(userModel, jwtService) {
+    constructor(userModel, chatModel, jwtService) {
         this.userModel = userModel;
+        this.chatModel = chatModel;
         this.jwtService = jwtService;
     }
     async registerUser(dto, registered) {
@@ -68,8 +71,9 @@ let UserService = class UserService {
     }
     async login(email) {
         const payload = { email };
+        const secret = process.env.JWT_SECRET;
         return {
-            access_token: await this.jwtService.signAsync(payload),
+            access_token: await this.jwtService.signAsync(payload, { secret }),
         };
     }
     async getData(email, field, options) {
@@ -200,10 +204,41 @@ let UserService = class UserService {
     async getOrders(email, options) {
         return this.getData(email, "order", options);
     }
+    async getAllChats(email) {
+        return await this.userModel
+            .findOne({ "privates.email": email })
+            .select('chats')
+            .populate('chats')
+            .exec();
+    }
     async getUserData(email) {
         return this.userModel
             .findOne({ "privates.email": email }, { publik: 1, privates: 1, delivery: 1, registered: 1, _id: 1 })
             .exec();
+    }
+    async createNewChat(dto) {
+        const { userId, id, userTitle, titleId } = dto;
+        const chat = await this.chatModel.create({
+            participants: [{ userId, title: userTitle }, { userId: id, title: titleId }],
+            createdAt: new Date(),
+            updatedAt: new Date()
+        });
+        const updateQuery = {
+            $push: { chats: { $each: [chat._id], $position: 0 } }
+        };
+        let user;
+        if (id === "672661ab9648816708d509ca") {
+            await this.userModel.updateMany({ _id: { $in: [userId, id] } }, updateQuery, { new: true });
+            user = await this.userModel.findById(userId).populate('chats').exec();
+        }
+        else {
+            user = await this.userModel.findOneAndUpdate({ _id: userId }, updateQuery, { new: true }).populate('chats').exec();
+        }
+        const socket = activeSockets[id];
+        if (socket) {
+            socket.emit("new chat", chat);
+        }
+        return { chats: user.chats };
     }
     async updateUserData(dto, email) {
         const updatedUser = await this.userModel
@@ -594,7 +629,8 @@ let UserService = class UserService {
 UserService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, nestjs_typegoose_1.InjectModel)(user_model_1.UserModel)),
-    __metadata("design:paramtypes", [Object, jwt_1.JwtService])
+    __param(1, (0, nestjs_typegoose_1.InjectModel)(chat_model_1.Chat)),
+    __metadata("design:paramtypes", [typeof (_a = typeof types_1.ModelType !== "undefined" && types_1.ModelType) === "function" ? _a : Object, typeof (_b = typeof types_1.ModelType !== "undefined" && types_1.ModelType) === "function" ? _b : Object, jwt_1.JwtService])
 ], UserService);
 exports.UserService = UserService;
 //# sourceMappingURL=user.service.js.map

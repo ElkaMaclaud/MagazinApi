@@ -35,20 +35,26 @@ let UserController = class UserController {
         const { email } = await this.userService.validateUser(login, password);
         return this.userService.login(email);
     }
-    async getCart(req, email, offset, limit) {
+    async getCart(email, offset, limit) {
         const options = { offset, limit };
         return this.userService.getCart(email, options);
     }
-    async getFavorites(req, email, offset, limit) {
+    async getFavorites(email, offset, limit) {
         const options = { offset, limit };
         return this.userService.getFavorites(email, options);
     }
-    async getOrders(req, email, offset, limit) {
+    async getOrders(email, offset, limit) {
         const options = { offset, limit };
         return this.userService.getOrders(email, options);
     }
-    async selectAll(req, dto, email) {
+    async selectAll(dto, email) {
         return this.userService.selectAll(email, dto.on);
+    }
+    async getAllChats(email) {
+        return this.userService.getAllChats(email);
+    }
+    async createNewChat(dto, email) {
+        return this.userService.createNewChat(dto);
     }
     async getUserData(email) {
         return this.userService.getUserData(email);
@@ -61,38 +67,38 @@ let UserController = class UserController {
         const result = this.userService.updateDelivery(dto, email);
         return result;
     }
-    async deleteSelected(req, email) {
+    async deleteSelected(email) {
         const result = this.userService.deleteSelected(email);
         return result;
     }
-    async addToCart(req, dto, email) {
+    async addToCart(dto, email) {
         const id = dto.id;
         return this.userService.addToCart(id, email);
     }
-    async addToCartGetAuto(req, dto) {
+    async addToCartGetAuto(dto) {
         const id = dto.id;
         return this.userService.addToCart(id);
     }
-    async toggleSelect(req, dto, email) {
+    async toggleSelect(dto, email) {
         const id = dto.id;
         return this.userService.toggleSelect(email, id);
     }
-    async addFavorites(req, dto, email) {
+    async addFavorites(dto, email) {
         const id = dto.id;
         return this.userService.toggleFavorites(id, email);
     }
-    async toggleFavoritesGetAuto(req, dto) {
+    async toggleFavoritesGetAuto(dto) {
         const id = dto.id;
         return this.userService.toggleFavorites(id);
     }
-    async addOrder(req, dto, email) {
+    async addOrder(dto, email) {
         return this.userService.addOrder(email, dto.ids);
     }
-    async subFromCart(req, dto, email) {
+    async subFromCart(dto, email) {
         const id = dto.id;
         return this.userService.subFromCart(email, id);
     }
-    async removeFromCart(req, dto, email) {
+    async removeFromCart(dto, email) {
         const id = dto.id;
         const result = this.userService.removeFromCart(email, id);
         return result;
@@ -116,46 +122,59 @@ __decorate([
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Get)("cart"),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, user_email_decorator_1.UserEmail)()),
-    __param(2, (0, common_1.Query)("offset")),
-    __param(3, (0, common_1.Query)("limit")),
+    __param(0, (0, user_email_decorator_1.UserEmail)()),
+    __param(1, (0, common_1.Query)("offset")),
+    __param(2, (0, common_1.Query)("limit")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, Number, Number]),
+    __metadata("design:paramtypes", [String, Number, Number]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getCart", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Get)("favorites"),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, user_email_decorator_1.UserEmail)()),
-    __param(2, (0, common_1.Query)("offset")),
-    __param(3, (0, common_1.Query)("limit")),
+    __param(0, (0, user_email_decorator_1.UserEmail)()),
+    __param(1, (0, common_1.Query)("offset")),
+    __param(2, (0, common_1.Query)("limit")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, Number, Number]),
+    __metadata("design:paramtypes", [String, Number, Number]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getFavorites", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Get)("orders"),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, user_email_decorator_1.UserEmail)()),
-    __param(2, (0, common_1.Query)("offset")),
-    __param(3, (0, common_1.Query)("limit")),
+    __param(0, (0, user_email_decorator_1.UserEmail)()),
+    __param(1, (0, common_1.Query)("offset")),
+    __param(2, (0, common_1.Query)("limit")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, Number, Number]),
+    __metadata("design:paramtypes", [String, Number, Number]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getOrders", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Patch)("selectAll"),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
-    __param(2, (0, user_email_decorator_1.UserEmail)()),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_email_decorator_1.UserEmail)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object, String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "selectAll", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
+    (0, common_1.Get)("getAllChats"),
+    __param(0, (0, user_email_decorator_1.UserEmail)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "getAllChats", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
+    (0, common_1.Post)("createNewChat"),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_email_decorator_1.UserEmail)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "createNewChat", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Get)("userData"),
@@ -185,86 +204,77 @@ __decorate([
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Delete)("deleteSelected"),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, user_email_decorator_1.UserEmail)()),
+    __param(0, (0, user_email_decorator_1.UserEmail)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "deleteSelected", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
-    (0, common_1.Patch)("addToCart"),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
-    __param(2, (0, user_email_decorator_1.UserEmail)()),
+    (0, common_1.Patch)("cart"),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_email_decorator_1.UserEmail)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object, String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "addToCart", null);
 __decorate([
     (0, common_1.Patch)("addToCartGetAuto"),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "addToCartGetAuto", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Patch)("toggleSelect"),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
-    __param(2, (0, user_email_decorator_1.UserEmail)()),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_email_decorator_1.UserEmail)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object, String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "toggleSelect", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Patch)("toggleFavorites"),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
-    __param(2, (0, user_email_decorator_1.UserEmail)()),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_email_decorator_1.UserEmail)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object, String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "addFavorites", null);
 __decorate([
     (0, common_1.Patch)("toggleFavoritesGetAuto"),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "toggleFavoritesGetAuto", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Patch)("buy"),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
-    __param(2, (0, user_email_decorator_1.UserEmail)()),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_email_decorator_1.UserEmail)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object, String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "addOrder", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Patch)("subFromCart"),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
-    __param(2, (0, user_email_decorator_1.UserEmail)()),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_email_decorator_1.UserEmail)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object, String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "subFromCart", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Patch)("removeFromCart"),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
-    __param(2, (0, user_email_decorator_1.UserEmail)()),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, user_email_decorator_1.UserEmail)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object, String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "removeFromCart", null);
 UserController = __decorate([

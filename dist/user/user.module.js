@@ -17,6 +17,7 @@ const jwt_1 = require("@nestjs/jwt");
 const jwt_config_1 = require("../configs/jwt.config");
 const jwt_stratagy_1 = require("./strategies/jwt.stratagy");
 const passport_1 = require("@nestjs/passport");
+const chat_model_1 = require("../chat/chat.model");
 let UserModule = class UserModule {
 };
 UserModule = __decorate([
@@ -28,6 +29,12 @@ UserModule = __decorate([
                     typegooseClass: user_model_1.UserModel,
                     schemaOptions: {
                         collection: "User",
+                    },
+                },
+                {
+                    typegooseClass: chat_model_1.Chat,
+                    schemaOptions: {
+                        collection: 'Chat',
                     },
                 },
             ]),

@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReviewDto = void 0;
 const typegoose_1 = require("@typegoose/typegoose");
@@ -36,7 +37,7 @@ __decorate([
 ], ReviewDto.prototype, "productId", void 0);
 __decorate([
     (0, typegoose_1.prop)(),
-    __metadata("design:type", Object)
+    __metadata("design:type", typeof (_a = typeof mongoose_1.Types !== "undefined" && mongoose_1.Types.ObjectId) === "function" ? _a : Object)
 ], ReviewDto.prototype, "goodId", void 0);
 exports.ReviewDto = ReviewDto;
 //# sourceMappingURL=review.dto.js.map

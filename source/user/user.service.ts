@@ -7,6 +7,7 @@ import { genSalt, hash, compare } from "bcryptjs";
 import { AuthDto } from "./dto/auth.dto";
 import { USER_NOT_FOUND_ERROR, WRONG_PASSWORD_ERROR } from "./user.constant";
 import { Chat } from "source/chat/chat.model";
+import { activeSockets } from "source/messenger/messenger.gateway";
 
 @Injectable()
 export class UserService {

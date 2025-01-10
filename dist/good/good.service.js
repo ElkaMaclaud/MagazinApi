@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GoodService = void 0;
 const common_1 = require("@nestjs/common");
@@ -38,16 +39,37 @@ let GoodService = class GoodService {
         }
         return matchCondition;
     }
+    buildMatchConditionByKeyword(keyword) {
+        const searchQuery = {
+            $or: [
+                { brand: { $regex: keyword, $options: 'i' } },
+                { name: { $regex: keyword, $options: 'i' } },
+                { description: { $regex: keyword, $options: 'i' } },
+                { category: { $regex: keyword, $options: 'i' } },
+                { characteristics: { $regex: keyword, $options: 'i' } },
+                { 'characteristics.name': { $regex: keyword, $options: 'i' } },
+                { 'characteristics.value': { $regex: keyword, $options: 'i' } }
+            ]
+        };
+        return searchQuery;
+    }
     async getGoodsByDiscountСlassificationUser(email, value, options) {
-        const offset = options.offset || 0;
-        const limit = options.limit || 50;
+        const offset = options?.offset || 0;
+        const limit = options?.limit || 50;
+        let query;
         const sortField = this.buildMatchCondition(value).sort || { price: 1 };
-        const existsFilter = this.buildMatchCondition(value).category ||
-            this.buildMatchCondition(value);
+        if (typeof value === "object" && value.hasOwnProperty("keyWord")) {
+            query = this.buildMatchConditionByKeyword(value.keyWord);
+        }
+        else {
+            query =
+                this.buildMatchCondition(value).category ||
+                    this.buildMatchCondition(value);
+        }
         return await this.goodModel
             .aggregate([
             {
-                $match: existsFilter,
+                $match: query,
             },
             {
                 $lookup: {
@@ -71,6 +93,11 @@ let GoodService = class GoodService {
             },
             {
                 $addFields: {
+                    user: { $ifNull: ["$user", null] }
+                }
+            },
+            {
+                $addFields: {
                     count: {
                         $let: {
                             vars: {
@@ -78,7 +105,7 @@ let GoodService = class GoodService {
                                     $arrayElemAt: [
                                         {
                                             $filter: {
-                                                input: "$user.cart",
+                                                input: { $ifNull: ["$user.cart", []] },
                                                 as: "cartItem",
                                                 cond: {
                                                     $eq: [
@@ -106,33 +133,39 @@ let GoodService = class GoodService {
             {
                 $addFields: {
                     favorite: {
-                        $let: {
-                            vars: {
-                                matchedFavorite: {
-                                    $arrayElemAt: [
-                                        {
-                                            $filter: {
-                                                input: "$user.favorites",
-                                                as: "favoriteItem",
-                                                cond: {
-                                                    $eq: [
-                                                        "$$favoriteItem",
-                                                        { $toString: "$$ROOT._id" },
-                                                    ],
+                        $cond: {
+                            if: { $ne: ["$user", null] },
+                            then: {
+                                $let: {
+                                    vars: {
+                                        matchedFavorite: {
+                                            $arrayElemAt: [
+                                                {
+                                                    $filter: {
+                                                        input: { $ifNull: ["$user.favorites", []] },
+                                                        as: "favoriteItem",
+                                                        cond: {
+                                                            $eq: [
+                                                                "$$favoriteItem",
+                                                                { $toString: "$$ROOT._id" },
+                                                            ],
+                                                        },
+                                                    },
                                                 },
-                                            },
+                                                0,
+                                            ],
                                         },
-                                        0,
-                                    ],
+                                    },
+                                    in: {
+                                        $cond: {
+                                            if: { $gt: [{ $type: "$$matchedFavorite" }, "missing"] },
+                                            then: true,
+                                            else: "$$REMOVE",
+                                        },
+                                    },
                                 },
                             },
-                            in: {
-                                $cond: {
-                                    if: { $gt: [{ $type: "$$matchedFavorite" }, "missing"] },
-                                    then: true,
-                                    else: "$$REMOVE",
-                                },
-                            },
+                            else: "$$REMOVE",
                         },
                     },
                 },
@@ -146,6 +179,16 @@ let GoodService = class GoodService {
             { $limit: limit },
         ])
             .exec();
+    }
+    async getGoodFindByKeyword(keyWord, options) {
+        const query = this.goodModel.find(this.buildMatchConditionByKeyword(keyWord));
+        if (options.offset) {
+            query.skip(options.offset);
+        }
+        if (options.limit) {
+            query.limit(options.limit);
+        }
+        return query.exec();
     }
     async getGoodsByCategory(dto, options) {
         const query = this.goodModel.find({
@@ -278,7 +321,7 @@ let GoodService = class GoodService {
 GoodService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, nestjs_typegoose_1.InjectModel)(good_model_1.GoodModel)),
-    __metadata("design:paramtypes", [Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof types_1.ModelType !== "undefined" && types_1.ModelType) === "function" ? _a : Object])
 ], GoodService);
 exports.GoodService = GoodService;
 //# sourceMappingURL=good.service.js.map
