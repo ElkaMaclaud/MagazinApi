@@ -707,4 +707,8 @@ export class UserService {
   async removeFromCart(email: string, id: string) {
     return this.deleteGood(email, id, "cart");
   }
+  async getChatParticipants(chatId) {
+    const chat = await this.chatModel.findById(chatId).populate('participants'); 
+    return chat.participants.map(participant => participant.userId.toString()); 
+  }
 }
