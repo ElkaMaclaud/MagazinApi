@@ -81,117 +81,117 @@ let UserService = class UserService {
         const limit = options.limit || 50;
         const result = await this.userModel
             .aggregate([
-            { $match: { "privates.email": email } },
-            {
-                $unwind: `$${field}`,
-            },
-            {
-                $lookup: {
-                    from: "Good",
-                    let: {
-                        goodId: {
+                { $match: { "privates.email": email } },
+                {
+                    $unwind: `$${field}`,
+                },
+                {
+                    $lookup: {
+                        from: "Good",
+                        let: {
+                            goodId: {
+                                $cond: {
+                                    if: { $eq: [field, "cart"] },
+                                    then: `$${field}.goodId`,
+                                    else: `$${field}`,
+                                },
+                            },
+                        },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: { $eq: [{ $toString: "$_id" }, "$$goodId"] },
+                                },
+                            },
+                        ],
+                        as: "goodInfo",
+                    },
+                },
+                {
+                    $addFields: {
+                        [field]: {
                             $cond: {
                                 if: { $eq: [field, "cart"] },
-                                then: `$${field}.goodId`,
-                                else: `$${field}`,
-                            },
-                        },
-                    },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: { $eq: [{ $toString: "$_id" }, "$$goodId"] },
-                            },
-                        },
-                    ],
-                    as: "goodInfo",
-                },
-            },
-            {
-                $addFields: {
-                    [field]: {
-                        $cond: {
-                            if: { $eq: [field, "cart"] },
-                            then: {
-                                $mergeObjects: [
-                                    `$${field}`,
-                                    { $arrayElemAt: ["$goodInfo", 0] },
-                                ],
-                            },
-                            else: {
-                                $cond: {
-                                    if: { $eq: [field, "favorites"] },
-                                    then: {
-                                        $let: {
-                                            vars: {
-                                                cartItem: {
-                                                    $arrayElemAt: [
-                                                        {
-                                                            $filter: {
-                                                                input: "$cart",
-                                                                as: "item",
-                                                                cond: {
-                                                                    $eq: [
-                                                                        "$$item.goodId",
-                                                                        { $toString: `$${field}` },
-                                                                    ],
+                                then: {
+                                    $mergeObjects: [
+                                        `$${field}`,
+                                        { $arrayElemAt: ["$goodInfo", 0] },
+                                    ],
+                                },
+                                else: {
+                                    $cond: {
+                                        if: { $eq: [field, "favorites"] },
+                                        then: {
+                                            $let: {
+                                                vars: {
+                                                    cartItem: {
+                                                        $arrayElemAt: [
+                                                            {
+                                                                $filter: {
+                                                                    input: "$cart",
+                                                                    as: "item",
+                                                                    cond: {
+                                                                        $eq: [
+                                                                            "$$item.goodId",
+                                                                            { $toString: `$${field}` },
+                                                                        ],
+                                                                    },
                                                                 },
                                                             },
-                                                        },
-                                                        0,
+                                                            0,
+                                                        ],
+                                                    },
+                                                },
+                                                in: {
+                                                    $mergeObjects: [
+                                                        { goodId: { $toString: `$${field}` } },
+                                                        { count: "$$cartItem.count" },
+                                                        { favorite: true },
+                                                        { $arrayElemAt: ["$goodInfo", 0] },
                                                     ],
                                                 },
                                             },
-                                            in: {
-                                                $mergeObjects: [
-                                                    { goodId: { $toString: `$${field}` } },
-                                                    { count: "$$cartItem.count" },
-                                                    { favorite: true },
-                                                    { $arrayElemAt: ["$goodInfo", 0] },
-                                                ],
-                                            },
                                         },
-                                    },
-                                    else: {
-                                        $mergeObjects: [
-                                            { goodId: { $toString: `$${field}` } },
-                                            { $arrayElemAt: ["$goodInfo", 0] },
-                                        ],
+                                        else: {
+                                            $mergeObjects: [
+                                                { goodId: { $toString: `$${field}` } },
+                                                { $arrayElemAt: ["$goodInfo", 0] },
+                                            ],
+                                        },
                                     },
                                 },
                             },
                         },
                     },
                 },
-            },
-            {
-                $group: {
-                    _id: "$_id",
-                    [field]: { $push: `$${field}` },
+                {
+                    $group: {
+                        _id: "$_id",
+                        [field]: { $push: `$${field}` },
+                    },
                 },
-            },
-            {
-                $project: {
-                    _id: 0,
-                    [field]: 1,
+                {
+                    $project: {
+                        _id: 0,
+                        [field]: 1,
+                    },
                 },
-            },
-            { $unwind: `$${field}` },
-            { $skip: offset },
-            { $limit: limit },
-            {
-                $group: {
-                    _id: null,
-                    [field]: { $push: `$${field}` },
+                { $unwind: `$${field}` },
+                { $skip: offset },
+                { $limit: limit },
+                {
+                    $group: {
+                        _id: null,
+                        [field]: { $push: `$${field}` },
+                    },
                 },
-            },
-            {
-                $project: {
-                    _id: 0,
-                    [field]: 1,
+                {
+                    $project: {
+                        _id: 0,
+                        [field]: 1,
+                    },
                 },
-            },
-        ])
+            ])
             .exec();
         return result[0]?.[field] || [];
     }
@@ -213,11 +213,15 @@ let UserService = class UserService {
     }
     async getUserData(email) {
         return this.userModel
-            .findOne({ "privates.email": email }, { publik: 1, privates: 1, delivery: 1, registered: 1, _id: 1 })
+            .findOne({ "privates.email": email })
+            .select({ publik: 1, privates: 1, delivery: 1, registered: 1, _id: 1, chats: 1 })
+            .populate('chats')
             .exec();
     }
     async createNewChat(dto) {
-        const { userId, id, userTitle, titleId } = dto;
+        const { userId, unprocessedId, unprocessedUserTitle, titleId } = dto
+        const id = unprocessedId.replace(/^\\+|\\+$/g, '').trim()
+        const userTitle = unprocessedUserTitle.replace(/^\\+|\\+$/g, '').trim()
         const chat = await this.chatModel.create({
             participants: [{ userId, title: userTitle }, { userId: id, title: titleId }],
             createdAt: new Date(),
@@ -227,7 +231,7 @@ let UserService = class UserService {
             $push: { chats: { $each: [chat._id], $position: 0 } }
         };
         let user;
-        if (id === "672661ab9648816708d509ca") {
+        if (id === "679b78b73ee3771d25a12239") {
             await this.userModel.updateMany({ _id: { $in: [userId, id] } }, updateQuery, { new: true });
             user = await this.userModel.findById(userId).populate('chats').exec();
         }
@@ -243,17 +247,17 @@ let UserService = class UserService {
     async updateUserData(dto, email) {
         const updatedUser = await this.userModel
             .findOneAndUpdate({ "privates.email": email }, [
-            {
-                $set: {
-                    publik: {
-                        $mergeObjects: ["$publik", { name: dto.name }],
-                    },
-                    privates: {
-                        $mergeObjects: ["$privates", { phone: dto.phone }],
+                {
+                    $set: {
+                        publik: {
+                            $mergeObjects: ["$publik", { name: dto.name }],
+                        },
+                        privates: {
+                            $mergeObjects: ["$privates", { phone: dto.phone }],
+                        },
                     },
                 },
-            },
-        ], { new: true, useFindAndModify: false })
+            ], { new: true, useFindAndModify: false })
             .exec();
         return {
             phone: updatedUser.privates.phone,
@@ -263,10 +267,10 @@ let UserService = class UserService {
     async updateDelivery(dto, email) {
         const updatedUser = await this.userModel
             .findOneAndUpdate({ "privates.email": email }, [
-            {
-                $set: { delivery: { $mergeObjects: ["$delivery", dto] } },
-            },
-        ], { new: true, useFindAndModify: false })
+                {
+                    $set: { delivery: { $mergeObjects: ["$delivery", dto] } },
+                },
+            ], { new: true, useFindAndModify: false })
             .exec();
         return updatedUser.delivery;
     }
@@ -363,50 +367,50 @@ let UserService = class UserService {
         ], { new: true, useFindAndModify: false });
         const result = await this.userModel
             .aggregate([
-            {
-                $match: { "privates.email": email },
-            },
-            {
-                $lookup: {
-                    from: "Good",
-                    let: { goodId: { $toString: goodId } },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: { $eq: ["$$goodId", { $toString: "$_id" }] },
-                            },
-                        },
-                    ],
-                    as: "goodDetails",
+                {
+                    $match: { "privates.email": email },
                 },
-            },
-            {
-                $project: {
-                    updated: {
-                        $mergeObjects: [
+                {
+                    $lookup: {
+                        from: "Good",
+                        let: { goodId: { $toString: goodId } },
+                        pipeline: [
                             {
-                                $arrayElemAt: [
-                                    {
-                                        $filter: {
-                                            input: "$cart",
-                                            as: "item",
-                                            cond: { $eq: ["$$item.goodId", goodId] },
-                                        },
-                                    },
-                                    0,
-                                ],
+                                $match: {
+                                    $expr: { $eq: ["$$goodId", { $toString: "$_id" }] },
+                                },
                             },
-                            { $arrayElemAt: ["$goodDetails", 0] },
                         ],
+                        as: "goodDetails",
                     },
                 },
-            },
-            {
-                $project: {
-                    "updated.goodId": 0,
+                {
+                    $project: {
+                        updated: {
+                            $mergeObjects: [
+                                {
+                                    $arrayElemAt: [
+                                        {
+                                            $filter: {
+                                                input: "$cart",
+                                                as: "item",
+                                                cond: { $eq: ["$$item.goodId", goodId] },
+                                            },
+                                        },
+                                        0,
+                                    ],
+                                },
+                                { $arrayElemAt: ["$goodDetails", 0] },
+                            ],
+                        },
+                    },
                 },
-            },
-        ])
+                {
+                    $project: {
+                        "updated.goodId": 0,
+                    },
+                },
+            ])
             .exec();
         if (token) {
             return { result: result[0]?.updated, token };
@@ -437,52 +441,52 @@ let UserService = class UserService {
     async toggleSelect(email, goodId) {
         const updated = await this.userModel
             .findOneAndUpdate({ "privates.email": email }, [
-            {
-                $set: {
-                    cart: {
-                        $map: {
-                            input: "$cart",
-                            as: "item",
-                            in: {
-                                $cond: {
-                                    if: {
-                                        $eq: ["$$item.goodId", goodId],
-                                    },
-                                    then: {
-                                        goodId: "$$item.goodId",
-                                        count: "$$item.count",
-                                        choice: {
-                                            $not: ["$$item.choice"],
+                {
+                    $set: {
+                        cart: {
+                            $map: {
+                                input: "$cart",
+                                as: "item",
+                                in: {
+                                    $cond: {
+                                        if: {
+                                            $eq: ["$$item.goodId", goodId],
                                         },
+                                        then: {
+                                            goodId: "$$item.goodId",
+                                            count: "$$item.count",
+                                            choice: {
+                                                $not: ["$$item.choice"],
+                                            },
+                                        },
+                                        else: "$$item",
                                     },
-                                    else: "$$item",
                                 },
                             },
                         },
                     },
                 },
-            },
-        ], { new: true, useFindAndModify: false })
+            ], { new: true, useFindAndModify: false })
             .exec();
         return updated.cart.find((good) => good.goodId === goodId);
     }
     async selectAll(email, on) {
         const updated = await this.userModel
             .findOneAndUpdate({ "privates.email": email }, [
-            {
-                $set: {
-                    cart: {
-                        $map: {
-                            input: "$cart",
-                            as: "item",
-                            in: {
-                                $mergeObjects: ["$$item", { choice: on }],
+                {
+                    $set: {
+                        cart: {
+                            $map: {
+                                input: "$cart",
+                                as: "item",
+                                in: {
+                                    $mergeObjects: ["$$item", { choice: on }],
+                                },
                             },
                         },
                     },
                 },
-            },
-        ], { new: true, useFindAndModify: false })
+            ], { new: true, useFindAndModify: false })
             .exec();
         return updated.cart;
     }
@@ -504,86 +508,86 @@ let UserService = class UserService {
     async toggleFavoritesByEmail(goodId, email, token) {
         const updateResult = (await this.userModel
             .findOneAndUpdate({ "privates.email": email }, [
-            {
-                $set: {
-                    isExisting: { $in: [goodId, "$favorites"] },
+                {
+                    $set: {
+                        isExisting: { $in: [goodId, "$favorites"] },
+                    },
                 },
-            },
-            {
-                $set: {
-                    existing: { $in: [goodId, "$favorites"] },
-                    favorites: {
-                        $cond: {
-                            if: "$isExisting",
-                            then: { $setDifference: ["$favorites", [goodId]] },
-                            else: { $concatArrays: ["$favorites", [goodId]] },
+                {
+                    $set: {
+                        existing: { $in: [goodId, "$favorites"] },
+                        favorites: {
+                            $cond: {
+                                if: "$isExisting",
+                                then: { $setDifference: ["$favorites", [goodId]] },
+                                else: { $concatArrays: ["$favorites", [goodId]] },
+                            },
                         },
                     },
                 },
-            },
-        ], { new: true, useFindAndModify: false })
+            ], { new: true, useFindAndModify: false })
             .exec());
         let result;
         if (updateResult.favorites.includes(goodId)) {
             result = await this.userModel
                 .aggregate([
-                {
-                    $match: { "privates.email": email },
-                },
-                {
-                    $lookup: {
-                        from: "Good",
-                        let: { goodId: { $toString: goodId } },
-                        pipeline: [
-                            {
-                                $match: {
-                                    $expr: { $eq: ["$$goodId", { $toString: "$_id" }] },
-                                },
-                            },
-                        ],
-                        as: "goodDetails",
+                    {
+                        $match: { "privates.email": email },
                     },
-                },
-                {
-                    $project: {
-                        updated: {
-                            $mergeObjects: [
+                    {
+                        $lookup: {
+                            from: "Good",
+                            let: { goodId: { $toString: goodId } },
+                            pipeline: [
                                 {
-                                    $arrayElemAt: [
-                                        {
-                                            $filter: {
-                                                input: "$favorites",
-                                                as: "item",
-                                                cond: { $eq: ["$$item.goodId", goodId] },
-                                            },
-                                        },
-                                        0,
-                                    ],
-                                },
-                                { $arrayElemAt: ["$goodDetails", 0] },
-                                { favorite: true },
-                                {
-                                    $arrayElemAt: [
-                                        {
-                                            $filter: {
-                                                input: "$cart",
-                                                as: "item",
-                                                cond: { $eq: ["$$item.goodId", goodId] },
-                                            },
-                                        },
-                                        0,
-                                    ],
+                                    $match: {
+                                        $expr: { $eq: ["$$goodId", { $toString: "$_id" }] },
+                                    },
                                 },
                             ],
+                            as: "goodDetails",
                         },
                     },
-                },
-                {
-                    $project: {
-                        "updated.goodId": 0,
+                    {
+                        $project: {
+                            updated: {
+                                $mergeObjects: [
+                                    {
+                                        $arrayElemAt: [
+                                            {
+                                                $filter: {
+                                                    input: "$favorites",
+                                                    as: "item",
+                                                    cond: { $eq: ["$$item.goodId", goodId] },
+                                                },
+                                            },
+                                            0,
+                                        ],
+                                    },
+                                    { $arrayElemAt: ["$goodDetails", 0] },
+                                    { favorite: true },
+                                    {
+                                        $arrayElemAt: [
+                                            {
+                                                $filter: {
+                                                    input: "$cart",
+                                                    as: "item",
+                                                    cond: { $eq: ["$$item.goodId", goodId] },
+                                                },
+                                            },
+                                            0,
+                                        ],
+                                    },
+                                ],
+                            },
+                        },
                     },
-                },
-            ])
+                    {
+                        $project: {
+                            "updated.goodId": 0,
+                        },
+                    },
+                ])
                 .exec();
             result = result[0]?.updated;
             if (token) {

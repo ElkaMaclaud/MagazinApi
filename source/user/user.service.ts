@@ -238,7 +238,7 @@ export class UserService {
       $push: { chats: { $each: [chat._id], $position: 0 } }
     };
     let user;
-    if (id === "672661ab9648816708d509ca") {
+    if (id === "679b78b73ee3771d25a12239") { //672661ab9648816708d509ca
       await this.userModel.updateMany(
         { _id: { $in: [userId, id] } },
         updateQuery,
